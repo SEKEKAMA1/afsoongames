@@ -81,9 +81,8 @@ function render(){
   const gap=parseFloat(getComputedStyle(tabRow).columnGap)||8;
   const wrap=document.querySelector('.wrap'),tbl=document.querySelector('.table');
   const cs=getComputedStyle(tbl),chrome=parseFloat(cs.paddingLeft)+parseFloat(cs.paddingRight)+parseFloat(cs.borderLeftWidth)*2;
-  const capH=(innerHeight-150)/(1.4*2.6);
   const capW=(Math.min(1560,document.body.clientWidth-32)-chrome-6*gap)/7;
-  const want=Math.max(40,Math.min(capW,capH,197));
+  const want=Math.max(40,Math.min(capW,197));
   wrap.style.maxWidth=Math.max(320,Math.ceil(want*7+6*gap+chrome))+'px';
   const cw=Math.max(30,(tabRow.clientWidth-6*gap)/7);
   const ch=cw*1.4;
