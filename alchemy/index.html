@@ -1,0 +1,382 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#0b0716">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' rx='22' fill='%230b0716'/%3E%3Cg fill='none' stroke='%23e6b85c' stroke-width='5'%3E%3Crect x='24' y='24' width='52' height='52'/%3E%3Crect x='24' y='24' width='52' height='52' transform='rotate(45 50 50)'/%3E%3C/g%3E%3Ccircle cx='50' cy='50' r='8' fill='%23e6b85c'/%3E%3C/svg%3E">
+<title>Afsoon Alchemy</title>
+<meta name="description" content="Afsoon Alchemy, a magical merge game by Afsoon Games. Brew sparks, merge potions into crystals and fill the orders of the royal court.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box}html{padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}body{margin:0;font-size:14px}
+/* Layout: one phone-first column. Status bar, court orders, 6x7 alchemy board, brew dock, collection. Single dark theme to match afsoongames.com */
+:root{
+  --night:#0b0716; --deep:#140c26; --cell:#1b1333; --cell-hi:#2a1d4d; --line:rgba(230,184,92,.16);
+  --gold:#e6b85c; --gold-2:#f6d999; --ink:#1a1020; --text:#ece6f7; --muted:#a99cc4; --good:#5DCAA5; --warn:#e2725b;
+  --display:Cinzel,"Trajan Pro",Georgia,serif; --body:Inter,system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;
+  color-scheme:dark;
+}
+html,body{height:100%}
+body{background:var(--night);color:var(--text);font-family:var(--body);overflow-x:hidden;
+  padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));
+  -webkit-user-select:none;user-select:none;-webkit-tap-highlight-color:transparent}
+body::after{content:"";position:fixed;inset:0;z-index:-1;pointer-events:none;
+  background:radial-gradient(60% 40% at 85% 0%,rgba(123,79,214,.28),transparent 70%),radial-gradient(50% 35% at 0% 100%,rgba(184,116,42,.14),transparent 70%)}
+.app{max-width:460px;margin:0 auto;display:flex;flex-direction:column;gap:12px;padding-block:12px 24px}
+button{font:inherit;color:inherit;cursor:pointer}
+button:focus-visible{outline:2px solid var(--gold-2);outline-offset:2px}
+
+.top{display:flex;align-items:center;justify-content:space-between;gap:10px}
+.brand{font-family:var(--display);font-weight:700;letter-spacing:.12em;font-size:1rem;line-height:1.1}
+.brand small{display:block;font-family:var(--body);font-weight:500;letter-spacing:.24em;font-size:.62rem;color:var(--gold);text-transform:uppercase;margin-top:3px}
+.icon-btn{background:none;border:1px solid var(--line);border-radius:10px;width:36px;height:36px;display:grid;place-items:center;color:var(--muted)}
+.icon-btn svg{width:18px;height:18px}
+
+.stats{display:grid;grid-template-columns:1fr 1fr 1.3fr;gap:8px}
+.stat{background:var(--deep);border:1px solid var(--line);border-radius:12px;padding:8px 10px;display:flex;align-items:center;gap:8px;min-width:0}
+.stat svg{width:20px;height:20px;flex:none}
+.stat b{font-weight:600;font-size:1rem;font-variant-numeric:tabular-nums}
+.stat span{font-size:.7rem;color:var(--muted);display:block;line-height:1.2;white-space:nowrap}
+.lvl{flex:1;min-width:0}
+.bar{height:5px;border-radius:3px;background:rgba(255,255,255,.08);margin-top:4px;overflow:hidden}
+.bar i{display:block;height:100%;background:linear-gradient(90deg,var(--gold),var(--gold-2));width:0;transition:width .3s}
+
+.label{font-size:.66rem;letter-spacing:.26em;text-transform:uppercase;color:var(--gold);margin-bottom:6px;display:flex;justify-content:space-between}
+.label em{font-style:normal;letter-spacing:.04em;text-transform:none;color:var(--muted)}
+.orders{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px}
+.order{background:var(--deep);border:1px solid var(--line);border-radius:12px;padding:8px;display:flex;flex-direction:column;gap:6px;transition:border-color .2s,transform .2s}
+.order.ready{border-color:rgba(93,202,165,.6)}
+.who{font-size:.72rem;color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.needs{display:flex;gap:4px;min-height:34px}
+.need{position:relative;width:34px;height:34px;border-radius:8px;background:var(--cell);display:grid;place-items:center}
+.need svg{width:26px;height:26px}
+.need.have::after{content:"";position:absolute;right:-3px;bottom:-3px;width:12px;height:12px;border-radius:50%;background:var(--good);
+  box-shadow:0 0 0 2px var(--deep);background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 12 12'%3E%3Cpath d='M3 6.2l2 2 4-4.4' fill='none' stroke='%230b0716' stroke-width='1.8'/%3E%3C/svg%3E")}
+.deliver{border:0;border-radius:8px;padding:6px 4px;font-size:.74rem;font-weight:600;background:rgba(255,255,255,.06);color:var(--muted);display:flex;align-items:center;justify-content:center;gap:4px;font-variant-numeric:tabular-nums}
+.deliver svg{width:13px;height:13px}
+.order.ready .deliver{background:var(--good);color:#06261c}
+
+.hint{font-size:.8rem;color:var(--muted);text-align:center;min-height:1.2em}
+.hint b{color:var(--gold-2);font-weight:500}
+
+.board{display:grid;grid-template-columns:repeat(6,minmax(0,1fr));gap:6px;padding:8px;border-radius:16px;background:var(--deep);border:1px solid var(--line);touch-action:none}
+.cell{aspect-ratio:1;border-radius:10px;background:var(--cell);display:grid;place-items:center;position:relative;transition:background .15s}
+.cell svg{width:78%;height:78%;transition:transform .15s;pointer-events:none}
+.cell.sel{background:var(--cell-hi);box-shadow:inset 0 0 0 2px var(--gold)}
+.cell.over{background:var(--cell-hi);box-shadow:inset 0 0 0 2px var(--gold-2)}
+.cell.match{box-shadow:inset 0 0 0 2px var(--good)}
+.cell.lift svg{opacity:.25}
+.cell.wanted::before{content:"";position:absolute;top:5px;right:5px;width:6px;height:6px;border-radius:50%;background:var(--good)}
+.cell.pop svg{animation:pop .38s cubic-bezier(.3,1.6,.5,1)}
+.cell.spawn svg{animation:spawn .32s ease-out}
+@keyframes pop{0%{transform:scale(.4)}100%{transform:scale(1)}}
+@keyframes spawn{0%{transform:scale(0) rotate(-40deg);opacity:0}100%{transform:none;opacity:1}}
+.float{position:absolute;left:50%;top:10%;transform:translateX(-50%);font-size:.72rem;font-weight:600;color:var(--gold-2);pointer-events:none;animation:rise .8s ease-out forwards;white-space:nowrap}
+@keyframes rise{to{transform:translate(-50%,-26px);opacity:0}}
+.ghost{position:fixed;left:0;top:0;pointer-events:none;z-index:50;filter:drop-shadow(0 8px 14px rgba(0,0,0,.5))}
+.ghost svg{width:100%;height:100%}
+
+.dock{display:grid;grid-template-columns:auto minmax(0,1fr);gap:10px;align-items:stretch}
+.brew{border:0;border-radius:16px;padding:10px 18px;background:linear-gradient(160deg,var(--gold-2),var(--gold));color:var(--ink);display:flex;flex-direction:column;align-items:center;gap:2px;font-weight:600;box-shadow:0 8px 26px rgba(230,184,92,.22);transition:transform .15s}
+.brew:active{transform:scale(.96)}
+.brew svg{width:38px;height:38px}
+.brew span{font-size:.7rem;font-weight:500;opacity:.8;display:flex;align-items:center;gap:2px}
+.brew span svg{width:11px;height:11px}
+.info{background:var(--deep);border:1px solid var(--line);border-radius:16px;padding:10px 12px;display:flex;align-items:center;gap:10px;min-width:0}
+.info .pic{width:44px;height:44px;flex:none;border-radius:10px;background:var(--cell);display:grid;place-items:center}
+.info .pic svg{width:34px;height:34px}
+.info .txt{flex:1;min-width:0}
+.info .name{font-family:var(--display);font-weight:500;font-size:.95rem;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.info .sub{font-size:.75rem;color:var(--muted)}
+.sell{border:1px solid var(--line);background:none;border-radius:10px;padding:8px 10px;font-size:.78rem;font-weight:600;color:var(--gold-2);white-space:nowrap}
+
+.collection{display:grid;grid-template-columns:repeat(8,minmax(0,1fr));gap:4px}
+.slot{aspect-ratio:1;border-radius:8px;background:var(--deep);border:1px solid var(--line);display:grid;place-items:center;font-family:var(--display);color:rgba(169,156,196,.4);font-size:.8rem}
+.slot svg{width:72%;height:72%}
+.foot{display:flex;justify-content:space-between;align-items:center;font-size:.72rem;color:var(--muted)}
+.foot a{color:var(--gold)}
+.link-btn{background:none;border:0;color:var(--muted);text-decoration:underline;font-size:.72rem;padding:4px}
+.link-btn.armed{color:var(--warn)}
+
+.toast{position:fixed;left:50%;bottom:calc(20px + env(safe-area-inset-bottom,0px));transform:translate(-50%,20px);opacity:0;
+  background:#241838;border:1px solid var(--gold);color:var(--text);padding:10px 16px;border-radius:12px;font-size:.85rem;
+  transition:opacity .25s,transform .25s;z-index:60;max-width:calc(100% - 40px);text-align:center;pointer-events:none}
+.toast.show{opacity:1;transform:translate(-50%,0)}
+@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+@media (max-width:360px){.stat span{display:none}}
+</style>
+</head>
+<body>
+
+<div class="app">
+  <header class="top">
+    <div class="brand">AFSOON ALCHEMY<small>Afsoon Games</small></div>
+    <button class="icon-btn" id="mute" aria-label="Sound on"></button>
+  </header>
+
+  <section class="stats" aria-label="Your progress">
+    <div class="stat" title="Coins"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9" fill="#e6b85c"/><circle cx="12" cy="12" r="6" fill="none" stroke="#a5792c" stroke-width="1.5"/></svg><div><b id="coins">0</b><span>coins</span></div></div>
+    <div class="stat" title="Energy"><svg viewBox="0 0 24 24"><path d="M13 2 4 14h7l-1 8 9-12h-7z" fill="#5DCAA5"/></svg><div><b id="energy">0</b><span id="etimer">full</span></div></div>
+    <div class="stat"><svg viewBox="0 0 24 24"><path d="M12 2l2.6 6.6L21 9.5l-5 4.4 1.5 6.6L12 17l-5.5 3.5L8 13.9 3 9.5l6.4-.9z" fill="#f6d999"/></svg><div class="lvl"><b id="level">Level 1</b><div class="bar"><i id="xpbar"></i></div></div></div>
+  </section>
+
+  <section aria-label="Orders">
+    <div class="label">Orders of the court <em id="ordinfo">Fill orders for coins</em></div>
+    <div class="orders" id="orders"></div>
+  </section>
+
+  <div class="hint" id="hint"></div>
+
+  <section class="board" id="board" aria-label="Alchemy board"></section>
+
+  <section class="dock">
+    <button class="brew" id="brew" aria-label="Brew a spark (costs 1 energy)">
+      <svg viewBox="0 0 48 48"><path d="M6 20h36l-3 16a8 8 0 0 1-8 7H17a8 8 0 0 1-8-7z" fill="#1a1020"/><rect x="4" y="16" width="40" height="5" rx="2.5" fill="#3a2a10"/><circle cx="18" cy="11" r="3" fill="#1a1020"/><circle cx="27" cy="7" r="4" fill="#1a1020"/><circle cx="33" cy="12" r="2" fill="#1a1020"/></svg>
+      Brew<span><svg viewBox="0 0 24 24"><path d="M13 2 4 14h7l-1 8 9-12h-7z" fill="currentColor"/></svg>1</span>
+    </button>
+    <div class="info" id="info"></div>
+  </section>
+
+  <section aria-label="Collection">
+    <div class="label">Collection <em id="colinfo"></em></div>
+    <div class="collection" id="collection"></div>
+  </section>
+
+  <footer class="foot">
+    <span>A game by <a href="/">Afsoon Games</a></span>
+    <button class="link-btn" id="restart">Restart game</button>
+  </footer>
+</div>
+<div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+<script>
+(function(){
+const COLS=6, ROWS=7, N=COLS*ROWS, MAXT=8, EMAX=30, REGEN=20000, KEY='afsoon-alchemy-v1';
+const NAMES=['','Spark','Ember','Vial','Elixir','Crystal','Gem','Orb','Sigil of Afsoon'];
+const WHO=['Vizier Kaveh','Princess Roya','Sage Bahram','Merchant Dara','Poet Shirin','Captain Arash','Queen Parisa','Astronomer Kian','Scribe Laleh'];
+const IC={
+1:'<path d="M32 9 L37.5 26.5 L55 32 L37.5 37.5 L32 55 L26.5 37.5 L9 32 L26.5 26.5Z" fill="#f6d999"/><circle cx="32" cy="32" r="5" fill="#fff6dc"/>',
+2:'<path d="M32 7 C41 19 50 26 48 40 C47 50 40 57 32 57 C24 57 17 50 16 40 C15 30 24 26 26 16 C30 23 32 25 32 7Z" fill="#e2725b"/><path d="M32 29 C36 35 40 40 39 46 C38 51 35 54 32 54 C29 54 26 51 25 46 C25 40 30 36 32 29Z" fill="#f6c06a"/>',
+3:'<rect x="25" y="7" width="14" height="6" rx="2" fill="#a99cc4"/><path d="M27 13 H37 V46 A5 5 0 0 1 32 51 A5 5 0 0 1 27 46Z" fill="#241a40" stroke="#d4cbea" stroke-width="2"/><path d="M28 29 H36 V46 A4 4 0 0 1 32 50 A4 4 0 0 1 28 46Z" fill="#5DCAA5"/><circle cx="31" cy="37" r="1.6" fill="#d8fff1"/>',
+4:'<rect x="26" y="6" width="12" height="7" rx="2" fill="#a99cc4"/><path d="M28 13 H36 V23 A17 17 0 1 1 28 23Z" fill="#241a40" stroke="#d4cbea" stroke-width="2"/><path d="M16.5 39 A15.5 15.5 0 0 0 47.5 39 Z" fill="#9b7bf0"/><circle cx="25" cy="44" r="2.2" fill="#efe8ff"/><circle cx="36" cy="47" r="1.4" fill="#efe8ff"/>',
+5:'<path d="M32 5 L44 19 L40 52 L32 59 L24 52 L20 19Z" fill="#5fd3e6"/><path d="M32 5 L44 19 L32 25 L20 19Z" fill="#c4f4fb"/><path d="M32 25 L32 59 L24 52 L20 19Z" fill="#3aa8c0"/>',
+6:'<path d="M16 22 L25 11 H39 L48 22 L32 55Z" fill="#e0558a"/><path d="M16 22 H48 L32 55Z" fill="#b8325f"/><path d="M25 11 L32 22 L39 11Z" fill="#f7b4cd"/><path d="M16 22 L25 11 L32 22Z M39 11 L48 22 H32Z" fill="#ef7fa9"/><path d="M24 22 L32 55 L40 22Z" fill="#d34479"/>',
+7:'<ellipse cx="32" cy="32" rx="28" ry="8" fill="none" stroke="#e6b85c" stroke-width="2" transform="rotate(-20 32 32)"/><circle cx="32" cy="32" r="19" fill="#5b3fb8"/><circle cx="32" cy="32" r="19" fill="none" stroke="#f6d999" stroke-width="2"/><circle cx="25" cy="25" r="6" fill="#a58cf5"/><circle cx="23" cy="23" r="2" fill="#ece6ff"/><path d="M5.5 41.5 A28 8 -20 0 0 58.5 22.5" fill="none" stroke="#e6b85c" stroke-width="2"/>',
+8:'<circle cx="32" cy="32" r="27" fill="#2b1d4f"/><g fill="none" stroke="#f6d999" stroke-width="3"><rect x="17" y="17" width="30" height="30"/><rect x="17" y="17" width="30" height="30" transform="rotate(45 32 32)"/></g><circle cx="32" cy="32" r="7" fill="#e6b85c"/>'
+};
+const svg=t=>`<svg viewBox="0 0 64 64" aria-hidden="true">${IC[t]}</svg>`;
+const COIN='<svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9" fill="#e6b85c"/><circle cx="12" cy="12" r="5.5" fill="none" stroke="#a5792c" stroke-width="2"/></svg>';
+const val=t=>2**(t-1);
+const $=id=>document.getElementById(id);
+const rand=(a,b)=>a+Math.floor(Math.random()*(b-a+1));
+
+let S, sel=-1, drag=null, audio=null, lastMerge=-1, spawned=-1;
+
+function newOrder(){
+  const lv=S?S.level:1, maxT=Math.min(3+Math.floor(lv/2),7);
+  const n=lv<3?1:(Math.random()<.45?2:1);
+  const req=[];for(let k=0;k<n;k++)req.push(rand(2,maxT));
+  req.sort((a,b)=>b-a);
+  const coins=req.reduce((s,t)=>s+3*val(t),0)+rand(1,4);
+  const busy=new Set((S&&S.orders||[]).map(o=>o.who));
+  const free=WHO.filter(w=>!busy.has(w));
+  return{who:free[rand(0,free.length-1)],req,coins,xp:req.reduce((s,t)=>s+t*3,0)};
+}
+function fresh(){
+  const g=Array(N).fill(0);
+  [[8,1],[9,1],[15,1],[21,2],[26,1],[27,2],[33,1]].forEach(([i,t])=>g[i]=t);
+  const s={grid:g,coins:15,energy:EMAX,tick:Date.now(),xp:0,level:1,found:[0,1,1,0,0,0,0,0,0],merges:0,orders:[],done:0};
+  S=s;s.orders=[{who:'Princess Roya',req:[3],coins:16,xp:9},newOrder(),newOrder()];
+  return s;
+}
+function load(){
+  try{const h=window.claude?.hot?.data;if(h&&h.S&&h.S.grid)return h.S}catch(e){}
+  try{const r=localStorage.getItem(KEY);if(r){const s=JSON.parse(r);if(s&&Array.isArray(s.grid)&&s.grid.length===N)return s}}catch(e){}
+  return null;
+}
+function save(){try{localStorage.setItem(KEY,JSON.stringify(S))}catch(e){}}
+
+function regen(){
+  const now=Date.now();
+  if(S.energy>=EMAX){S.tick=now;return}
+  while(S.energy<EMAX&&now-S.tick>=REGEN){S.energy++;S.tick+=REGEN}
+  if(S.energy>=EMAX)S.tick=now;
+}
+function counts(){const c=Array(MAXT+1).fill(0);S.grid.forEach(t=>{if(t)c[t]++});return c}
+function canFill(o){const c=counts();return o.req.every(t=>--c[t]>=0)}
+function wantedTiers(){const w=new Set();S.orders.forEach(o=>o.req.forEach(t=>w.add(t)));return w}
+
+const board=$('board');
+for(let i=0;i<N;i++){const d=document.createElement('div');d.className='cell';d.dataset.i=i;board.appendChild(d)}
+const cells=[...board.children];
+
+function render(){
+  regen();
+  const want=wantedTiers();
+  cells.forEach((c,i)=>{
+    const t=S.grid[i];
+    if(c.dataset.t!=String(t)){c.innerHTML=t?svg(t):'';c.dataset.t=t}
+    c.classList.toggle('sel',i===sel&&!!t);
+    c.classList.toggle('wanted',!!t&&want.has(t));
+    c.setAttribute('aria-label',t?NAMES[t]:'Empty');
+  });
+  if(lastMerge>=0){const c=cells[lastMerge];c.classList.remove('pop');void c.offsetWidth;c.classList.add('pop');lastMerge=-1}
+  if(spawned>=0){const c=cells[spawned];c.classList.remove('spawn');void c.offsetWidth;c.classList.add('spawn');spawned=-1}
+
+  $('coins').textContent=S.coins.toLocaleString();
+  $('energy').textContent=S.energy+'/'+EMAX;
+  timer();
+  const need=S.level*25;
+  $('level').textContent='Level '+S.level;
+  $('xpbar').style.width=Math.min(100,Math.round(S.xp/need*100))+'%';
+
+  $('orders').innerHTML=S.orders.map((o,k)=>{
+    const c=counts();
+    const items=o.req.map(t=>`<div class="need${--c[t]>=0?' have':''}" title="${NAMES[t]}">${svg(t)}</div>`).join('');
+    const ok=canFill(o);
+    return `<div class="order${ok?' ready':''}"><div class="who">${o.who}</div><div class="needs">${items}</div><button class="deliver" data-o="${k}" aria-label="Deliver to ${o.who} for ${o.coins} coins">${ok?'Deliver':'Reward'} ${COIN}${o.coins}</button></div>`;
+  }).join('');
+  $('ordinfo').textContent=S.done?S.done+' delivered':'Fill orders for coins';
+
+  const st=S.merges===0?'Drag one <b>Spark</b> onto another to merge them.':
+    S.done===0?'Make what the court asks for, then tap <b>Deliver</b>.':
+    'Tap <b>Brew</b> for new sparks. Green dots mark items someone wants.';
+  $('hint').innerHTML=st;
+
+  const t=sel>=0?S.grid[sel]:0;
+  $('info').innerHTML=t?
+    `<div class="pic">${svg(t)}</div><div class="txt"><div class="name">${NAMES[t]}</div><div class="sub">Level ${t}${t<MAXT?' · merge two for '+NAMES[t+1]:' · the rarest magic'}</div></div><button class="sell" id="sell">Sell +${val(t)}</button>`:
+    `<div class="pic">${svg(1)}</div><div class="txt"><div class="name">Brew a spark</div><div class="sub">Each brew costs 1 energy. Tap an item to see it.</div></div>`;
+
+  const f=S.found.filter(Boolean).length;
+  $('collection').innerHTML=NAMES.slice(1).map((n,k)=>`<div class="slot" title="${S.found[k+1]?n:'Not yet discovered'}">${S.found[k+1]?svg(k+1):'?'}</div>`).join('');
+  $('colinfo').textContent=f+' of '+MAXT+' discovered';
+  save();
+}
+function timer(){
+  if(S.energy>=EMAX){$('etimer').textContent='full';return}
+  const s=Math.max(0,Math.ceil((REGEN-(Date.now()-S.tick))/1000));
+  $('etimer').textContent='+1 in '+s+'s';
+}
+setInterval(()=>{const e=S.energy;regen();if(S.energy!==e)render();else timer()},1000);
+
+let tt;
+function toast(m){const t=$('toast');t.textContent=m;t.classList.add('show');clearTimeout(tt);tt=setTimeout(()=>t.classList.remove('show'),2200)}
+function floatAt(i,txt){const f=document.createElement('span');f.className='float';f.textContent=txt;cells[i].appendChild(f);setTimeout(()=>f.remove(),850)}
+
+function sound(f,d=.12,type='sine'){
+  if(!S.sound)return;
+  try{
+    audio=audio||new (window.AudioContext||window.webkitAudioContext)();
+    const o=audio.createOscillator(),g=audio.createGain(),n=audio.currentTime;
+    o.type=type;o.frequency.setValueAtTime(f,n);o.frequency.exponentialRampToValueAtTime(f*1.5,n+d);
+    g.gain.setValueAtTime(.12,n);g.gain.exponentialRampToValueAtTime(.001,n+d+.1);
+    o.connect(g);g.connect(audio.destination);o.start(n);o.stop(n+d+.12);
+  }catch(e){}
+}
+const SPK='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 9v6h4l5 4V5L8 9z"/>';
+function muteIcon(){const b=$('mute');b.innerHTML=SPK+(S.sound?'<path d="M16 9a4 4 0 0 1 0 6M18.5 6.5a8 8 0 0 1 0 11"/>':'<path d="M17 9l5 6M22 9l-5 6"/>')+'</svg>';b.setAttribute('aria-label',S.sound?'Mute sound':'Turn sound on')}
+$('mute').onclick=()=>{S.sound=!S.sound;muteIcon();save();sound(660)};
+
+function addXp(n){
+  S.xp+=n;
+  while(S.xp>=S.level*25){S.xp-=S.level*25;S.level++;S.energy=Math.max(S.energy,EMAX);S.tick=Date.now();
+    toast('Level '+S.level+'! Energy refilled and bigger orders unlocked.');sound(523,.25,'triangle');setTimeout(()=>sound(784,.3,'triangle'),180)}
+}
+
+function brew(){
+  regen();
+  if(S.energy<1){const s=Math.ceil((REGEN-(Date.now()-S.tick))/1000);toast('Out of energy. Next one in '+s+'s.');return}
+  const empty=[];S.grid.forEach((t,i)=>{if(!t)empty.push(i)});
+  if(!empty.length){toast('The board is full. Merge or sell items to make room.');return}
+  if(S.energy===EMAX)S.tick=Date.now();
+  S.energy--;
+  const i=empty[rand(0,empty.length-1)];
+  S.grid[i]=Math.random()<Math.min(.1+S.level*.02,.3)?2:1;
+  S.found[S.grid[i]]=1;spawned=i;sound(440,.08);render();
+}
+$('brew').onclick=brew;
+
+function drop(a,b){
+  const ta=S.grid[a],tb=S.grid[b];
+  if(tb===ta&&ta<MAXT){
+    const nt=ta+1;S.grid[b]=nt;S.grid[a]=0;S.merges++;
+    const isNew=!S.found[nt];S.found[nt]=1;
+    addXp(ta);lastMerge=b;sel=b;render();floatAt(b,'+'+ta+' xp');
+    sound(330+nt*70,.14,'triangle');
+    if(isNew)toast('New discovery: '+NAMES[nt]+'!');
+    if(nt===MAXT&&isNew)setTimeout(()=>toast('You created the Sigil of Afsoon. True magic!'),2300);
+  }else{S.grid[b]=ta;S.grid[a]=tb;sel=b;render()}
+}
+
+$('orders').addEventListener('click',e=>{
+  const b=e.target.closest('.deliver');if(!b)return;
+  const k=+b.dataset.o,o=S.orders[k];
+  if(!canFill(o)){toast(o.who+' needs: '+o.req.map(t=>NAMES[t]).join(' + ')+'.');return}
+  o.req.forEach(t=>{for(let i=N-1;i>=0;i--)if(S.grid[i]===t){S.grid[i]=0;if(sel===i)sel=-1;break}});
+  S.coins+=o.coins;S.done++;addXp(o.xp);
+  S.orders[k]=newOrder();
+  toast(o.who+' paid you '+o.coins+' coins.');sound(660,.1,'triangle');setTimeout(()=>sound(880,.15,'triangle'),110);
+  render();
+});
+$('info').addEventListener('click',e=>{
+  if(!e.target.closest('#sell')||sel<0||!S.grid[sel])return;
+  const t=S.grid[sel];S.coins+=val(t);S.grid[sel]=0;floatAt(sel,'+'+val(t));sel=-1;sound(520,.08);render();
+});
+
+function cellAt(x,y){const el=document.elementFromPoint(x,y);const c=el&&el.closest&&el.closest('.cell');return c&&board.contains(c)?+c.dataset.i:-1}
+function clearOver(){cells.forEach(c=>c.classList.remove('over','match'))}
+board.addEventListener('pointerdown',e=>{
+  const c=e.target.closest('.cell');if(!c)return;
+  const i=+c.dataset.i;
+  if(!S.grid[i]){sel=-1;render();return}
+  drag={i,x0:e.clientX,y0:e.clientY,moved:false,ghost:null,size:c.getBoundingClientRect().width,id:e.pointerId};
+  try{board.setPointerCapture(e.pointerId)}catch(_){}
+});
+board.addEventListener('pointermove',e=>{
+  if(!drag||e.pointerId!==drag.id)return;
+  if(!drag.moved){
+    if(Math.hypot(e.clientX-drag.x0,e.clientY-drag.y0)<6)return;
+    drag.moved=true;const g=document.createElement('div');g.className='ghost';
+    const s=drag.size*1.15;g.style.width=g.style.height=s+'px';g.innerHTML=svg(S.grid[drag.i]);document.body.appendChild(g);
+    drag.ghost=g;cells[drag.i].classList.add('lift');
+  }
+  const s=drag.size*1.15;drag.ghost.style.transform=`translate(${e.clientX-s/2}px,${e.clientY-s/2}px)`;
+  clearOver();const t=cellAt(e.clientX,e.clientY);
+  if(t>=0&&t!==drag.i)cells[t].classList.add(S.grid[t]===S.grid[drag.i]&&S.grid[t]<MAXT?'match':'over');
+});
+function endDrag(e,cancel){
+  if(!drag||(e&&e.pointerId!==drag.id))return;
+  const d=drag;drag=null;clearOver();cells[d.i].classList.remove('lift');
+  if(d.ghost)d.ghost.remove();
+  if(cancel)return;
+  if(!d.moved){sel=d.i;render();sound(600,.04);return}
+  const t=cellAt(e.clientX,e.clientY);
+  if(t>=0&&t!==d.i)drop(d.i,t);
+}
+board.addEventListener('pointerup',e=>endDrag(e,false));
+board.addEventListener('pointercancel',e=>endDrag(e,true));
+
+let armed=0;
+$('restart').onclick=()=>{
+  const b=$('restart');
+  if(!armed){armed=setTimeout(()=>{armed=0;b.textContent='Restart game';b.classList.remove('armed')},3000);b.textContent='Tap again to restart';b.classList.add('armed');return}
+  clearTimeout(armed);armed=0;b.textContent='Restart game';b.classList.remove('armed');
+  const snd=S.sound;S=fresh();S.sound=snd;sel=-1;render();toast('A new game begins.');
+};
+
+function start(){
+  S=load()||fresh();
+  if(S.sound===undefined)S.sound=true;
+  muteIcon();render();
+}
+window.claude?.hot?.snapshot?.(()=>({S}));
+window.claude?.hot?.ready?window.claude.hot.ready(start):start();
+})();
+</script>
+
+</body>
+</html>
