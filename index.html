@@ -112,6 +112,16 @@
   .card h3{font-family:Cinzel,serif;font-weight:500;font-size:1.2rem;margin-bottom:6px}
   .card p{color:var(--muted);font-size:.95rem}
 
+  .more{margin-top:40px;text-align:center}
+  .tags{display:flex;gap:6px;flex-wrap:wrap;margin-top:12px}
+  .tags span{font-size:.72rem;letter-spacing:.06em;color:var(--gold-2);border:1px solid var(--line);border-radius:999px;padding:3px 10px}
+  .page-head{padding:90px 0 0}
+  .page-head h1{font-family:Cinzel,serif;font-weight:700;font-size:clamp(2.2rem,5vw,3.4rem);letter-spacing:.05em;line-height:1.1;margin-bottom:16px;background:linear-gradient(180deg,var(--gold-2),var(--gold) 60%,#b8862f);-webkit-background-clip:text;background-clip:text;color:transparent}
+  .page-head + section{padding-top:0}
+  .cta{margin-top:70px;padding:36px;border:1px solid var(--line);border-radius:var(--radius);display:flex;justify-content:space-between;align-items:center;gap:20px;flex-wrap:wrap;background:linear-gradient(160deg,rgba(123,79,214,.12),rgba(230,184,92,.05))}
+  .cta h2{font-size:1.5rem;margin:0 0 6px}
+  .cta p{color:var(--muted);margin:0}
+
   /* about */
   .about{display:grid;grid-template-columns:1.1fr .9fr;gap:64px;align-items:center}
   .about p+p{margin-top:16px}
@@ -173,7 +183,7 @@
 <header>
   <div class="wrap">
     <nav>
-      <a href="#top" class="brand" aria-label="Afsoon Games home">
+      <a href="/" class="brand" aria-label="Afsoon Games home">
         <svg width="30" height="30" viewBox="0 0 100 100" aria-hidden="true">
           <g fill="none" stroke="#e6b85c" stroke-width="5">
             <rect x="24" y="24" width="52" height="52"/>
@@ -185,7 +195,7 @@
       </a>
       <button class="menu-btn" aria-label="Open menu" onclick="document.querySelector('.links').classList.toggle('open')">Menu</button>
       <div class="links">
-        <a href="#games">Games</a>
+        <a href="/games/">Games</a>
         <a href="#about">About</a>
         <a href="#partners">Partners</a>
         <a href="#contact">Contact</a>
@@ -221,7 +231,7 @@
       <h1>Afsoon Games</h1>
       <p class="tagline">Games that cast a spell. An independent studio crafting mysterious, beautiful worlds inspired by ancient Persian myth.</p>
       <div class="btns">
-        <a href="#games" class="btn primary">Discover our games</a>
+        <a href="/games/" class="btn primary">Discover our games</a>
         <a href="#partners" class="btn ghost">Work with us</a>
       </div>
     </div>
@@ -236,7 +246,7 @@
       <div class="reveal">
         <div class="eyebrow">Our games</div>
         <h2>Worlds in the making</h2>
-        <p class="lead">Our first spell has been cast: Afsoon Alchemy is now playable in your browser. More worlds are on the way.</p>
+        <p class="lead">Our first spells have been cast: Afsoon Alchemy and Anshan Run are now playable in your browser. More worlds are on the way.</p>
       </div>
       <div class="grid">
         <a class="card reveal" href="/alchemy/">
@@ -270,6 +280,7 @@
           </div>
         </article>
       </div>
+      <div class="more reveal"><a href="/games/" class="btn ghost">See all games</a></div>
     </div>
   </section>
 
