@@ -10,7 +10,6 @@
   --display:"Marcellus",Georgia,serif; --body:"Figtree",system-ui,sans-serif;
   color-scheme:dark;
 }
-html,body{height:100%}
 body{background:var(--felt-deep);color:var(--ink);font-family:var(--body);
   padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));padding-block:16px}
 .wrap{max-width:1560px;margin:0 auto;display:flex;flex-direction:column;gap:12px}
@@ -37,6 +36,7 @@ button:focus-visible{outline:2px solid var(--gold-soft);outline-offset:2px}
 .table .card,.table .slot{touch-action:none}
 .help{font-size:13px;color:var(--muted);text-align:center;margin:0}
 .win{text-align:center;font-family:var(--display);font-size:22px;color:var(--gold-soft);min-height:1.3em}
+.win:empty{display:none}
 @media (prefers-reduced-motion:reduce){.card{transition:none}}
 </style>
 
@@ -82,13 +82,15 @@ function render(){
   const wrap=document.querySelector('.wrap'),tbl=document.querySelector('.table');
   const cs=getComputedStyle(tbl),chrome=parseFloat(cs.paddingLeft)+parseFloat(cs.paddingRight)+parseFloat(cs.borderLeftWidth)*2;
   const capW=(Math.min(1560,document.body.clientWidth-32)-chrome-6*gap)/7;
-  const capH=(innerHeight-130)/(1.4*2.4);
+  const topGap=parseFloat(getComputedStyle($('top')).marginBottom)||12;
+  const below=$('win').offsetHeight+document.querySelector('.help').offsetHeight+24+16+10;
+  const avail=innerHeight-(tbl.getBoundingClientRect().top+scrollY)-parseFloat(cs.paddingTop)-parseFloat(cs.paddingBottom)-parseFloat(cs.borderTopWidth)*2-below;
+  const capH=(avail-topGap)/(1.4*3.15);
   const want=Math.max(40,Math.min(capW,capH,130));
   wrap.style.maxWidth=Math.max(320,Math.ceil(want*7+6*gap+chrome))+'px';
   const cw=Math.max(30,(tabRow.clientWidth-6*gap)/7);
   const ch=cw*1.4;
-  const tabTop=tabRow.getBoundingClientRect().top+scrollY;
-  const room=Math.max(ch*1.6,innerHeight-tabTop-56-ch);
+  const room=Math.max(ch*.9,avail-topGap-2*ch);
   let h='<div class="slot" data-k="s" aria-label="Deck">'+(st.length?cardEl({up:false},'data-k="s"',0,false):'↻')+'</div>';
   h+='<div class="slot" data-k="w" style="border-color:transparent">'+(wa.length?cardEl(wa[wa.length-1],'data-k="w"',0,sel&&sel.k=='w'):'')+'</div><div></div>';
   fd.forEach((f,i)=>{h+='<div class="slot" data-k="f" data-i="'+i+'">'+(f.length?cardEl(f[f.length-1],'data-k="f" data-i="'+i+'"',0,sel&&sel.k=='f'&&sel.i==i):SYM[i])+'</div>'});
@@ -99,7 +101,7 @@ function render(){
     const nU=p.slice(0,-1).filter(c=>c.up).length,nD=p.slice(0,-1).length-nU;
     let offUp=ch*.27,offDn=ch*.1;
     const need=nU*offUp+nD*offDn;
-    if(need>room){const f=room/need;offUp=Math.max(ch*.17,offUp*f);offDn=Math.max(ch*.05,offDn*f)}
+    if(need>room){const f=room/need;offUp=Math.max(ch*.1,offUp*f);offDn=Math.max(ch*.025,offDn*f)}
     offUp=Math.round(offUp);offDn=Math.round(offDn);
     p.forEach((cd,x)=>{c+=cardEl(cd,'data-k="t" data-i="'+i+'" data-x="'+x+'"',top,sel&&sel.k=='t'&&sel.i==i&&x>=sel.x);if(x<p.length-1)top+=cd.up?offUp:offDn});
     t+='<div class="col" data-k="t" data-i="'+i+'" data-x="-1" style="height:'+Math.ceil(top+ch)+'px">'+(p.length?c:'<div class="slot" data-k="t" data-i="'+i+'" data-x="-1"></div>')+'</div>';
@@ -183,6 +185,6 @@ $('ng').onclick=deal;
 $('undo').onclick=()=>{if(!hist.length||won)return;const s=JSON.parse(hist.pop());({st,wa,fd,tb,mv}=s);sel=null;render()};
 setInterval(()=>{if(!t0||won)return;const s=Math.floor((Date.now()-t0)/1000);$('tm').textContent=Math.floor(s/60)+':'+String(s%60).padStart(2,'0')},1000);
 let rz;addEventListener('resize',()=>{clearTimeout(rz);rz=setTimeout(render,80)});
-deal();requestAnimationFrame(render);
+deal();requestAnimationFrame(render);if(document.fonts&&document.fonts.ready)document.fonts.ready.then(render);
 })();
 </script>
