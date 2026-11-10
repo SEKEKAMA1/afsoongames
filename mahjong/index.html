@@ -54,15 +54,21 @@ button:focus-visible,a:focus-visible{outline:2px solid var(--gold-2);outline-off
 
 /* board */
 .playwrap{flex:1;display:flex;flex-direction:column;gap:8px;min-height:0}
-.stage{position:relative;flex:1;min-height:320px}
+.stage{position:relative;flex:1;min-height:300px}
+.tray{display:flex;align-items:center;justify-content:center;gap:12px;flex-wrap:wrap}
+.tray .tl{font-size:.7rem;letter-spacing:.16em;text-transform:uppercase;font-weight:800;color:var(--muted)}
+.slots{display:flex;gap:10px}
+.slot{position:relative;width:var(--sw);height:var(--sh);padding:0;border:2px dashed rgba(230,184,92,.55);border-radius:10px;background:rgba(0,0,0,.22);--tw:var(--sw);--th:var(--sh);--d:3px}
+.slot:hover{border-color:var(--gold)}
+.slot.ready{border-style:solid;border-color:var(--gold-2);box-shadow:0 0 12px rgba(246,217,153,.5)}
+.slot .t{left:0!important;top:0!important;z-index:1!important;filter:none!important}
+.btn .n{background:rgba(230,184,92,.25);border-radius:9px;padding:0 7px;font-size:.78rem}
 .board{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%)}
 .t{position:absolute;width:var(--tw);height:var(--th);cursor:pointer;transition:opacity .25s,transform .25s;user-select:none;-webkit-user-select:none}
 .t .sd{position:absolute;left:var(--d);top:var(--d);width:100%;height:100%;border-radius:calc(var(--tw) * .14);background:#9c7d47}
 .t .sd2{position:absolute;left:calc(var(--d) / 2);top:calc(var(--d) / 2);width:100%;height:100%;border-radius:calc(var(--tw) * .14);background:#d6bd86}
 .t .fc{position:absolute;inset:0;border-radius:calc(var(--tw) * .14);background:linear-gradient(160deg,#fffaf0,#efe2c6);border:max(1px,calc(var(--tw) * .03)) solid #c9a764;box-shadow:inset 0 0 0 max(1px,calc(var(--tw) * .045)) #fffdf6}
 .t svg{position:absolute;left:5%;top:4%;width:90%;height:92%}
-.t.blk .fc{background:linear-gradient(160deg,#e7dfcd,#d3c4a2)}
-.t.blk svg{opacity:.62}
 .t.sel .fc{background:linear-gradient(160deg,#fff4c4,#ffd978);border-color:#e09a12;box-shadow:0 0 0 3px #ffd36b,0 0 18px #ffd36b}
 .t.hint .fc{animation:hint .9s ease-in-out infinite}
 @keyframes hint{50%{box-shadow:0 0 0 3px #7fe0ff,0 0 20px #7fe0ff}}
@@ -105,17 +111,17 @@ label.tg{display:inline-flex;align-items:center;gap:6px;font-size:.82rem;font-we
   </header>
 
   <section id="pick">
-    <div class="intro"><h1>Choose a board</h1><p>Match pairs of identical tiles that are free: nothing on top, and an open left or right side. Clear every tile to win. Each finished board unlocks the next.</p></div>
+    <div class="intro"><h1>Choose a board</h1><p>Match pairs of identical tiles that are free: nothing on top, and an open left or right side. Stuck? Park a free tile in one of the four free spaces to reach the tiles underneath, and match it later. Clear every tile to win.</p></div>
     <div class="levels" id="levels"></div>
   </section>
 
   <section class="playwrap" id="play" hidden>
     <div class="stage" id="stage"><div class="board" id="board"></div><div class="toast" id="toast"></div></div>
+    <div class="tray"><span class="tl">Free spaces</span><div class="slots" id="slots"><button class="slot" data-s="0" aria-label="Free space 1"></button><button class="slot" data-s="1" aria-label="Free space 2"></button><button class="slot" data-s="2" aria-label="Free space 3"></button><button class="slot" data-s="3" aria-label="Free space 4"></button></div></div>
     <div class="bar">
       <button class="btn" id="undo"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M9 14 4 9l5-5"/><path d="M4 9h11a5 5 0 0 1 0 10h-3"/></svg><span class="lbl">Undo</span></button>
-      <button class="btn" id="hint"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M9 18h6M10 21h4M12 3a6 6 0 0 0-4 10.5c.7.7 1 1.5 1 2.5h6c0-1 .3-1.8 1-2.5A6 6 0 0 0 12 3z"/></svg><span class="lbl">Hint</span></button>
+      <button class="btn" id="hint"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M9 18h6M10 21h4M12 3a6 6 0 0 0-4 10.5c.7.7 1 1.5 1 2.5h6c0-1 .3-1.8 1-2.5A6 6 0 0 0 12 3z"/></svg><span class="lbl">Hint</span><span class="n" id="hintN">3</span></button>
       <button class="btn" id="shuf"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M16 3h5v5M4 20 21 3M21 16v5h-5M15 15l6 6M4 4l5 5"/></svg><span class="lbl">Shuffle</span></button>
-      <label class="tg"><input type="checkbox" id="showFree" checked> Show free tiles</label>
       <button class="btn primary" id="restart">Restart</button>
     </div>
   </section>
@@ -230,34 +236,40 @@ HONS.forEach(([n,s])=>KINDS.push({name:n,svg:s}));
 ANIMALS.forEach(([n,s])=>KINDS.push({name:n,svg:s}));
 const face=k=>`<svg viewBox="0 0 48 64" aria-hidden="true">${KINDS[k].svg}${FRAME}</svg>`;
 
-/* ---------- boards: layers of rows; each '#' is a tile. dx/dy shift a layer by half tiles ---------- */
+/* ---------- boards: a base shape; upper layers stack automatically, each tile resting on four below ---------- */
+const F=(w,h)=>Array(h).fill('#'.repeat(w));
 const LAYOUTS=[
- {name:'Courtyard',layers:[{rows:['######','######','######','######']},{dx:2,dy:2,rows:['####','####']},{dx:4,dy:2,rows:['##','##']}]},
- {name:'Pyramid',layers:[{rows:['########','########','########','########']},{dx:2,dy:1,rows:['######','######','######']},{dx:4,dy:2,rows:['####','####']},{dx:6,dy:3,rows:['##']}]},
- {name:'Gate of Nations',layers:[{rows:['##########','###....###','###....###','###....###','###....###','##########']},{dx:1,dy:1,rows:['##......##','##......##','##......##','##......##']},{dx:2,dy:-1,rows:['########']}]},
- {name:'Garden Cross',layers:[{rows:['...####...','...####...','##########','##########','...####...','...####...']},{dx:1,dy:1,rows:['...##...','########','########','...##...']},{dx:4,dy:2,rows:['####','####']},{dx:7,dy:3,rows:['#','#']}]},
- {name:'Persian Star',layers:[{rows:['....##....','..######..','##########','##########','##########','..######..','....##....']},{dx:2,dy:1,rows:['..####..','########','########','########','..####..']},{dx:4,dy:2,rows:['####','####','####']},{dx:6,dy:3,rows:['##','##']},{dx:7,dy:4,rows:['#','#']}]},
- {name:'Fortress',layers:[{rows:['##........##','############','.##########.','.##########.','############','##........##']},{dx:3,dy:2,rows:['#########','#########','#########','#########']},{dx:5,dy:3,rows:['#######','#######','#######']},{dx:7,dy:4,rows:['#####','#####']}]},
- {name:'Twin Towers',layers:[{rows:['####....####','####....####','############','############','####....####','####....####']},{dx:1,dy:1,rows:['###......###','###......###','###......###','###......###','###......###']},{dx:2,dy:2,rows:['##........##','##........##','##........##','##........##']},{dx:3,dy:3,rows:['#..........#','#..........#','#..........#']}]},
- {name:'Royal Road',layers:[{rows:['##############','##############','##############','##############','##############']},{dx:2,dy:2,rows:['############','############','############']},{dx:4,dy:3,rows:['##########','##########']},{dx:8,dy:3,rows:['######','######']},{dx:8,dy:4,rows:['######']}]},
- {name:'Apadana',layers:[{rows:['############','############','############','############','############','############']},{dx:1,dy:1,rows:['###########','###########','###########','###########','###########']},{dx:6,dy:4,rows:['######','######']},{dx:7,dy:5,rows:['#####']}]},
- {name:'Palace of Darius',layers:[{rows:['.###########.','#############','#############','#############','#############','.###########.']},{dx:2,dy:1,rows:['###########','###########','###########','###########','###########']},{dx:6,dy:3,rows:['#######','#######']},{dx:12,dy:4,rows:['#']}]}
+ {name:'Courtyard',base:F(6,4),max:3},
+ {name:'Pyramid',base:F(6,5),max:3},
+ {name:'Gate of Nations',base:['########','########','###..###','###..###','###..###','###..###'],max:3},
+ {name:'Garden Cross',base:['..####..','..####..','########','########','########','..####..','..####..'],max:3},
+ {name:'Persian Star',base:['...##...','..####..','.######.','########','########','.######.','..####..','...##...'],max:5},
+ {name:'Fortress',base:['###..###','###..###','########','########','########','########','###..###','###..###'],max:3},
+ {name:'Apadana',base:['.######.','########','########','########','########','########','.######.'],max:3},
+ {name:'Royal Road',base:F(8,7),max:3},
+ {name:'Twin Towers',base:['####..####','####..####','####..####','##########','##########','####..####','####..####','####..####'],max:3},
+ {name:'Palace of Darius',base:F(9,6),max:4}
 ];
-function buildSlots(li){
-  const out=[];LAYOUTS[li].layers.forEach((ly,z)=>ly.rows.forEach((row,r)=>[...row].forEach((ch,c)=>{if(ch=='#')out.push({x:c*2+(ly.dx||0),y:r*2+(ly.dy||0),z})})));
-  const mnx=Math.min(...out.map(t=>t.x)),mny=Math.min(...out.map(t=>t.y));out.forEach(t=>{t.x-=mnx;t.y-=mny});
+function buildSlots(li,transpose){
+  const L=LAYOUTS[li];let layer=[];
+  L.base.forEach((row,r)=>[...row].forEach((ch,c)=>{if(ch=='#')layer.push({x:c*2,y:r*2,z:0})}));
+  const out=[...layer];
+  for(let z=1;z<L.max;z++){
+    const has=new Set(layer.map(t=>t.x+','+t.y));
+    layer=layer.filter(t=>has.has((t.x+2)+','+t.y)&&has.has(t.x+','+(t.y+2))&&has.has((t.x+2)+','+(t.y+2))).map(t=>({x:t.x+1,y:t.y+1,z}));
+    if(!layer.length)break;out.push(...layer);
+  }
   out.sort((a,b)=>a.z-b.z||a.y-b.y||a.x-b.x);
-  while(out.length>144)out.pop();
-  if(out.length%2)out.pop();
+  if(out.length%2){const top=out.filter(t=>t.z===out[out.length-1].z);out.splice(out.indexOf(top[Math.floor(top.length/2)]),1)}
+  if(transpose)out.forEach(t=>{const x=t.x;t.x=t.y;t.y=x});
   return out;
 }
-
 /* ---------- geometry: which tiles are free ---------- */
 let tiles=[];
 function covers(a,b){return a.z===b.z+1&&Math.abs(a.x-b.x)<2&&Math.abs(a.y-b.y)<2}
 function isFree(t,set){
-  if(!t.alive)return false;let left=false,right=false;
-  for(const o of set){if(!o.alive||o===t)continue;
+  if(!t.alive)return false;if(t.inSlot!=null)return true;let left=false,right=false;
+  for(const o of set){if(!o.alive||o===t||o.inSlot!=null)continue;
     if(o.z>t.z&&Math.abs(o.x-t.x)<2&&Math.abs(o.y-t.y)<2)return false;
     if(o.z===t.z&&Math.abs(o.y-t.y)<2){if(o.x===t.x-2)left=true;else if(o.x===t.x+2)right=true}}
   return !(left&&right);
@@ -310,68 +322,105 @@ $('levels').addEventListener('click',e=>{const b=e.target.closest('.lv');if(b&&!
 $('menuBtn').onclick=renderPick;
 
 /* ---------- play ---------- */
-let game=0,cur=0,sel=null,history=[],t0=0,elapsed=0,clock=null,hintsUsed=0,shufflesUsed=0,done=false,TW=48,TH=64,D=5;
+let game=0,cur=0,sel=null,history=[],t0=0,elapsed=0,clock=null,hintsLeft=3,shufflesUsed=0,done=false,TW=48,TH=64,D=5,MZ=0;
+const slots=[null,null,null,null];
 function startClock(){stopClock();t0=Date.now()-elapsed*1000;clock=setInterval(()=>{elapsed=Math.floor((Date.now()-t0)/1000);$('time').textContent=fmt(elapsed)},500)}
 function stopClock(){clearInterval(clock);clock=null}
 function start(i){
-  cur=i;const slots=buildSlots(i);const ks=dealKinds(slots,pairKinds(slots.length/2));
-  tiles=slots.map((s,j)=>({...s,k:ks[j],alive:true,el:null}));
-  sel=null;history=[];elapsed=0;hintsUsed=0;shufflesUsed=0;done=false;game++;$('ov').hidden=true;
-  $('pick').hidden=true;$('play').hidden=false;$('stats').hidden=false;$('menuBtn').hidden=false;
+  cur=i;$('pick').hidden=true;$('play').hidden=false;$('stats').hidden=false;$('menuBtn').hidden=false;$('ov').hidden=true;
+  sizeTray();
+  const st=$('stage').getBoundingClientRect();const base=LAYOUTS[i].base;
+  const tr=st.height>st.width*1.05&&base[0].length>base.length;
+  const sl=buildSlots(i,tr);const ks=dealKinds(sl,pairKinds(sl.length/2));
+  tiles=sl.map((s,j)=>({...s,k:ks[j],alive:true,inSlot:null,el:null}));
+  sel=null;history=[];elapsed=0;hintsLeft=3;shufflesUsed=0;done=false;game++;slots.fill(null);
+  document.querySelectorAll('.slot').forEach(s=>{s.innerHTML='';s.classList.remove('ready')});
   const b=$('board');b.innerHTML='';
   tiles.forEach((t,j)=>{const el=document.createElement('div');el.className='t';el.dataset.j=j;el.innerHTML='<div class="sd"></div><div class="sd2"></div><div class="fc"></div>'+face(t.k);t.el=el;b.appendChild(el)});
   layout();refresh();startClock();$('time').textContent='0:00';
 }
+function sizeTray(){const sw=Math.round(Math.max(34,Math.min(58,innerHeight*.07,(innerWidth-130)/4.8)));$('slots').style.setProperty('--sw',sw+'px');$('slots').style.setProperty('--sh',Math.round(sw*1.33)+'px')}
+function place(t){t.el.style.left=(t.x/2*TW-t.z*D+MZ*D)+'px';t.el.style.top=(t.y/2*TH-t.z*D+MZ*D)+'px';t.el.style.zIndex=t.z*1000+t.y*20+t.x;
+  t.el.style.filter=t.z?`drop-shadow(${(D*.5).toFixed(1)}px ${(D*.7).toFixed(1)}px ${(D*.7).toFixed(1)}px rgba(20,12,0,.35))`:''}
 function layout(){
-  if($('play').hidden)return;
+  if($('play').hidden)return;sizeTray();
   const st=$('stage').getBoundingClientRect();
-  const mx=Math.max(...tiles.map(t=>t.x))+2,my=Math.max(...tiles.map(t=>t.y))+2,mz=Math.max(...tiles.map(t=>t.z));
-  // tile width w, height 1.33w, depth .1w per layer
-  const w=Math.max(18,Math.min((st.width-8)/(mx/2+mz*.12+.12),(st.height-8)/((my/2)*1.33+mz*.12+.12),96));
-  TW=w;TH=w*1.33;D=Math.max(2,w*.1);
+  const mx=Math.max(...tiles.map(t=>t.x))+2,my=Math.max(...tiles.map(t=>t.y))+2;MZ=Math.max(...tiles.map(t=>t.z));
+  const w=Math.max(18,Math.min((st.width-8)/(mx/2+MZ*.13+.13),(st.height-8)/((my/2)*1.33+MZ*.13+.13),100));
+  TW=w;TH=w*1.33;D=Math.max(2,w*.12);
   const b=$('board');b.style.setProperty('--tw',TW+'px');b.style.setProperty('--th',TH+'px');b.style.setProperty('--d',D+'px');
-  const bw=mx/2*TW+mz*D+D,bh=my/2*TH+mz*D+D;b.style.width=bw+'px';b.style.height=bh+'px';
-  tiles.forEach(t=>{Object.assign(t.el.style,{left:(t.x/2*TW-t.z*D+mz*D)+'px',top:(t.y/2*TH-t.z*D+mz*D)+'px',zIndex:t.z*1000+t.y*20+t.x})});
+  b.style.width=(mx/2*TW+MZ*D+D)+'px';b.style.height=(my/2*TH+MZ*D+D)+'px';
+  tiles.forEach(t=>{if(t.inSlot==null)place(t)});
 }
 addEventListener('resize',layout);
 function refresh(){
-  const show=$('showFree').checked;
-  tiles.forEach(t=>{if(!t.alive)return;t.free=isFree(t,tiles);t.el.classList.toggle('blk',show&&!t.free)});
+  tiles.forEach(t=>{if(t.alive)t.free=isFree(t,tiles)});
   $('pairs').textContent=tiles.filter(t=>t.alive).length/2;
+  $('hintN').textContent=hintsLeft;
+  document.querySelectorAll('.slot').forEach((s,i)=>s.classList.toggle('ready',!!sel&&sel.inSlot==null&&!slots[i]));
 }
-$('showFree').onchange=refresh;
 function moves(){const f=tiles.filter(t=>t.alive&&t.free);const out=[];for(let i=0;i<f.length;i++)for(let j=i+1;j<f.length;j++)if(f[i].k===f[j].k)out.push([f[i],f[j]]);return out}
-function toast(msg){const t=$('toast');t.textContent=msg;t.classList.add('on');clearTimeout(toast.h);toast.h=setTimeout(()=>t.classList.remove('on'),1800)}
+const canPark=()=>slots.some(s=>!s)&&tiles.some(t=>t.alive&&t.inSlot==null&&t.free);
+function toast(msg){const t=$('toast');t.textContent=msg;t.classList.add('on');clearTimeout(toast.h);toast.h=setTimeout(()=>t.classList.remove('on'),2200)}
 function clearHint(){tiles.forEach(t=>t.el&&t.el.classList.remove('hint'))}
-$('board').addEventListener('click',e=>{
-  const el=e.target.closest('.t');if(!el||done)return;const t=tiles[+el.dataset.j];if(!t.alive)return;
-  if(!actx&&!muted){try{actx=new (window.AudioContext||window.webkitAudioContext)()}catch(e){}}
+function unlockAudio(){if(!actx&&!muted){try{actx=new (window.AudioContext||window.webkitAudioContext)()}catch(e){}}}
+function pick(t){
   clearHint();
-  if(!isFree(t,tiles)){el.classList.remove('shake');void el.offsetWidth;el.classList.add('shake');sfx.no();return}
-  if(sel===t){t.el.classList.remove('sel');sel=null;return}
-  if(sel&&sel.k===t.k){remove(sel,t);sel=null;return}
+  if(!isFree(t,tiles)){t.el.classList.remove('shake');void t.el.offsetWidth;t.el.classList.add('shake');sfx.no();return}
+  if(sel===t){t.el.classList.remove('sel');sel=null;refresh();return}
+  if(sel&&sel.k===t.k){match(sel,t);return}
   if(sel)sel.el.classList.remove('sel');
-  sel=t;t.el.classList.add('sel');sfx.tap();
-});
-function remove(a,b){
-  a.el.classList.remove('sel');a.alive=false;b.alive=false;a.el.classList.add('gone');b.el.classList.add('gone');history.push([a,b]);sfx.match();refresh();
-  if(tiles.every(t=>!t.alive))return win();
-  if(!moves().length){const g=game;setTimeout(()=>{if(!done&&g===game&&!moves().length)noMoves()},450)}
+  sel=t;t.el.classList.add('sel');sfx.tap();refresh();
 }
-$('undo').onclick=()=>{if(done||!history.length)return;const [a,b]=history.pop();a.alive=b.alive=true;a.el.classList.remove('gone');b.el.classList.remove('gone');if(sel){sel.el.classList.remove('sel');sel=null}refresh()};
-$('hint').onclick=()=>{if(done)return;clearHint();const m=moves();if(!m.length){noMoves();return}hintsUsed++;m[0].forEach(t=>t.el.classList.add('hint'))};
+$('board').addEventListener('click',e=>{const el=e.target.closest('.t');if(!el||done)return;const t=tiles[+el.dataset.j];if(!t.alive||t.inSlot!=null)return;unlockAudio();pick(t)});
+$('slots').addEventListener('click',e=>{
+  if(done)return;unlockAudio();const tEl=e.target.closest('.t');
+  if(tEl){const t=tiles[+tEl.dataset.j];if(t&&t.alive)pick(t);return}
+  const sl=e.target.closest('.slot');if(!sl)return;const i=+sl.dataset.s;
+  if(slots[i])return;
+  if(!sel||sel.inSlot!=null){toast('Tap a free tile on the board, then an empty space');return}
+  park(sel,i);
+});
+function toSlot(t,i){t.inSlot=i;slots[i]=t;t.el.style.filter='';document.querySelector(`.slot[data-s="${i}"]`).appendChild(t.el)}
+function toBoard(t){if(t.inSlot!=null)slots[t.inSlot]=null;t.inSlot=null;$('board').appendChild(t.el);place(t)}
+function park(t,i){
+  t.el.classList.remove('sel');sel=null;toSlot(t,i);history.push({type:'park',t,i});sfx.tap();refresh();checkStuck();
+}
+function match(a,b){
+  a.el.classList.remove('sel');b.el.classList.remove('sel');sel=null;
+  history.push({type:'match',a,b,as:a.inSlot,bs:b.inSlot});
+  [a,b].forEach(t=>{if(t.inSlot!=null){slots[t.inSlot]=null}t.alive=false;t.el.classList.add('gone')});
+  sfx.match();refresh();
+  if(tiles.every(t=>!t.alive))return win();
+  checkStuck();
+}
+function checkStuck(){if(!moves().length&&!canPark()){const g=game;setTimeout(()=>{if(!done&&g===game&&!moves().length&&!canPark())noMoves()},450)}}
+$('undo').onclick=()=>{
+  if(done||!history.length)return;const h=history.pop();if(sel){sel.el.classList.remove('sel');sel=null}clearHint();
+  if(h.type=='park'){toBoard(h.t)}
+  else{[[h.a,h.as],[h.b,h.bs]].forEach(([t,s])=>{t.alive=true;t.el.classList.remove('gone');if(s!=null){if(slots[s]&&slots[s]!==t)toBoard(slots[s]);t.inSlot=s;slots[s]=t;document.querySelector(`.slot[data-s="${s}"]`).appendChild(t.el)}})}
+  refresh();
+};
+$('hint').onclick=()=>{
+  if(done)return;clearHint();
+  if(hintsLeft<=0){toast('No hints left on this board');return}
+  const m=moves();
+  if(!m.length){if(canPark())toast('No free pairs. Park a tile in a free space');else noMoves();return}
+  hintsLeft--;refresh();m[Math.floor(Math.random()*m.length)].forEach(t=>t.el.classList.add('hint'));
+};
 $('shuf').onclick=()=>{if(!done)reshuffle(true)};
 $('restart').onclick=()=>start(cur);
 function reshuffle(manual){
+  tiles.forEach(t=>{if(t.alive&&t.inSlot!=null)toBoard(t)});
   const alive=tiles.filter(t=>t.alive);const kinds=[];const seen={};alive.forEach(t=>{seen[t.k]=(seen[t.k]||0)+1});
   for(const k in seen)for(let i=0;i<seen[k]/2;i++)kinds.push(+k);
   const ks=dealKinds(alive.map(t=>({x:t.x,y:t.y,z:t.z})),kinds);if(!ks){toast('No shuffle possible');return}
   alive.forEach((t,i)=>{t.k=ks[i];t.el.querySelector('svg').outerHTML=face(t.k)});
   if(sel){sel.el.classList.remove('sel');sel=null}
-  if(manual)shufflesUsed++;refresh();toast('Tiles shuffled');
+  history=[];if(manual)shufflesUsed++;refresh();toast('Tiles shuffled');
 }
 function noMoves(){
-  $('dlg').innerHTML=`<h2>No more moves</h2><p>There are no free matching pairs left. Shuffle the remaining tiles and keep going, or undo your last moves.</p>
+  $('dlg').innerHTML=`<h2>No more moves</h2><p>No free pairs are left and the free spaces are full. Shuffle the remaining tiles and keep going, or undo your last moves.</p>
    <div class="btns"><button class="btn" data-a="undo">Undo</button><button class="btn primary" data-a="shuffle">Shuffle tiles</button></div>`;$('ov').hidden=false;
 }
 function win(){
@@ -389,7 +438,7 @@ $('dlg').addEventListener('click',e=>{const a=e.target.closest('[data-a]');if(!a
 document.addEventListener('visibilitychange',()=>{if($('play').hidden||done)return;if(document.hidden)stopClock();else startClock()});
 
 renderPick();
-window.__mj={get tiles(){return tiles},moves,start,buildSlots,LAYOUTS,get done(){return done},refresh,save};
+window.__mj={get tiles(){return tiles},moves,start,buildSlots,LAYOUTS,get done(){return done},refresh,save,slots,canPark,park,pick};
 })();
 </script>
 </body>
