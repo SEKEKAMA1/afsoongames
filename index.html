@@ -67,40 +67,46 @@ main{margin-left:var(--rail);padding-top:calc(var(--top) + 22px);padding-bottom:
 .row h2{display:flex;align-items:baseline;gap:12px;margin:0 0 14px;font-size:20px;font-weight:800}
 .row h2 small{font-size:14px;color:var(--muted);font-weight:700}
 
-/* featured grid: one big tile + two stacked */
-.featured{display:grid;grid-template-columns:2fr 1fr;grid-template-rows:1fr 1fr;gap:14px}
-.featured .tile:first-child{grid-row:span 2}
-.tiles{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:14px}
-
-.tile{position:relative;border-radius:14px;overflow:hidden;background:var(--panel);aspect-ratio:16/9;isolation:isolate;
+/* tiles: cover art carries the title, like CrazyGames */
+.tile{position:relative;display:block;border-radius:10px;overflow:hidden;background:var(--panel);aspect-ratio:16/9;isolation:isolate;
   transition:transform .18s ease,box-shadow .18s ease}
-.featured .tile{aspect-ratio:auto;min-height:0}
-.featured .tile:first-child{aspect-ratio:16/9}
 .tile img{width:100%;height:100%;object-fit:cover;transition:transform .35s ease}
-.tile::after{content:"";position:absolute;inset:0;background:linear-gradient(180deg,transparent 40%,rgba(8,6,18,.92));z-index:1}
-.featured .tile:first-child::after{background:linear-gradient(180deg,transparent 30%,rgba(8,6,18,.75) 62%,rgba(8,6,18,.96))}
-.tile .meta{position:absolute;left:14px;right:14px;bottom:12px;z-index:2;display:flex;align-items:flex-end;justify-content:space-between;gap:10px}
-.tile .t{font-weight:800;font-size:16px;line-height:1.2;text-shadow:0 1px 8px rgba(0,0,0,.6)}
-.tile .c{font-size:12px;color:var(--gold-2);font-weight:700;letter-spacing:.04em}
-.featured .tile:first-child .t{font-size:26px}
-.featured .tile:first-child .d{display:block}
-.tile .d{display:none;font-size:14px;color:#d9d3ec;max-width:46ch;margin-top:6px;line-height:1.45}
-.tile .play{flex:none;width:44px;height:44px;border-radius:50%;background:var(--gold);color:#241a08;display:grid;place-items:center;
-  opacity:0;transform:scale(.8);transition:.18s ease}
-.tile .play svg{width:20px;height:20px;margin-left:3px}
-.badge{position:absolute;top:10px;left:10px;z-index:2;font-size:11px;font-weight:800;letter-spacing:.06em;text-transform:uppercase;
-  padding:4px 9px;border-radius:7px;background:var(--plum);color:#fff}
-.badge.hot{background:#e8553f}
-.tile:hover,.tile:focus-visible{transform:translateY(-3px);box-shadow:0 0 0 2px var(--gold),0 14px 30px rgba(0,0,0,.45)}
-.tile:hover img{transform:scale(1.05)}
-.tile:hover .play,.tile:focus-visible .play{opacity:1;transform:none}
+.tile .name{position:absolute;left:0;right:0;bottom:0;z-index:2;padding:22px 12px 9px;font-weight:800;font-size:14px;
+  background:linear-gradient(180deg,transparent,rgba(8,6,18,.92));opacity:0;transform:translateY(6px);transition:.18s ease}
+.tile:hover .name,.tile:focus-visible .name{opacity:1;transform:none}
+.badge{position:absolute;top:7px;left:7px;z-index:2;width:26px;height:26px;border-radius:7px;display:grid;place-items:center;background:#e8553f;color:#fff}
+.badge.new{background:var(--plum)}
+.badge svg{width:15px;height:15px}
+.tile:hover,.tile:focus-visible{transform:translateY(-3px);box-shadow:0 0 0 2px var(--gold),0 14px 30px rgba(0,0,0,.45);z-index:3}
+.tile:hover img{transform:scale(1.04)}
 
-/* category chips */
-.chips{display:flex;flex-wrap:wrap;gap:10px}
-.chip{display:flex;align-items:center;gap:10px;padding:10px 16px;border-radius:12px;background:var(--panel);border:1px solid var(--line);font-weight:800;cursor:pointer}
-.chip:hover,.chip.on{background:var(--panel-2);border-color:rgba(230,184,92,.5)}
-.chip svg{width:18px;height:18px;color:var(--gold)}
-.chip .n{color:var(--muted);font-size:13px}
+/* mood cards */
+.moods{display:grid;grid-auto-flow:column;grid-auto-columns:minmax(200px,1fr);gap:12px;overflow-x:auto;scrollbar-width:none;padding-bottom:2px}
+.moods::-webkit-scrollbar{display:none}
+.mood{position:relative;height:118px;border-radius:14px;padding:14px;display:flex;align-items:flex-end;font-weight:800;font-size:16px;
+  overflow:hidden;cursor:pointer;border:0;text-align:left;transition:transform .18s ease,filter .18s ease}
+.mood i{position:absolute;right:12px;top:8px;font-style:normal;font-size:50px;line-height:1;filter:drop-shadow(0 6px 8px rgba(0,0,0,.35));transition:transform .2s ease}
+.mood:hover{transform:translateY(-3px);filter:brightness(1.12)}
+.mood:hover i{transform:rotate(-8deg) scale(1.08)}
+.m1{background:linear-gradient(135deg,#1f3a5c,#1a2238);color:#8fd0ff}
+.m2{background:linear-gradient(135deg,#55213f,#24182b);color:#ff8ec1}
+.m3{background:linear-gradient(135deg,#1f4a3c,#18262a);color:#7ff0b8}
+.m4{background:linear-gradient(135deg,#4c4517,#24221a);color:#ffe066}
+.m5{background:linear-gradient(135deg,#3a2a5e,#1d1830);color:#c9b2ff}
+
+/* mosaic: big | 2x2 small | big, like "Top games today" */
+.mosaic{display:grid;grid-template-columns:repeat(var(--cols,6),minmax(0,1fr));grid-auto-rows:auto;gap:8px;max-width:calc(var(--cols,6) * 240px)}
+.mosaic .big{grid-column:span 2;grid-row:span 2;aspect-ratio:auto}
+.mosaic .big img{position:absolute;inset:0}
+
+/* scroll row */
+.strip{display:grid;grid-auto-flow:column;grid-auto-columns:230px;gap:8px;overflow-x:auto;scrollbar-width:none;padding:4px 2px 8px;margin:-4px -2px 0}
+.strip::-webkit-scrollbar{display:none}
+.tiles{display:grid;grid-template-columns:repeat(auto-fill,minmax(210px,1fr));gap:8px}
+.flt{display:none;align-items:center;gap:10px;margin:0 0 14px}
+.flt.on{display:flex}
+.flt button{border:1px solid var(--line);background:var(--panel);border-radius:16px;height:32px;padding:0 14px;font-weight:800;cursor:pointer}
+.flt button:hover{border-color:rgba(230,184,92,.5)}
 
 /* partner banner */
 .partner{display:grid;grid-template-columns:auto 1fr auto;gap:24px;align-items:center;padding:24px 28px;border-radius:18px;
@@ -128,20 +134,20 @@ body.mini footer{margin-left:72px}
   main,footer,body.mini main,body.mini footer{margin-left:0}
   body.mini .rail{width:var(--rail)}
   body.mini .rail a span,body.mini .rail .n,body.mini .rail h4{display:revert}
-  .featured{grid-template-columns:1fr;grid-template-rows:none}
-  .featured .tile{aspect-ratio:16/9}
-  .featured .tile:first-child{grid-row:auto}
-  .featured .tile:first-child .t{font-size:20px}
-  .featured .tile:first-child .d{display:none}
   .partner{grid-template-columns:1fr;text-align:left}
   .partner img{width:64px}
 }
 @media (max-width:620px){
   .logo b{display:none}
   .cta{display:none}
-  .tiles{grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
-  .tile .t{font-size:14px}
-  .tile .c{display:none}
+  .tiles{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .mosaic{--cols:2!important;max-width:none}
+  .strip{grid-auto-columns:168px}
+  .moods{grid-auto-columns:150px}
+  .mood{height:96px;font-size:14px}
+  .mood i{font-size:38px}
+  .mosaic .big{grid-row:auto;aspect-ratio:16/9}
+  .tile .name{display:none}
 }
 @media (prefers-reduced-motion:reduce){*{transition:none!important}}
 </style>
@@ -183,23 +189,28 @@ body.mini footer{margin-left:72px}
     </section>
 
     <div id="home">
-      <section class="row" id="new" style="margin-bottom:34px">
-        <h2>Featured games</h2>
-        <div class="featured" id="featured"></div>
+      <section class="row" style="margin-bottom:30px">
+        <div class="moods" id="moods"></div>
       </section>
 
-      <section class="row" id="recent" style="margin-bottom:34px" hidden>
+      <section class="row" id="new" style="margin-bottom:30px">
+        <h2>Top games today</h2>
+        <div class="mosaic" id="mosaic"></div>
+      </section>
+
+      <section class="row" id="recent" style="margin-bottom:30px" hidden>
         <h2>Recently played</h2>
-        <div class="tiles" id="recentTiles"></div>
+        <div class="strip" id="recentTiles"></div>
       </section>
 
-      <section class="row" style="margin-bottom:34px">
-        <h2>Categories</h2>
-        <div class="chips" id="chips"></div>
+      <section class="row" style="margin-bottom:30px">
+        <h2>Featured games</h2>
+        <div class="strip" id="strip"></div>
       </section>
 
       <section class="row" id="all" style="margin-bottom:34px">
         <h2><span id="allTitle">All games</span> <small id="allCount"></small></h2>
+        <div class="flt" id="flt"><button type="button" id="clearF">Show all games</button></div>
         <div class="tiles" id="allTiles"></div>
       </section>
 
@@ -229,12 +240,19 @@ body.mini footer{margin-left:72px}
 
 <script>
 const GAMES=[
-  {id:'solitaire',name:'Afsoon Solitaire',url:'/solitaire/',cat:'Card',badge:'New',
-   desc:'Classic Klondike solitaire with a Persian miniature deck. Build the four foundations from ace to king.'},
-  {id:'anshan-run',name:'Anshan Run',url:'/anshan-run/',cat:'Arcade',badge:'Hot',
-   desc:'Race a royal messenger across the mud-brick rooftops of ancient Anshan, home of the first Achaemenid kings.'},
-  {id:'alchemy',name:'Afsoon Alchemy',url:'/alchemy/',cat:'Puzzle',badge:'',
-   desc:'Brew sparks, merge them into potions and crystals, and fill the orders of the royal court.'}
+  {id:'solitaire',name:'Afsoon Solitaire',url:'/solitaire/',cat:'Card',badge:'new',moods:['relax','classic','quick'],
+   desc:'Classic Klondike solitaire with a Persian miniature deck.'},
+  {id:'anshan-run',name:'Anshan Run',url:'/anshan-run/',cat:'Arcade',badge:'hot',moods:['rush','quick'],
+   desc:'Race a royal messenger across the rooftops of ancient Anshan.'},
+  {id:'alchemy',name:'Afsoon Alchemy',url:'/alchemy/',cat:'Puzzle',badge:'',moods:['brain','relax'],
+   desc:'Brew sparks, merge them into potions and fill the royal orders.'}
+];
+const MOODS=[
+  {id:'brain',name:'Train your brain',icon:'\u{1F9E0}',cls:'m1'},
+  {id:'rush',name:'Adrenaline rush',icon:'\u{1F525}',cls:'m2'},
+  {id:'relax',name:'Just relax',icon:'\u{1F375}',cls:'m3'},
+  {id:'quick',name:'5-minute fun',icon:'⏱️',cls:'m4'},
+  {id:'classic',name:'Timeless classics',icon:'\u{1F0CF}',cls:'m5'}
 ];
 const CATS={
   Puzzle:'<path d="M9 3h6v3a2 2 0 1 0 4 0h2v6h-3a2 2 0 1 0 0 4h3v5H3V3h6z"/>',
@@ -242,43 +260,50 @@ const CATS={
   Card:'<rect x="4" y="5" width="11" height="15" rx="2"/><path d="M9 3h9a2 2 0 0 1 2 2v13"/>'
 };
 const ico=p=>'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">'+p+'</svg>';
-const play='<span class="play">'+ico('<path d="M7 4v16l13-8z" fill="currentColor" stroke="none"/>')+'</span>';
-function tile(g){
-  const b=g.badge?'<span class="badge'+(g.badge=='Hot'?' hot':'')+'">'+g.badge+'</span>':'';
-  return '<a class="tile" href="'+g.url+'" data-id="'+g.id+'">'+b+'<img src="/img/thumbs/'+g.id+'.webp" alt="" loading="lazy" width="640" height="360">'+
-    '<div class="meta"><div><div class="c">'+g.cat+'</div><div class="t">'+g.name+'</div><span class="d">'+g.desc+'</span></div>'+play+'</div></a>';
+const BADGE={hot:'<span class="badge" title="Hot">'+ico('<path d="M12 3c1 4 5 5 5 10a5 5 0 0 1-10 0c0-2 1-3 2-4 0 2 1 3 2 3 0-3-1-5 1-9z" fill="currentColor" stroke="none"/>')+'</span>',
+  new:'<span class="badge new" title="New">'+ico('<path d="m12 3 2.6 5.6 6.1.7-4.5 4.2 1.2 6L12 16.6 6.6 19.5l1.2-6L3.3 9.3l6.1-.7z" fill="currentColor" stroke="none"/>')+'</span>'};
+function tile(g,big){
+  return '<a class="tile'+(big?' big':'')+'" href="'+g.url+'" data-id="'+g.id+'" aria-label="'+g.name+'">'+(BADGE[g.badge]||'')+
+    '<img src="/img/covers/'+g.id+(big?'':'-s')+'.webp" alt="" loading="lazy" width="'+(big?960:480)+'" height="'+(big?540:270)+'">'+
+    '<span class="name">'+g.name+'</span></a>';
 }
 const $=id=>document.getElementById(id);
-$('featured').innerHTML=GAMES.slice(0,3).map(tile).join('');
+$('moods').innerHTML=MOODS.map(m=>'<button type="button" class="mood '+m.cls+'" data-mood="'+m.id+'"><i aria-hidden="true">'+m.icon+'</i>'+m.name+'</button>').join('');
+// mosaic pattern: big, small x4, big ...
+(function(){
+  const pat=['b','s','s','s','s','b'];let cols=0,html='';
+  GAMES.slice(0,6).forEach((g,i)=>{const big=pat[i]=='b';html+=tile(g,big)});
+  const n=Math.min(GAMES.length,6);cols=[0,2,3,3,4,4,6][n];
+  $('mosaic').style.setProperty('--cols',cols);$('mosaic').innerHTML=html;
+})();
+$('strip').innerHTML=GAMES.map(g=>tile(g)).join('');
 const counts={};GAMES.forEach(g=>counts[g.cat]=(counts[g.cat]||0)+1);
-$('chips').innerHTML='<button class="chip on" data-cat="">All <span class="n">'+GAMES.length+'</span></button>'+
-  Object.keys(CATS).map(c=>'<button class="chip" data-cat="'+c+'">'+ico(CATS[c])+c+' <span class="n">'+(counts[c]||0)+'</span></button>').join('');
 $('railCats').innerHTML=Object.keys(CATS).map(c=>'<a href="#all" data-cat="'+c+'">'+ico(CATS[c])+'<span>'+c+' games</span><b class="n">'+(counts[c]||0)+'</b></a>').join('');
 $('nAll').textContent=GAMES.length;
-function showAll(cat){
-  const list=cat?GAMES.filter(g=>g.cat==cat):GAMES;
-  $('allTitle').textContent=cat?cat+' games':'All games';$('allCount').textContent=list.length+(list.length==1?' game':' games');
-  $('allTiles').innerHTML=list.map(tile).join('');
-  document.querySelectorAll('.chip').forEach(c=>c.classList.toggle('on',c.dataset.cat===(cat||'')));
+function showAll(title,list,filtered){
+  $('allTitle').textContent=title;$('allCount').textContent=list.length+(list.length==1?' game':' games');
+  $('allTiles').innerHTML=list.map(g=>tile(g)).join('');$('flt').classList.toggle('on',!!filtered);
 }
-showAll('');
+showAll('All games',GAMES,false);
+$('clearF').onclick=()=>showAll('All games',GAMES,false);
 document.addEventListener('click',e=>{
-  const c=e.target.closest('[data-cat]');
-  if(c){e.preventDefault();showAll(c.dataset.cat);$('all').scrollIntoView({behavior:'smooth',block:'start'});closeRail()}
+  const c=e.target.closest('[data-cat]'),m=e.target.closest('[data-mood]');
+  if(c){e.preventDefault();showAll(c.dataset.cat+' games',GAMES.filter(g=>g.cat==c.dataset.cat),true);$('all').scrollIntoView({behavior:'smooth',block:'start'});closeRail()}
+  if(m){const md=MOODS.find(x=>x.id==m.dataset.mood);showAll(md.name,GAMES.filter(g=>g.moods.includes(md.id)),true);$('all').scrollIntoView({behavior:'smooth',block:'start'})}
   const t=e.target.closest('.tile');
   if(t){try{let r=JSON.parse(localStorage.getItem('afsoon-recent')||'[]');r=[t.dataset.id,...r.filter(x=>x!=t.dataset.id)].slice(0,8);localStorage.setItem('afsoon-recent',JSON.stringify(r))}catch(_){}}
   if(e.target.closest('.rail a:not([data-cat])'))closeRail();
 });
 let recent=[];try{recent=JSON.parse(localStorage.getItem('afsoon-recent')||'[]')}catch(_){}
 const rec=recent.map(id=>GAMES.find(g=>g.id==id)).filter(Boolean);
-if(rec.length){$('recent').hidden=false;$('recentTiles').innerHTML=rec.map(tile).join('')}
+if(rec.length){$('recent').hidden=false;$('recentTiles').innerHTML=rec.map(g=>tile(g)).join('')}
 $('q').addEventListener('input',e=>{
   const v=e.target.value.trim().toLowerCase();
   if(!v){$('results').hidden=true;$('home').hidden=false;return}
   const list=GAMES.filter(g=>(g.name+' '+g.cat+' '+g.desc).toLowerCase().includes(v));
   $('home').hidden=true;$('results').hidden=false;
   $('rcount').textContent=list.length+(list.length==1?' game':' games');
-  $('rtiles').innerHTML=list.length?list.map(tile).join(''):'<div class="empty">No games match "'+e.target.value.replace(/[<>&"]/g,'')+'". Try "card", "puzzle" or "run".</div>';
+  $('rtiles').innerHTML=list.length?list.map(g=>tile(g)).join(''):'<div class="empty">No games match "'+e.target.value.replace(/[<>&"]/g,'')+'". Try "card", "puzzle" or "run".</div>';
 });
 const mq=matchMedia('(max-width:900px)');
 function closeRail(){document.body.classList.remove('open');$('burger').setAttribute('aria-expanded','false')}
