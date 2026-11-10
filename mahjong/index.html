@@ -1,0 +1,319 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#0b0716">
+<link rel="icon" type="image/png" href="/img/favicon-64.png">
+<link rel="apple-touch-icon" href="/img/apple-touch-icon.png">
+<title>Afsoon Mahjong</title>
+<meta name="description" content="Afsoon Mahjong by Afsoon Games. Classic mahjong solitaire with Persian tiles: lapis circles, cypress trees, Persian numerals, lions and pomegranates. Ten boards, free in your browser.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@600;700&family=Nunito:wght@600;700;800&family=Vazirmatn:wght@700&display=swap" rel="stylesheet">
+<style>
+/* Layout: level picker (10 boards) and a play screen whose board scales to the window. Single dark lapis theme. */
+:root{
+  --night:#090f22; --deep:#0f1d3c; --panel:#13234a; --panel-2:#1b2f5e; --line:rgba(230,184,92,.25);
+  --gold:#e6b85c; --gold-2:#f6d999; --text:#eef2ff; --muted:#a3b0d4;
+  --display:Cinzel,Georgia,serif; --ui:Nunito,system-ui,sans-serif;
+  color-scheme:dark;
+}
+*{box-sizing:border-box}
+html{padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+html,body{margin:0;min-height:100%}
+body{background:radial-gradient(90% 80% at 50% 35%,#1f3a6e 0%,var(--deep) 50%,var(--night) 100%);background-attachment:fixed;color:var(--text);font-family:var(--ui);
+  padding-left:max(12px,env(safe-area-inset-left,0px));padding-right:max(12px,env(safe-area-inset-right,0px));-webkit-tap-highlight-color:transparent}
+[hidden]{display:none!important}
+button{font:inherit;color:inherit;cursor:pointer}
+button:focus-visible,a:focus-visible{outline:2px solid var(--gold-2);outline-offset:2px}
+.app{max-width:1200px;margin:0 auto;padding-block:10px 18px;display:flex;flex-direction:column;gap:10px;min-height:100vh}
+.top{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+.brand{font-family:var(--display);font-weight:700;letter-spacing:.08em;font-size:1.1rem;line-height:1.1;margin-right:auto;color:var(--gold-2)}
+.brand small{display:block;font-family:var(--ui);font-weight:800;letter-spacing:.24em;font-size:.6rem;color:var(--gold);text-transform:uppercase;margin-top:3px}
+.ib{background:rgba(255,255,255,.05);border:1px solid var(--line);border-radius:10px;height:38px;min-width:38px;padding:0 10px;display:inline-flex;align-items:center;justify-content:center;gap:6px;font-weight:800;font-size:.85rem;text-decoration:none;color:var(--text)}
+.ib:hover{border-color:rgba(230,184,92,.6)}
+.ib svg{width:18px;height:18px}
+.stats{display:flex;gap:8px}
+.st{background:rgba(255,255,255,.05);border:1px solid var(--line);border-radius:10px;padding:3px 12px;text-align:center;min-width:72px}
+.st b{display:block;font-size:1.05rem;font-variant-numeric:tabular-nums}
+.st span{font-size:.6rem;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);font-weight:800}
+
+/* level picker */
+.intro h1{font-family:var(--display);font-size:clamp(1.4rem,4vw,2rem);margin:6px 0 2px;color:var(--gold-2);letter-spacing:.04em}
+.intro p{margin:0 0 12px;color:var(--muted);max-width:60ch;line-height:1.5}
+.levels{display:grid;grid-template-columns:repeat(auto-fill,minmax(190px,1fr));gap:12px}
+.lv{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:12px;text-align:left;display:flex;flex-direction:column;gap:8px;
+  transition:transform .2s cubic-bezier(.2,.8,.3,1.2),box-shadow .2s}
+.lv:not(:disabled):hover{transform:scale(1.04);box-shadow:0 0 0 2px var(--gold),0 12px 26px rgba(0,0,0,.45)}
+.lv:disabled{opacity:.45;cursor:default}
+.lv canvas{width:100%;aspect-ratio:16/10;background:rgba(0,0,0,.2);border-radius:8px}
+.lv b{font-size:1rem}
+.lv .m{display:flex;justify-content:space-between;font-size:.8rem;color:var(--muted);font-weight:700}
+.lv .s{color:var(--gold)}
+
+/* board */
+.playwrap{flex:1;display:flex;flex-direction:column;gap:8px;min-height:0}
+.stage{position:relative;flex:1;min-height:320px}
+.board{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%)}
+.t{position:absolute;width:var(--tw);height:var(--th);cursor:pointer;transition:opacity .25s,transform .25s;user-select:none;-webkit-user-select:none}
+.t .sd{position:absolute;left:var(--d);top:var(--d);width:100%;height:100%;border-radius:calc(var(--tw) * .14);background:#9c7d47}
+.t .sd2{position:absolute;left:calc(var(--d) / 2);top:calc(var(--d) / 2);width:100%;height:100%;border-radius:calc(var(--tw) * .14);background:#d6bd86}
+.t .fc{position:absolute;inset:0;border-radius:calc(var(--tw) * .14);background:linear-gradient(160deg,#fffaf0,#efe2c6);border:max(1px,calc(var(--tw) * .03)) solid #c9a764;box-shadow:inset 0 0 0 max(1px,calc(var(--tw) * .045)) #fffdf6}
+.t svg{position:absolute;left:8%;top:7%;width:84%;height:86%}
+.t.blk .fc{background:linear-gradient(160deg,#e7dfcd,#d3c4a2)}
+.t.blk svg{opacity:.62}
+.t.sel .fc{background:linear-gradient(160deg,#fff4c4,#ffd978);border-color:#e09a12;box-shadow:0 0 0 3px #ffd36b,0 0 18px #ffd36b}
+.t.hint .fc{animation:hint .9s ease-in-out infinite}
+@keyframes hint{50%{box-shadow:0 0 0 3px #7fe0ff,0 0 20px #7fe0ff}}
+.t.gone{opacity:0;transform:translateY(-24px) scale(.85);pointer-events:none}
+.t.shake{animation:shake .3s}
+@keyframes shake{25%{transform:translateX(-4px)}75%{transform:translateX(4px)}}
+.bar{display:flex;gap:8px;justify-content:center;flex-wrap:wrap}
+.btn{height:42px;padding:0 18px;border-radius:21px;border:1px solid var(--line);background:rgba(10,16,40,.7);font-weight:800;display:inline-flex;align-items:center;gap:7px}
+.btn:hover{border-color:rgba(230,184,92,.6)}
+.btn.primary{background:var(--gold);color:#2a1c06;border-color:var(--gold)}
+.btn.primary:hover{background:var(--gold-2)}
+.btn svg{width:17px;height:17px}
+.toast{position:absolute;left:50%;top:10px;transform:translateX(-50%);background:rgba(10,16,40,.9);border:1px solid var(--line);border-radius:12px;padding:8px 14px;font-weight:800;z-index:999;pointer-events:none;opacity:0;transition:opacity .3s}
+.toast.on{opacity:1}
+.ov{position:fixed;inset:0;z-index:50;background:rgba(4,8,20,.72);display:grid;place-items:center;padding:20px;backdrop-filter:blur(3px)}
+.dlg{width:min(420px,100%);background:linear-gradient(180deg,#1d3266,#111f44);border:1px solid rgba(230,184,92,.45);border-radius:20px;padding:22px;text-align:center;display:flex;flex-direction:column;gap:12px;box-shadow:0 30px 80px rgba(0,0,0,.6);animation:in .3s cubic-bezier(.2,.8,.3,1.2)}
+@keyframes in{from{transform:scale(.85);opacity:0}}
+.dlg h2{font-family:var(--display);margin:0;color:var(--gold-2);font-size:1.5rem}
+.dlg p{margin:0;color:#dce3f7;line-height:1.55}
+.stars{font-size:2rem;letter-spacing:6px;color:#3d4f7d}.stars .on{color:var(--gold)}
+.btns{display:flex;gap:10px;justify-content:center;flex-wrap:wrap}
+.credit{text-align:center;font-size:.76rem;color:var(--muted)}
+.credit a{color:var(--gold)}
+label.tg{display:inline-flex;align-items:center;gap:6px;font-size:.82rem;font-weight:800;color:var(--muted)}
+@media (max-width:560px){.brand{font-size:.95rem}.ib .lbl{display:none}.btn{height:40px;padding:0 13px;font-size:.88rem}.btn .lbl{display:none}}
+@media (prefers-reduced-motion:reduce){.t,.lv{transition:none}.t.hint .fc{animation:none;box-shadow:0 0 0 3px #7fe0ff}}
+</style>
+</head>
+<body>
+<div class="app">
+  <header class="top">
+    <div class="brand">Afsoon Mahjong<small>Afsoon Games</small></div>
+    <div class="stats" id="stats" hidden>
+      <div class="st"><b id="pairs">0</b><span>Pairs</span></div>
+      <div class="st"><b id="time">0:00</b><span>Time</span></div>
+    </div>
+    <button class="ib" id="menuBtn" hidden aria-label="All boards"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7" rx="2"/><rect x="14" y="3" width="7" height="7" rx="2"/><rect x="3" y="14" width="7" height="7" rx="2"/><rect x="14" y="14" width="7" height="7" rx="2"/></svg><span class="lbl">Boards</span></button>
+    <button class="ib" id="snd" aria-label="Sound on"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"><path d="M4 10v4h4l5 4V6L8 10z"/><path id="wave" d="M16 9a4 4 0 0 1 0 6M18.5 6.5a8 8 0 0 1 0 11"/></svg></button>
+    <a class="ib" href="/" aria-label="More Afsoon games"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"><path d="M3 11 12 4l9 7v9h-6v-6H9v6H3z"/></svg><span class="lbl">More games</span></a>
+  </header>
+
+  <section id="pick">
+    <div class="intro"><h1>Choose a board</h1><p>Match pairs of identical tiles that are free: nothing on top, and an open left or right side. Clear every tile to win. Each finished board unlocks the next.</p></div>
+    <div class="levels" id="levels"></div>
+  </section>
+
+  <section class="playwrap" id="play" hidden>
+    <div class="stage" id="stage"><div class="board" id="board"></div><div class="toast" id="toast"></div></div>
+    <div class="bar">
+      <button class="btn" id="undo"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M9 14 4 9l5-5"/><path d="M4 9h11a5 5 0 0 1 0 10h-3"/></svg><span class="lbl">Undo</span></button>
+      <button class="btn" id="hint"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M9 18h6M10 21h4M12 3a6 6 0 0 0-4 10.5c.7.7 1 1.5 1 2.5h6c0-1 .3-1.8 1-2.5A6 6 0 0 0 12 3z"/></svg><span class="lbl">Hint</span></button>
+      <button class="btn" id="shuf"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M16 3h5v5M4 20 21 3M21 16v5h-5M15 15l6 6M4 4l5 5"/></svg><span class="lbl">Shuffle</span></button>
+      <label class="tg"><input type="checkbox" id="showFree" checked> Show free tiles</label>
+      <button class="btn primary" id="restart">Restart</button>
+    </div>
+  </section>
+  <p class="credit">A game by <a href="/">Afsoon Games</a>. Progress is saved on this device.</p>
+</div>
+<div class="ov" id="ov" hidden><div class="dlg" id="dlg" role="dialog" aria-modal="true"></div></div>
+
+<script>
+(function(){
+'use strict';
+/* ---------- tile faces: 36 kinds (3 suits x 9, plus 9 honours) ---------- */
+const L='#2f5fc9',LL='#a9c8ff',R='#c4553b',J='#2c9a62',G='#c9971c',P='#8a4fd6';
+const FA='۱۲۳۴۵۶۷۸۹';
+const POS={1:[[24,32]],2:[[24,16],[24,48]],3:[[12,14],[24,32],[36,50]],4:[[13,17],[35,17],[13,47],[35,47]],5:[[13,15],[35,15],[24,32],[13,49],[35,49]],
+ 6:[[13,13],[35,13],[13,32],[35,32],[13,51],[35,51]],7:[[12,10],[24,18],[36,26],[13,40],[35,40],[13,54],[35,54]],8:[[13,9],[35,9],[13,24],[35,24],[13,39],[35,39],[13,54],[35,54]],
+ 9:[[11,12],[24,12],[37,12],[11,32],[24,32],[37,32],[11,52],[24,52],[37,52]]};
+function dots(n){const r=n==1?14:n<=4?9:n<=6?7.5:6.5;return POS[n].map(([x,y])=>`<circle cx="${x}" cy="${y}" r="${r}" fill="${L}"/><circle cx="${x}" cy="${y}" r="${r*.5}" fill="${LL}"/>${n==1?`<circle cx="${x}" cy="${y}" r="${r*.2}" fill="${G}"/>`:''}`).join('')}
+function trees(n){const s=n==1?1.6:n<=4?1:n<=6?.85:.72;return POS[n].map(([x,y])=>`<g transform="translate(${x} ${y}) scale(${s})"><path d="M0 -11c-5 5-6 12 0 19 6-7 5-14 0-19z" fill="${J}"/><path d="M0 -8v15" stroke="#bff3d8" stroke-width="1"/><rect x="-1.2" y="8" width="2.4" height="3.5" fill="#7a5233"/></g>`).join('')}
+function num(n){return `<text x="24" y="38" text-anchor="middle" font-family="Vazirmatn,Tahoma,sans-serif" font-size="34" font-weight="700" fill="${R}">${FA[n-1]}</text><path d="M10 47h28" stroke="${R}" stroke-width="2.5"/><text x="24" y="60" text-anchor="middle" font-family="Nunito,sans-serif" font-size="10" font-weight="800" fill="${R}">${n}</text>`}
+const HON=[
+ ['Lion',`<circle cx="24" cy="30" r="17" fill="${G}"/><g fill="#a77510">${Array.from({length:12},(_,i)=>{const a=i/12*Math.PI*2;return `<circle cx="${24+Math.cos(a)*16}" cy="${30+Math.sin(a)*16}" r="4"/>`}).join('')}</g><circle cx="24" cy="31" r="11" fill="#f2c96a"/><circle cx="20" cy="28" r="1.6" fill="#3a2a10"/><circle cx="28" cy="28" r="1.6" fill="#3a2a10"/><path d="M21 34q3 3 6 0" stroke="#3a2a10" stroke-width="1.6" fill="none"/><path d="M22 31h4l-2 2z" fill="#3a2a10"/><text x="24" y="60" text-anchor="middle" font-family="Nunito,sans-serif" font-size="8" font-weight="800" fill="#a77510">LION</text>`],
+ ['Sun',`<g stroke="#e57a1a" stroke-width="3" stroke-linecap="round">${Array.from({length:12},(_,i)=>{const a=i/12*Math.PI*2;return `<path d="M${24+Math.cos(a)*13} ${29+Math.sin(a)*13}L${24+Math.cos(a)*19} ${29+Math.sin(a)*19}"/>`}).join('')}</g><circle cx="24" cy="29" r="10" fill="#f5a623"/><text x="24" y="60" text-anchor="middle" font-family="Nunito,sans-serif" font-size="8" font-weight="800" fill="#e57a1a">SUN</text>`],
+ ['Moon',`<path d="M30 10a18 18 0 1 0 6 32 15 15 0 1 1-6-32z" fill="${L}"/><circle cx="34" cy="16" r="1.6" fill="${G}"/><circle cx="38" cy="26" r="1.2" fill="${G}"/><text x="24" y="60" text-anchor="middle" font-family="Nunito,sans-serif" font-size="8" font-weight="800" fill="${L}">MOON</text>`],
+ ['Bird',`<path d="M8 38c8-14 20-16 30-10-4-6-2-14 4-16-10-2-16 4-18 10-6-4-14-2-16 16z" fill="${L}"/><circle cx="36" cy="14" r="1.8" fill="#fff"/><path d="M6 42h34" stroke="${G}" stroke-width="2.5"/><text x="24" y="60" text-anchor="middle" font-family="Nunito,sans-serif" font-size="8" font-weight="800" fill="${L}">BIRD</text>`],
+ ['Pomegranate',`<circle cx="24" cy="32" r="15" fill="${R}"/><path d="M18 17l6-8 6 8z" fill="#8e3523"/><circle cx="19" cy="30" r="2.6" fill="#ffd0c4"/><circle cx="28" cy="36" r="2.6" fill="#ffd0c4"/><circle cx="25" cy="27" r="2.6" fill="#ffd0c4"/><circle cx="20" cy="38" r="2.2" fill="#ffd0c4"/><text x="24" y="60" text-anchor="middle" font-family="Nunito,sans-serif" font-size="7" font-weight="800" fill="${R}">ANAR</text>`],
+ ['Flame',`<path d="M24 6c4 10 14 14 14 25a14 14 0 0 1-28 0c0-11 10-15 14-25z" fill="${R}"/><path d="M24 22c2 6 7 8 7 13a7 7 0 0 1-14 0c0-5 5-7 7-13z" fill="${G}"/><text x="24" y="60" text-anchor="middle" font-family="Nunito,sans-serif" font-size="8" font-weight="800" fill="${R}">FIRE</text>`],
+ ['Rose',`<circle cx="24" cy="28" r="14" fill="#d94f7e"/><path d="M24 28c0-6 6-7 7-2s-5 9-10 6-4-11 3-12 13 3 12 10" stroke="#8f1f47" stroke-width="2" fill="none"/><path d="M24 42v8M24 47c-5-1-7-4-7-6 4 0 6 2 7 6z" stroke="${J}" stroke-width="2.5" fill="${J}"/><text x="24" y="61" text-anchor="middle" font-family="Nunito,sans-serif" font-size="8" font-weight="800" fill="#b2335f">ROSE</text>`],
+ ['Star',`<path d="M24 6l5 9 10-3-3 10 9 5-9 5 3 10-10-3-5 9-5-9-10 3 3-10-9-5 9-5-3-10 10 3z" fill="${G}"/><circle cx="24" cy="27" r="6" fill="${L}"/><text x="24" y="60" text-anchor="middle" font-family="Nunito,sans-serif" font-size="8" font-weight="800" fill="#a77510">STAR</text>`],
+ ['Gate',`<rect x="8" y="12" width="32" height="6" fill="#8a5a35"/><rect x="10" y="18" width="9" height="28" fill="#b07a4c"/><rect x="29" y="18" width="9" height="28" fill="#b07a4c"/><rect x="6" y="46" width="36" height="4" fill="#8a5a35"/><path d="M12 24l5-4M12 30l5-4" stroke="#7a4a28" stroke-width="1.5"/><text x="24" y="60" text-anchor="middle" font-family="Nunito,sans-serif" font-size="8" font-weight="800" fill="#8a5a35">GATE</text>`]
+];
+const KINDS=[];
+for(let n=1;n<=9;n++)KINDS.push({name:'Lapis '+n,svg:dots(n)});
+for(let n=1;n<=9;n++)KINDS.push({name:'Cypress '+n,svg:trees(n)});
+for(let n=1;n<=9;n++)KINDS.push({name:'Number '+n,svg:num(n)});
+HON.forEach(([n,s])=>KINDS.push({name:n,svg:s}));
+const face=k=>`<svg viewBox="0 0 48 64" aria-hidden="true">${KINDS[k].svg}</svg>`;
+
+/* ---------- boards: layers of rows; each '#' is a tile. dx/dy shift a layer by half tiles ---------- */
+const LAYOUTS=[
+ {name:'Courtyard',layers:[{rows:['######','######','######','######']},{dx:2,dy:2,rows:['####','####']},{dx:4,dy:2,rows:['##','##']}]},
+ {name:'Pyramid',layers:[{rows:['########','########','########','########']},{dx:2,dy:1,rows:['######','######','######']},{dx:4,dy:2,rows:['####','####']},{dx:6,dy:3,rows:['##']}]},
+ {name:'Gate of Nations',layers:[{rows:['##########','###....###','###....###','###....###','###....###','##########']},{dx:1,dy:1,rows:['##......##','##......##','##......##','##......##']},{dx:2,dy:-1,rows:['########']}]},
+ {name:'Garden Cross',layers:[{rows:['...####...','...####...','##########','##########','...####...','...####...']},{dx:1,dy:1,rows:['...##...','########','########','...##...']},{dx:4,dy:2,rows:['####','####']},{dx:7,dy:3,rows:['#','#']}]},
+ {name:'Persian Star',layers:[{rows:['....##....','..######..','##########','##########','##########','..######..','....##....']},{dx:2,dy:1,rows:['..####..','########','########','########','..####..']},{dx:4,dy:2,rows:['####','####','####']},{dx:6,dy:3,rows:['##','##']},{dx:7,dy:4,rows:['#','#']}]},
+ {name:'Fortress',layers:[{rows:['##........##','############','.##########.','.##########.','############','##........##']},{dx:3,dy:2,rows:['#########','#########','#########','#########']},{dx:5,dy:3,rows:['#######','#######','#######']},{dx:7,dy:4,rows:['#####','#####']}]},
+ {name:'Twin Towers',layers:[{rows:['####....####','####....####','############','############','####....####','####....####']},{dx:1,dy:1,rows:['###......###','###......###','###......###','###......###','###......###']},{dx:2,dy:2,rows:['##........##','##........##','##........##','##........##']},{dx:3,dy:3,rows:['#..........#','#..........#','#..........#']}]},
+ {name:'Royal Road',layers:[{rows:['##############','##############','##############','##############','##############']},{dx:2,dy:2,rows:['############','############','############']},{dx:4,dy:3,rows:['##########','##########']},{dx:8,dy:3,rows:['######','######']},{dx:8,dy:4,rows:['######']}]},
+ {name:'Apadana',layers:[{rows:['############','############','############','############','############','############']},{dx:1,dy:1,rows:['###########','###########','###########','###########','###########']},{dx:6,dy:4,rows:['######','######']},{dx:7,dy:5,rows:['#####']}]},
+ {name:'Palace of Darius',layers:[{rows:['.###########.','#############','#############','#############','#############','.###########.']},{dx:2,dy:1,rows:['###########','###########','###########','###########','###########']},{dx:6,dy:3,rows:['#######','#######']},{dx:12,dy:4,rows:['#']}]}
+];
+function buildSlots(li){
+  const out=[];LAYOUTS[li].layers.forEach((ly,z)=>ly.rows.forEach((row,r)=>[...row].forEach((ch,c)=>{if(ch=='#')out.push({x:c*2+(ly.dx||0),y:r*2+(ly.dy||0),z})})));
+  const mnx=Math.min(...out.map(t=>t.x)),mny=Math.min(...out.map(t=>t.y));out.forEach(t=>{t.x-=mnx;t.y-=mny});
+  out.sort((a,b)=>a.z-b.z||a.y-b.y||a.x-b.x);
+  while(out.length>144)out.pop();
+  if(out.length%2)out.pop();
+  return out;
+}
+
+/* ---------- geometry: which tiles are free ---------- */
+let tiles=[];
+function covers(a,b){return a.z===b.z+1&&Math.abs(a.x-b.x)<2&&Math.abs(a.y-b.y)<2}
+function isFree(t,set){
+  if(!t.alive)return false;let left=false,right=false;
+  for(const o of set){if(!o.alive||o===t)continue;
+    if(o.z>t.z&&Math.abs(o.x-t.x)<2&&Math.abs(o.y-t.y)<2)return false;
+    if(o.z===t.z&&Math.abs(o.y-t.y)<2){if(o.x===t.x-2)left=true;else if(o.x===t.x+2)right=true}}
+  return !(left&&right);
+}
+/* Deal kinds so the board is always solvable: remove free pairs in reverse and give each pair a kind. */
+function dealKinds(slots,kindsPairs){
+  for(let attempt=0;attempt<400;attempt++){
+    const set=slots.map(s=>({...s,alive:true}));let pairs=[...kindsPairs];shuffleArr(pairs);let ok=true;const order=[];
+    while(set.some(s=>s.alive)){
+      const free=set.filter(s=>isFree(s,set));if(free.length<2){ok=false;break}
+      // prefer high and distant picks for variety
+      shuffleArr(free);const a=free[0],b=free.find(f=>f!==a&&!(f.z===a.z&&Math.abs(f.y-a.y)<2&&Math.abs(f.x-a.x)<=2))||free[1];
+      a.alive=false;b.alive=false;order.push([a,b]);
+    }
+    if(!ok)continue;
+    order.forEach(([a,b],i)=>{a.k=pairs[i];b.k=pairs[i]});
+    return set.map(s=>s.k);
+  }
+  return null;
+}
+function shuffleArr(a){for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]]}return a}
+function pairKinds(nPairs){const ks=shuffleArr([...KINDS.keys()]);const out=[];for(let i=0;i<nPairs;i++)out.push(ks[i%ks.length]);return out}
+
+/* ---------- save & sound ---------- */
+const KEY='afsoon-mahjong-v1';let save={best:{}};
+try{const s=JSON.parse(localStorage.getItem(KEY)||'null');if(s&&s.best)save=s}catch(e){}
+const persist=()=>{try{localStorage.setItem(KEY,JSON.stringify(save))}catch(e){}};
+let actx=null,muted=false;try{muted=localStorage.getItem('afsoon-mj-mute')=='1'}catch(e){}
+function tone(f,d,type,vol){if(muted)return;try{actx=actx||new (window.AudioContext||window.webkitAudioContext)();const o=actx.createOscillator(),g=actx.createGain();o.type=type||'sine';o.frequency.value=f;g.gain.setValueAtTime(vol||.07,actx.currentTime);g.gain.exponentialRampToValueAtTime(.0001,actx.currentTime+d);o.connect(g).connect(actx.destination);o.start();o.stop(actx.currentTime+d)}catch(e){}}
+const sfx={tap:()=>tone(660,.06,'triangle',.05),match:()=>{tone(784,.15,'triangle',.08);setTimeout(()=>tone(1047,.2,'triangle',.07),70)},no:()=>tone(160,.15,'square',.04),
+  win:()=>[523,659,784,1047,1319].forEach((f,i)=>setTimeout(()=>tone(f,.3,'triangle',.08),i*110))};
+const $=id=>document.getElementById(id);
+function drawSnd(){$('wave').style.display=muted?'none':'';$('snd').setAttribute('aria-label',muted?'Sound off':'Sound on')}
+$('snd').onclick=()=>{muted=!muted;try{localStorage.setItem('afsoon-mj-mute',muted?'1':'0')}catch(e){}drawSnd()};drawSnd();
+
+/* ---------- level picker ---------- */
+const unlocked=i=>i==0||!!save.best[i-1];
+const fmt=s=>Math.floor(s/60)+':'+String(s%60).padStart(2,'0');
+function renderPick(){
+  stopClock();$('pick').hidden=false;$('play').hidden=true;$('stats').hidden=true;$('menuBtn').hidden=true;
+  $('levels').innerHTML=LAYOUTS.map((l,i)=>{const n=buildSlots(i).length,b=save.best[i];
+    return `<button class="lv" data-i="${i}" ${unlocked(i)?'':'disabled'}><canvas width="320" height="200" data-i="${i}"></canvas><b>${i+1}. ${l.name}</b>
+     <span class="m"><span>${n} tiles</span><span class="s">${b?'★'.repeat(b.stars)+' '+fmt(b.time):unlocked(i)?'New':'\u{1F512} Locked'}</span></span></button>`}).join('');
+  $('levels').querySelectorAll('canvas').forEach(cv=>{const s=buildSlots(+cv.dataset.i);const ctx=cv.getContext('2d');
+    const mx=Math.max(...s.map(t=>t.x))+2,my=Math.max(...s.map(t=>t.y))+2;const u=Math.min(296/(mx/2)/.78,176/(my/2));
+    const ox=(320-mx/2*u*.78)/2+4,oy=(200-my/2*u)/2+4;
+    s.forEach(t=>{const x=ox+t.x*u*.78/2*1-t.z*3,y=oy+t.y*u/2-t.z*3;ctx.fillStyle='#9c7d47';ctx.fillRect(x+2,y+2,u*.78-1,u-1);ctx.fillStyle=['#efe2c6','#f6ecd6','#fff6e2','#fffaf0','#ffffff'][Math.min(t.z,4)];ctx.fillRect(x,y,u*.78-1,u-1);ctx.strokeStyle='#c9a764';ctx.lineWidth=1;ctx.strokeRect(x+.5,y+.5,u*.78-2,u-2)})});
+}
+$('levels').addEventListener('click',e=>{const b=e.target.closest('.lv');if(b&&!b.disabled)start(+b.dataset.i)});
+$('menuBtn').onclick=renderPick;
+
+/* ---------- play ---------- */
+let game=0,cur=0,sel=null,history=[],t0=0,elapsed=0,clock=null,hintsUsed=0,shufflesUsed=0,done=false,TW=48,TH=64,D=5;
+function startClock(){stopClock();t0=Date.now()-elapsed*1000;clock=setInterval(()=>{elapsed=Math.floor((Date.now()-t0)/1000);$('time').textContent=fmt(elapsed)},500)}
+function stopClock(){clearInterval(clock);clock=null}
+function start(i){
+  cur=i;const slots=buildSlots(i);const ks=dealKinds(slots,pairKinds(slots.length/2));
+  tiles=slots.map((s,j)=>({...s,k:ks[j],alive:true,el:null}));
+  sel=null;history=[];elapsed=0;hintsUsed=0;shufflesUsed=0;done=false;game++;$('ov').hidden=true;
+  $('pick').hidden=true;$('play').hidden=false;$('stats').hidden=false;$('menuBtn').hidden=false;
+  const b=$('board');b.innerHTML='';
+  tiles.forEach((t,j)=>{const el=document.createElement('div');el.className='t';el.dataset.j=j;el.innerHTML='<div class="sd"></div><div class="sd2"></div><div class="fc"></div>'+face(t.k);t.el=el;b.appendChild(el)});
+  layout();refresh();startClock();$('time').textContent='0:00';
+}
+function layout(){
+  if($('play').hidden)return;
+  const st=$('stage').getBoundingClientRect();
+  const mx=Math.max(...tiles.map(t=>t.x))+2,my=Math.max(...tiles.map(t=>t.y))+2,mz=Math.max(...tiles.map(t=>t.z));
+  // tile width w, height 1.33w, depth .1w per layer
+  const w=Math.max(18,Math.min((st.width-8)/(mx/2+mz*.12+.12),(st.height-8)/((my/2)*1.33+mz*.12+.12),96));
+  TW=w;TH=w*1.33;D=Math.max(2,w*.1);
+  const b=$('board');b.style.setProperty('--tw',TW+'px');b.style.setProperty('--th',TH+'px');b.style.setProperty('--d',D+'px');
+  const bw=mx/2*TW+mz*D+D,bh=my/2*TH+mz*D+D;b.style.width=bw+'px';b.style.height=bh+'px';
+  tiles.forEach(t=>{Object.assign(t.el.style,{left:(t.x/2*TW-t.z*D+mz*D)+'px',top:(t.y/2*TH-t.z*D+mz*D)+'px',zIndex:t.z*1000+t.y*20+t.x})});
+}
+addEventListener('resize',layout);
+function refresh(){
+  const show=$('showFree').checked;
+  tiles.forEach(t=>{if(!t.alive)return;t.free=isFree(t,tiles);t.el.classList.toggle('blk',show&&!t.free)});
+  $('pairs').textContent=tiles.filter(t=>t.alive).length/2;
+}
+$('showFree').onchange=refresh;
+function moves(){const f=tiles.filter(t=>t.alive&&t.free);const out=[];for(let i=0;i<f.length;i++)for(let j=i+1;j<f.length;j++)if(f[i].k===f[j].k)out.push([f[i],f[j]]);return out}
+function toast(msg){const t=$('toast');t.textContent=msg;t.classList.add('on');clearTimeout(toast.h);toast.h=setTimeout(()=>t.classList.remove('on'),1800)}
+function clearHint(){tiles.forEach(t=>t.el&&t.el.classList.remove('hint'))}
+$('board').addEventListener('click',e=>{
+  const el=e.target.closest('.t');if(!el||done)return;const t=tiles[+el.dataset.j];if(!t.alive)return;
+  if(!actx&&!muted){try{actx=new (window.AudioContext||window.webkitAudioContext)()}catch(e){}}
+  clearHint();
+  if(!isFree(t,tiles)){el.classList.remove('shake');void el.offsetWidth;el.classList.add('shake');sfx.no();return}
+  if(sel===t){t.el.classList.remove('sel');sel=null;return}
+  if(sel&&sel.k===t.k){remove(sel,t);sel=null;return}
+  if(sel)sel.el.classList.remove('sel');
+  sel=t;t.el.classList.add('sel');sfx.tap();
+});
+function remove(a,b){
+  a.el.classList.remove('sel');a.alive=false;b.alive=false;a.el.classList.add('gone');b.el.classList.add('gone');history.push([a,b]);sfx.match();refresh();
+  if(tiles.every(t=>!t.alive))return win();
+  if(!moves().length){const g=game;setTimeout(()=>{if(!done&&g===game&&!moves().length)noMoves()},450)}
+}
+$('undo').onclick=()=>{if(done||!history.length)return;const [a,b]=history.pop();a.alive=b.alive=true;a.el.classList.remove('gone');b.el.classList.remove('gone');if(sel){sel.el.classList.remove('sel');sel=null}refresh()};
+$('hint').onclick=()=>{if(done)return;clearHint();const m=moves();if(!m.length){noMoves();return}hintsUsed++;m[0].forEach(t=>t.el.classList.add('hint'))};
+$('shuf').onclick=()=>{if(!done)reshuffle(true)};
+$('restart').onclick=()=>start(cur);
+function reshuffle(manual){
+  const alive=tiles.filter(t=>t.alive);const kinds=[];const seen={};alive.forEach(t=>{seen[t.k]=(seen[t.k]||0)+1});
+  for(const k in seen)for(let i=0;i<seen[k]/2;i++)kinds.push(+k);
+  const ks=dealKinds(alive.map(t=>({x:t.x,y:t.y,z:t.z})),kinds);if(!ks){toast('No shuffle possible');return}
+  alive.forEach((t,i)=>{t.k=ks[i];t.el.querySelector('svg').outerHTML=face(t.k)});
+  if(sel){sel.el.classList.remove('sel');sel=null}
+  if(manual)shufflesUsed++;refresh();toast('Tiles shuffled');
+}
+function noMoves(){
+  $('dlg').innerHTML=`<h2>No more moves</h2><p>There are no free matching pairs left. Shuffle the remaining tiles and keep going, or undo your last moves.</p>
+   <div class="btns"><button class="btn" data-a="undo">Undo</button><button class="btn primary" data-a="shuffle">Shuffle tiles</button></div>`;$('ov').hidden=false;
+}
+function win(){
+  done=true;stopClock();sfx.win();
+  const n=tiles.length;const stars=(elapsed<=n*2.4&&!shufflesUsed)?3:(elapsed<=n*4)?2:1;
+  const prev=save.best[cur];if(!prev||stars>prev.stars||(stars==prev.stars&&elapsed<prev.time))save.best[cur]={time:elapsed,stars};persist();
+  const next=cur+1<LAYOUTS.length;
+  $('dlg').innerHTML=`<h2>Board cleared!</h2><div class="stars">${[0,1,2].map(i=>`<span class="${i<stars?'on':''}">★</span>`).join('')}</div>
+   <p>${LAYOUTS[cur].name} cleared in <b>${fmt(elapsed)}</b>.${next?' You unlocked <b>'+LAYOUTS[cur+1].name+'</b>.':' You cleared every board. Magnificent!'}</p>
+   <div class="btns"><button class="btn" data-a="pick">All boards</button>${next?'<button class="btn primary" data-a="next">Next board</button>':'<button class="btn primary" data-a="again">Play again</button>'}</div>`;
+  $('ov').hidden=false;const p=$('dlg').querySelector('.btn.primary');if(p)p.focus();
+}
+$('dlg').addEventListener('click',e=>{const a=e.target.closest('[data-a]');if(!a)return;$('ov').hidden=true;const act=a.dataset.a;
+  if(act=='shuffle')reshuffle(false);else if(act=='undo')$('undo').click();else if(act=='pick')renderPick();else if(act=='next')start(cur+1);else if(act=='again')start(cur)});
+document.addEventListener('visibilitychange',()=>{if($('play').hidden||done)return;if(document.hidden)stopClock();else startClock()});
+
+renderPick();
+window.__mj={get tiles(){return tiles},moves,start,buildSlots,LAYOUTS,get done(){return done},refresh,save};
+})();
+</script>
+</body>
+</html>
