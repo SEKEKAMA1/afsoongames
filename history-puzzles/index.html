@@ -117,6 +117,45 @@ a{color:inherit}
 .btn{height:46px;padding:0 22px;border-radius:23px;border:1px solid var(--line);background:var(--panel-2);font-weight:800}
 .btn.primary{background:var(--gold);color:#241a08;border-color:var(--gold)}
 .btn.primary:hover{background:var(--gold-2)}
+/* film */
+.film{position:fixed;inset:0;z-index:70;background:#000;display:grid;place-items:center}
+.stage{position:relative;width:min(100vw,calc(100vh * 16 / 9));aspect-ratio:16/9;max-width:100%;overflow:hidden;background:#000;opacity:0;transition:opacity 1s ease}
+.stage.on{opacity:1}
+.stage .sc{position:absolute;inset:0;opacity:0;transition:opacity 1.2s ease}
+.stage .sc.on{opacity:1}
+.stage .sc svg{width:100%;height:100%;display:block}
+.stage .kb{position:absolute;inset:0;transform-origin:50% 70%;animation:kb 22s linear forwards}
+@keyframes kb{from{transform:scale(1)}to{transform:scale(1.12) translateY(1%)}}
+.stage .night{position:absolute;inset:0;background:linear-gradient(180deg,#0b0a2e 0%,rgba(30,20,70,.85) 45%,rgba(40,20,60,.35) 100%);opacity:0;transition:opacity 4s ease;pointer-events:none}
+.stage .night.on{opacity:.82}
+.stage .tw{position:absolute;width:3px;height:3px;border-radius:50%;background:#fff;opacity:0;animation:tw 2s ease-in-out infinite}
+.stage .night.on .tw{opacity:1}
+@keyframes tw{50%{transform:scale(.4);opacity:.3}}
+.stage canvas{position:absolute;inset:0;width:100%;height:100%;pointer-events:none}
+.stage .bar{position:absolute;left:0;right:0;height:9%;background:#000;z-index:5}
+.stage .bar.t{top:0}.stage .bar.b{bottom:0}
+.stage .shade{position:absolute;left:0;right:0;bottom:0;height:55%;z-index:4;background:linear-gradient(180deg,transparent,rgba(5,3,14,.75));pointer-events:none}
+.stage .cap{position:absolute;left:6%;bottom:14%;z-index:6;max-width:62%;opacity:0;transform:translateY(12px);transition:opacity .9s ease,transform .9s ease;text-shadow:0 2px 16px rgba(0,0,0,.8)}
+.stage .cap.on{opacity:1;transform:none}
+.stage .cap small{display:block;font-family:var(--ui);font-weight:800;letter-spacing:.3em;text-transform:uppercase;color:var(--gold);font-size:clamp(9px,1.5vw,14px)}
+.stage .cap b{display:block;font-family:var(--display);font-size:clamp(20px,5vw,54px);color:#fff;line-height:1.1}
+.stage .cap p{margin:6px 0 0;font-size:clamp(11px,1.9vw,19px);color:#f1ecff;line-height:1.45}
+.stage .cupwrap{position:absolute;left:50%;top:50%;z-index:6;width:30%;transform:translate(-50%,120%);transition:transform 1.8s cubic-bezier(.2,.9,.25,1.1)}
+.stage .cupwrap.on{transform:translate(-50%,-58%)}
+.stage .rays{position:absolute;left:50%;top:42%;width:170%;aspect-ratio:1;transform:translate(-50%,-50%);border-radius:50%;
+  background:repeating-conic-gradient(rgba(255,226,140,.38) 0 8deg,rgba(255,226,140,0) 8deg 20deg);mask:radial-gradient(circle,#000 20%,transparent 68%);-webkit-mask:radial-gradient(circle,#000 20%,transparent 68%);animation:spin 14s linear infinite;opacity:0;transition:opacity 1.5s}
+.stage .cupwrap.on .rays{opacity:1}
+@keyframes spin{to{transform:translate(-50%,-50%) rotate(360deg)}}
+.stage .cupwrap svg{position:relative;width:100%;height:auto;display:block;filter:drop-shadow(0 10px 30px rgba(255,200,80,.5))}
+.stage .title{position:absolute;left:0;right:0;bottom:12%;z-index:7;text-align:center;opacity:0;transform:scale(.8);transition:opacity .8s ease,transform .8s cubic-bezier(.2,.9,.3,1.3)}
+.stage .title.on{opacity:1;transform:none}
+.stage .title b{display:block;font-family:var(--display);font-size:clamp(20px,4.6vw,50px);color:var(--gold-2);text-shadow:0 3px 18px rgba(0,0,0,.85)}
+.stage .title span{font-weight:800;color:#fff;font-size:clamp(11px,1.8vw,18px);text-shadow:0 2px 10px rgba(0,0,0,.8)}
+.film .skip{position:absolute;top:max(14px,env(safe-area-inset-top,0px));right:max(14px,env(safe-area-inset-right,0px));z-index:9;background:rgba(0,0,0,.5);border:1px solid rgba(255,255,255,.3);border-radius:18px;height:36px;padding:0 16px;font-weight:800}
+.film .go{position:absolute;left:50%;bottom:max(18px,env(safe-area-inset-bottom,0px));transform:translateX(-50%);z-index:9;opacity:0;pointer-events:none;transition:opacity .6s}
+.film .go.on{opacity:1;pointer-events:auto}
+.card .watch{position:absolute;top:8px;left:8px;z-index:2;background:rgba(11,7,22,.75);border:1px solid rgba(230,184,92,.6);color:var(--gold-2);border-radius:8px;height:28px;padding:0 9px;font-weight:800;font-size:.75rem}
+.card .watch:hover{background:rgba(40,28,10,.9)}
 .credit{text-align:center;font-size:.78rem;color:var(--muted)}
 .credit a{color:var(--gold)}
 
@@ -172,6 +211,7 @@ a{color:inherit}
   <p class="credit">A game by <a href="/">Afsoon Games</a>. Progress is saved on this device.</p>
 </div>
 
+<div class="film" id="film" hidden></div>
 <div class="ov" id="ov" hidden><div class="dlg" id="dlg" role="dialog" aria-modal="true"></div></div>
 
 <script>
@@ -380,9 +420,11 @@ function renderMap(){
     return `<div class="card${un?'':' locked'}" ${un?`data-b="${b}" role="button" tabindex="0"`:''}>
       <span class="art">${art(b,dc/5)}</span>
       ${un?'':'<span class="lock">\u{1F512} Locked</span>'}
+      ${dc==5?`<button class="watch" data-film="${b}" type="button">\u{1F3C6} Watch film</button>`:''}
       <div class="info"><b>${w.name}</b><span class="where">${w.where} · ${dc==5?'Restored':dc*20+'% restored'}</span><div class="dots">${dots}</div></div></div>`}).join('');
 }
 $('cards').addEventListener('click',e=>{
+  const wf=e.target.closest('[data-film]');if(wf){e.stopPropagation();const fb=+wf.dataset.film;playFilm(fb==B.length-1&&B.every((_,i)=>doneCount(i)==5)?'finale':'one',fb,null);return}
   const d=e.target.closest('.dot');if(d){e.stopPropagation();if(!d.disabled)startLevel(+d.dataset.b,+d.dataset.l);return}
   const c=e.target.closest('.card[data-b]');if(c){const b=+c.dataset.b;let l=[0,1,2,3,4].find(l=>!starsOf(b,l));if(l===undefined)l=4;startLevel(b,l)}
 });
@@ -586,11 +628,77 @@ function unlockAudio(){if(!muted&&!actx){try{actx=new (window.AudioContext||wind
 function stopHint(){clearTimeout(hintT);boardEl.querySelectorAll('.hint').forEach(e=>e.classList.remove('hint'))}
 function scheduleHint(){stopHint();hintT=setTimeout(()=>{if(busy||ended||$('game').hidden)return;const m=findMove();if(m)m.forEach(p=>{if(p&&grid[p[0]]&&grid[p[0]][p[1]])grid[p[0]][p[1]].el.classList.add('hint')})},7000)}
 
+/* ---------- victory film ---------- */
+const CUP=name=>`<svg viewBox="0 0 200 250" aria-hidden="true"><defs>
+ <linearGradient id="cg" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#b8860b"/><stop offset=".35" stop-color="#ffe9a0"/><stop offset=".6" stop-color="#f2c335"/><stop offset="1" stop-color="#9a6d08"/></linearGradient>
+ <linearGradient id="cb" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#3a2a12"/><stop offset="1" stop-color="#1c1408"/></linearGradient></defs>
+ <path d="M42 46c-32 0-34 52 10 60M158 46c32 0 34 52-10 60" stroke="url(#cg)" stroke-width="11" fill="none" stroke-linecap="round"/>
+ <path d="M38 28h124v34c0 50-30 82-62 82S38 112 38 62z" fill="url(#cg)"/>
+ <path d="M38 28h124v8H38z" fill="#fff3c4" opacity=".7"/>
+ <path d="M56 40c0 40 10 66 30 80" stroke="#fffbe6" stroke-width="7" fill="none" stroke-linecap="round" opacity=".55"/>
+ <path d="M100 58l6.5 13.5 15 1.6-11.2 10 3.2 14.7L100 90.5l-13.5 7.3 3.2-14.7-11.2-10 15-1.6z" fill="#fff6d0" stroke="#b8860b" stroke-width="2"/>
+ <rect x="91" y="142" width="18" height="26" fill="url(#cg)"/><ellipse cx="100" cy="148" rx="16" ry="6" fill="url(#cg)"/>
+ <path d="M64 168h72l10 22H54z" fill="url(#cg)"/>
+ <rect x="44" y="190" width="112" height="40" rx="5" fill="url(#cb)" stroke="#d9a441" stroke-width="2.5"/>
+ <text x="100" y="${name.length>16?214:216}" text-anchor="middle" font-family="Cinzel,Georgia,serif" font-weight="700" font-size="${name.length>16?11:name.length>11?13:15}" fill="#f6d999">${name}</text></svg>`;
+function fireworks(cv){
+  const ctx=cv.getContext('2d');let W,H,parts=[],alive=true,last=0;
+  const fit=()=>{W=cv.width=cv.clientWidth*devicePixelRatio;H=cv.height=cv.clientHeight*devicePixelRatio};fit();
+  const cols=['#ffd36b','#ff7a6b','#7fe0ff','#b58cff','#7dffb0','#ffffff'];
+  function burst(){const x=W*(.15+Math.random()*.7),y=H*(.12+Math.random()*.35),c=cols[Math.floor(Math.random()*cols.length)],n=70;
+    for(let i=0;i<n;i++){const a=i/n*Math.PI*2,v=(1.5+Math.random()*2.5)*devicePixelRatio*(W/900);parts.push({x,y,vx:Math.cos(a)*v,vy:Math.sin(a)*v,l:1,c})}
+    tone(140+Math.random()*120,.25,'triangle',.05)}
+  function loop(t){if(!alive)return;if(t-last>520){burst();last=t}
+    ctx.fillStyle='rgba(0,0,0,0)';ctx.clearRect(0,0,W,H);ctx.globalCompositeOperation='lighter';
+    parts.forEach(p=>{p.x+=p.vx;p.y+=p.vy;p.vy+=.03*devicePixelRatio;p.vx*=.985;p.vy*=.985;p.l-=.011;ctx.globalAlpha=Math.max(0,p.l);ctx.fillStyle=p.c;ctx.beginPath();ctx.arc(p.x,p.y,2.2*devicePixelRatio,0,7);ctx.fill()});
+    parts=parts.filter(p=>p.l>0);ctx.globalAlpha=1;ctx.globalCompositeOperation='source-over';requestAnimationFrame(loop)}
+  requestAnimationFrame(loop);return()=>{alive=false};
+}
+function playFilm(kind,b,done){
+  const f=$('film');const reduce=matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const scenes=kind=='finale'?B.map((_,i)=>i):[b];
+  const scArt=i=>art(i,1,{noRuin:true}).replace('<svg viewBox="0 0 320 200"','<svg viewBox="0 0 320 200" preserveAspectRatio="xMidYMid slice"');
+  let stars='';for(let i=0;i<40;i++)stars+=`<span class="tw" style="left:${Math.random()*100}%;top:${Math.random()*45}%;animation-delay:${Math.random()*2}s"></span>`;
+  const name=kind=='finale'?'World Restorer':B[b].name;
+  f.innerHTML=`<div class="stage" id="stage">
+    ${scenes.map(i=>`<div class="sc" data-i="${i}"><div class="kb">${scArt(i)}</div></div>`).join('')}
+    <div class="night">${stars}</div><canvas></canvas>
+    <div class="shade"></div><div class="bar t"></div><div class="bar b"></div>
+    <div class="cap" id="cap"></div>
+    <div class="cupwrap"><div class="rays"></div>${CUP(name)}</div>
+    <div class="title"><b>${kind=='finale'?'All ten wonders restored!':B[b].name+' restored!'}</b><span>${kind=='finale'?'You are a true World Restorer':B[b].where+' · wonder '+(b+1)+' of '+B.length}</span></div>
+  </div><button class="skip" type="button">Skip ›</button><button class="btn primary go" type="button">Continue</button>`;
+  f.hidden=false;
+  const st=f.querySelector('.stage'),cap=f.querySelector('#cap'),T=[];let stopFw=null,finished=false;
+  const at=(ms,fn)=>T.push(setTimeout(fn,reduce?Math.min(ms,ms/4):ms));
+  const say=(eb,big,txt)=>{cap.classList.remove('on');setTimeout(()=>{cap.innerHTML=`<small>${eb}</small><b>${big}</b>${txt?'<p>'+txt+'</p>':''}`;cap.classList.add('on')},450)};
+  const show=i=>f.querySelectorAll('.sc').forEach(s=>s.classList.toggle('on',+s.dataset.i===i));
+  function end(){if(finished)return;finished=true;T.forEach(clearTimeout);if(stopFw)stopFw();f.hidden=true;f.innerHTML='';done&&done()}
+  f.querySelector('.skip').onclick=end;f.querySelector('.go').onclick=end;
+  requestAnimationFrame(()=>st.classList.add('on'));
+  [523,659,784].forEach((fr,i)=>setTimeout(()=>tone(fr,.5,'sine',.05),300+i*260));
+  let t;
+  if(kind=='finale'){
+    scenes.forEach((i,k)=>at(k*2600,()=>{show(i);say('Wonder '+(k+1)+' of 10',B[i].name,B[i].where)}));
+    t=scenes.length*2600;
+  }else{
+    at(0,()=>{show(b);say('You restored',B[b].name,B[b].where)});
+    at(5200,()=>say('Did you know?',B[b].name,B[b].facts[0]));
+    t=11000;
+  }
+  at(t-1500,()=>f.querySelector('.night').classList.add('on'));
+  at(t,()=>{cap.classList.remove('on');stopFw=fireworks(f.querySelector('canvas'))});
+  at(t+900,()=>{f.querySelector('.cupwrap').classList.add('on');[784,988,1175,1568].forEach((fr,i)=>setTimeout(()=>tone(fr,.4,'triangle',.07),i*150))});
+  at(t+2600,()=>f.querySelector('.title').classList.add('on'));
+  at(t+5200,()=>f.querySelector('.go').classList.add('on'));
+  at(t+(kind=='finale'?10500:8800),end);
+}
 /* ---------- results ---------- */
 function dialog(html){$('dlg').innerHTML=html;$('ov').hidden=false;const b=$('dlg').querySelector('.btn.primary');if(b)b.focus()}
 function closeDlg(){$('ov').hidden=true}
 function win(){
-  sfx.win();
+  if(curL==4&&!win.filmShown){{const r0=moves/cfg.moves,st0=r0>=.3?3:r0>=.12?2:1,k0=curB+'-'+curL;save.stars[k0]=Math.max(save.stars[k0]||0,st0);persist()}win.filmShown=true;const fin=curB==B.length-1;setTimeout(()=>playFilm(fin?'finale':'one',curB,()=>{win();win.filmShown=false}),600);sfx.win();return}
+  if(curL!=4)sfx.win();
   const ratio=moves/cfg.moves;const stars=ratio>=.3?3:ratio>=.12?2:1;
   const k=curB+'-'+curL;save.stars[k]=Math.max(save.stars[k]||0,stars);persist();
   drawPanel(false);
@@ -617,7 +725,7 @@ renderMap();
 function allMoves(){const out=[];for(let r=0;r<N;r++)for(let c=0;c<N;c++)for(const [dr,dc] of [[0,1],[1,0]]){const r2=r+dr,c2=c+dc;if(r2>=N||c2>=N)continue;const a=grid[r][c],b=grid[r2][c2];
   if(a.sp=='star'||b.sp=='star'||(a.sp&&b.sp)){out.push({a:[r,c],b:[r2,c2],sp:2,t:a.sp=='star'?b.t:a.t});continue}
   grid[r][c]=b;grid[r2][c2]=a;const h1=lineAt(r,c),h2=lineAt(r2,c2);grid[r][c]=a;grid[r2][c2]=b;if(h1||h2)out.push({a:[r,c],b:[r2,c2],sp:(a.sp||b.sp)?1:0,t:h1?b.t:a.t})}return out}
-window.__hp={allMoves,get grid(){return grid},trySwap,findMove,get busy(){return busy},get ended(){return ended},get moves(){return moves},get goals(){return goalsLeft},startLevel,levelCfg,save};
+window.__hp={allMoves,playFilm,get grid(){return grid},trySwap,findMove,get busy(){return busy},get ended(){return ended},get moves(){return moves},get goals(){return goalsLeft},startLevel,levelCfg,save};
 })();
 </script>
 </body>
