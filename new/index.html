@@ -1,0 +1,292 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Afsoon Games – Free Persian-inspired browser games</title>
+<meta name="description" content="Play free browser games from Afsoon Games: merge puzzles, rooftop runners and card games inspired by ancient Persia. No download needed.">
+<link rel="icon" type="image/png" href="/img/favicon-64.png">
+<link rel="apple-touch-icon" href="/img/apple-touch-icon.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cinzel:wght@600;700&family=Nunito:wght@500;700;800&display=swap">
+<style>
+/* Layout: game-portal shell. Fixed top bar, left nav rail, main column of game rows. */
+:root{
+  --bg:#0c0b17; --bar:#12111f; --panel:#181628; --panel-2:#211e36; --line:rgba(255,255,255,.07);
+  --text:#ece8f6; --muted:#9a94b3; --gold:#e6b85c; --gold-2:#f6d999; --plum:#7b5cff;
+  --brand:"Cinzel",Georgia,serif; --ui:"Nunito",system-ui,sans-serif;
+  --top:64px; --rail:232px;
+  color-scheme:dark;
+}
+*{box-sizing:border-box}
+html,body{margin:0}
+body{background:var(--bg);color:var(--text);font-family:var(--ui);font-size:15px;-webkit-font-smoothing:antialiased}
+a{color:inherit;text-decoration:none}
+img{max-width:100%;display:block}
+button{font:inherit;color:inherit}
+:focus-visible{outline:2px solid var(--gold);outline-offset:2px;border-radius:6px}
+
+/* top bar */
+.top{position:fixed;inset:0 0 auto 0;height:var(--top);z-index:30;background:var(--bar);border-bottom:1px solid var(--line);
+  display:flex;align-items:center;gap:14px;padding-left:max(12px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+.burger{width:40px;height:40px;border:0;background:transparent;border-radius:10px;display:grid;place-items:center;cursor:pointer;flex:none}
+.burger:hover{background:var(--panel-2)}
+.burger svg{width:22px;height:22px}
+.logo{display:flex;align-items:center;gap:10px;flex:none}
+.logo img{width:38px;height:auto}
+.logo b{font-family:var(--brand);font-weight:700;letter-spacing:.12em;font-size:16px;white-space:nowrap}
+.logo b span{color:var(--gold)}
+.search{flex:1;max-width:520px;margin:0 auto;position:relative}
+.search input{width:100%;height:42px;border-radius:21px;border:1px solid var(--line);background:var(--panel);color:var(--text);
+  padding:0 16px 0 42px;font:600 15px var(--ui)}
+.search input::placeholder{color:var(--muted)}
+.search input:focus{outline:none;border-color:rgba(230,184,92,.6);background:var(--panel-2)}
+.search svg{position:absolute;left:14px;top:50%;transform:translateY(-50%);width:18px;height:18px;color:var(--muted)}
+.cta{flex:none;height:40px;padding:0 18px;border-radius:20px;background:var(--gold);color:#241a08;font-weight:800;display:flex;align-items:center;gap:8px}
+.cta:hover{background:var(--gold-2)}
+
+/* rail */
+.rail{position:fixed;top:var(--top);bottom:0;left:0;width:var(--rail);background:var(--bar);border-right:1px solid var(--line);
+  overflow-y:auto;padding:12px 10px 24px;z-index:20;transition:transform .2s ease}
+.rail a{display:flex;align-items:center;gap:14px;padding:10px 12px;border-radius:10px;font-weight:700;color:#d8d3ea}
+.rail a:hover{background:var(--panel-2)}
+.rail a.on{background:var(--panel-2);color:var(--gold-2)}
+.rail svg{width:20px;height:20px;flex:none;color:var(--gold)}
+.rail .n{margin-left:auto;font-size:12px;color:var(--muted);font-weight:700}
+.rail hr{border:0;border-top:1px solid var(--line);margin:10px 6px}
+.rail h4{margin:12px 12px 6px;font-size:12px;letter-spacing:.12em;text-transform:uppercase;color:var(--muted)}
+body.mini .rail{width:72px}
+body.mini .rail a span,body.mini .rail .n,body.mini .rail h4{display:none}
+body.mini main{margin-left:72px}
+
+/* main */
+main{margin-left:var(--rail);padding-top:calc(var(--top) + 22px);padding-bottom:40px;
+  padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));transition:margin .2s ease}
+.inner{max-width:1360px;margin:0 auto;display:flex;flex-direction:column;gap:34px}
+.row h2{display:flex;align-items:baseline;gap:12px;margin:0 0 14px;font-size:20px;font-weight:800}
+.row h2 small{font-size:14px;color:var(--muted);font-weight:700}
+
+/* featured grid: one big tile + two stacked */
+.featured{display:grid;grid-template-columns:2fr 1fr;grid-template-rows:1fr 1fr;gap:14px}
+.featured .tile:first-child{grid-row:span 2}
+.tiles{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:14px}
+
+.tile{position:relative;border-radius:14px;overflow:hidden;background:var(--panel);aspect-ratio:16/9;isolation:isolate;
+  transition:transform .18s ease,box-shadow .18s ease}
+.featured .tile{aspect-ratio:auto;min-height:0}
+.featured .tile:first-child{aspect-ratio:16/9}
+.tile img{width:100%;height:100%;object-fit:cover;transition:transform .35s ease}
+.tile::after{content:"";position:absolute;inset:0;background:linear-gradient(180deg,transparent 40%,rgba(8,6,18,.92));z-index:1}
+.featured .tile:first-child::after{background:linear-gradient(180deg,transparent 30%,rgba(8,6,18,.75) 62%,rgba(8,6,18,.96))}
+.tile .meta{position:absolute;left:14px;right:14px;bottom:12px;z-index:2;display:flex;align-items:flex-end;justify-content:space-between;gap:10px}
+.tile .t{font-weight:800;font-size:16px;line-height:1.2;text-shadow:0 1px 8px rgba(0,0,0,.6)}
+.tile .c{font-size:12px;color:var(--gold-2);font-weight:700;letter-spacing:.04em}
+.featured .tile:first-child .t{font-size:26px}
+.featured .tile:first-child .d{display:block}
+.tile .d{display:none;font-size:14px;color:#d9d3ec;max-width:46ch;margin-top:6px;line-height:1.45}
+.tile .play{flex:none;width:44px;height:44px;border-radius:50%;background:var(--gold);color:#241a08;display:grid;place-items:center;
+  opacity:0;transform:scale(.8);transition:.18s ease}
+.tile .play svg{width:20px;height:20px;margin-left:3px}
+.badge{position:absolute;top:10px;left:10px;z-index:2;font-size:11px;font-weight:800;letter-spacing:.06em;text-transform:uppercase;
+  padding:4px 9px;border-radius:7px;background:var(--plum);color:#fff}
+.badge.hot{background:#e8553f}
+.tile:hover,.tile:focus-visible{transform:translateY(-3px);box-shadow:0 0 0 2px var(--gold),0 14px 30px rgba(0,0,0,.45)}
+.tile:hover img{transform:scale(1.05)}
+.tile:hover .play,.tile:focus-visible .play{opacity:1;transform:none}
+
+/* category chips */
+.chips{display:flex;flex-wrap:wrap;gap:10px}
+.chip{display:flex;align-items:center;gap:10px;padding:10px 16px;border-radius:12px;background:var(--panel);border:1px solid var(--line);font-weight:800;cursor:pointer}
+.chip:hover,.chip.on{background:var(--panel-2);border-color:rgba(230,184,92,.5)}
+.chip svg{width:18px;height:18px;color:var(--gold)}
+.chip .n{color:var(--muted);font-size:13px}
+
+/* partner banner */
+.partner{display:grid;grid-template-columns:auto 1fr auto;gap:24px;align-items:center;padding:24px 28px;border-radius:18px;
+  background:radial-gradient(120% 140% at 0% 0%,#2b2150 0%,var(--panel) 60%);border:1px solid rgba(230,184,92,.25)}
+.partner img{width:84px}
+.partner h3{margin:0 0 6px;font-family:var(--brand);font-size:22px;color:var(--gold-2);letter-spacing:.04em}
+.partner p{margin:0;color:#cfc9e2;line-height:1.55;max-width:62ch}
+.btn{display:inline-flex;align-items:center;height:44px;padding:0 22px;border-radius:22px;font-weight:800;background:var(--gold);color:#241a08;white-space:nowrap}
+.btn:hover{background:var(--gold-2)}
+.empty{color:var(--muted);padding:20px;border:1px dashed var(--line);border-radius:14px;text-align:center}
+
+footer{margin-left:var(--rail);border-top:1px solid var(--line);background:var(--bar);
+  padding-block:28px;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));transition:margin .2s ease}
+footer .inner{flex-direction:row;flex-wrap:wrap;justify-content:space-between;gap:18px;color:var(--muted);font-size:14px}
+footer nav{display:flex;flex-wrap:wrap;gap:20px}
+footer a:hover{color:var(--gold-2)}
+body.mini footer{margin-left:72px}
+.scrim{display:none}
+
+@media (max-width:900px){
+  :root{--rail:250px}
+  .rail{transform:translateX(-100%);box-shadow:0 0 40px rgba(0,0,0,.6)}
+  body.open .rail{transform:none}
+  body.open .scrim{display:block;position:fixed;inset:var(--top) 0 0 0;background:rgba(0,0,0,.5);z-index:15}
+  main,footer,body.mini main,body.mini footer{margin-left:0}
+  body.mini .rail{width:var(--rail)}
+  body.mini .rail a span,body.mini .rail .n,body.mini .rail h4{display:revert}
+  .featured{grid-template-columns:1fr;grid-template-rows:none}
+  .featured .tile{aspect-ratio:16/9}
+  .featured .tile:first-child{grid-row:auto}
+  .featured .tile:first-child .t{font-size:20px}
+  .featured .tile:first-child .d{display:none}
+  .partner{grid-template-columns:1fr;text-align:left}
+  .partner img{width:64px}
+}
+@media (max-width:620px){
+  .logo b{display:none}
+  .cta{display:none}
+  .tiles{grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
+  .tile .t{font-size:14px}
+  .tile .c{display:none}
+}
+@media (prefers-reduced-motion:reduce){*{transition:none!important}}
+</style>
+</head>
+<body>
+
+<header class="top">
+  <button class="burger" id="burger" aria-label="Toggle menu" aria-expanded="false">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M4 7h16M4 12h16M4 17h16"/></svg>
+  </button>
+  <a class="logo" href="/" aria-label="Afsoon Games home"><img src="/img/afsoon-logo-96.png" width="38" height="40" alt=""><b>AFSOON <span>GAMES</span></b></a>
+  <label class="search">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>
+    <input id="q" type="search" placeholder="Search games" autocomplete="off" aria-label="Search games">
+  </label>
+  <a class="cta" href="#partners">For partners</a>
+</header>
+
+<nav class="rail" id="rail" aria-label="Main">
+  <a href="/" class="on" data-nav="home"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"><path d="M3 11 12 4l9 7v9h-6v-6H9v6H3z"/></svg><span>Home</span></a>
+  <a href="#recent" data-nav="recent"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg><span>Recently played</span></a>
+  <a href="#new" data-nav="new"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"><path d="m12 3 2.6 5.6 6.1.7-4.5 4.2 1.2 6L12 16.6 6.6 19.5l1.2-6L3.3 9.3l6.1-.7z"/></svg><span>New games</span></a>
+  <a href="#all" data-nav="all"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7" rx="2"/><rect x="14" y="3" width="7" height="7" rx="2"/><rect x="3" y="14" width="7" height="7" rx="2"/><rect x="14" y="14" width="7" height="7" rx="2"/></svg><span>All games</span><b class="n" id="nAll"></b></a>
+  <hr>
+  <h4>Categories</h4>
+  <div id="railCats"></div>
+  <hr>
+  <a href="#partners"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"><path d="M8 12l3 3 5-6"/><circle cx="12" cy="12" r="9"/></svg><span>License our games</span></a>
+  <a href="#about"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="9"/><path d="M12 11v6M12 7.5v.01"/></svg><span>About Afsoon</span></a>
+  <a href="mailto:info@afsoongames.com"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="m3 7 9 6 9-6"/></svg><span>Contact</span></a>
+</nav>
+<div class="scrim" id="scrim"></div>
+
+<main>
+  <div class="inner">
+    <section class="row" id="results" hidden>
+      <h2>Search results <small id="rcount"></small></h2>
+      <div class="tiles" id="rtiles"></div>
+    </section>
+
+    <div id="home">
+      <section class="row" id="new" style="margin-bottom:34px">
+        <h2>Featured games</h2>
+        <div class="featured" id="featured"></div>
+      </section>
+
+      <section class="row" id="recent" style="margin-bottom:34px" hidden>
+        <h2>Recently played</h2>
+        <div class="tiles" id="recentTiles"></div>
+      </section>
+
+      <section class="row" style="margin-bottom:34px">
+        <h2>Categories</h2>
+        <div class="chips" id="chips"></div>
+      </section>
+
+      <section class="row" id="all" style="margin-bottom:34px">
+        <h2><span id="allTitle">All games</span> <small id="allCount"></small></h2>
+        <div class="tiles" id="allTiles"></div>
+      </section>
+
+      <section class="partner" id="partners">
+        <img src="/img/afsoon-logo-96.png" width="84" height="88" alt="">
+        <div>
+          <h3>Put our games on your platform</h3>
+          <p>Game portals, publishers and brands can license or rent any Afsoon game. We also build custom games for campaigns and events.</p>
+        </div>
+        <a class="btn" href="mailto:info@afsoongames.com">info@afsoongames.com</a>
+      </section>
+
+      <section class="row" id="about" style="margin-top:34px">
+        <h2>About Afsoon</h2>
+        <p style="margin:0;color:#cfc9e2;line-height:1.65;max-width:70ch">Afsoon means magic in Persian. We are an independent studio making free browser games inspired by ancient Persia, from the rooftops of Anshan to the royal alchemists. Every game runs on phone and computer with no download.</p>
+      </section>
+    </div>
+  </div>
+</main>
+
+<footer>
+  <div class="inner">
+    <span>&copy; 2026 Afsoon Games</span>
+    <nav><a href="#all">All games</a><a href="#partners">Partners</a><a href="#about">About</a><a href="mailto:info@afsoongames.com">Contact</a></nav>
+  </div>
+</footer>
+
+<script>
+const GAMES=[
+  {id:'solitaire',name:'Afsoon Solitaire',url:'/solitaire/',cat:'Card',badge:'New',
+   desc:'Classic Klondike solitaire with a Persian miniature deck. Build the four foundations from ace to king.'},
+  {id:'anshan-run',name:'Anshan Run',url:'/anshan-run/',cat:'Arcade',badge:'Hot',
+   desc:'Race a royal messenger across the mud-brick rooftops of ancient Anshan, home of the first Achaemenid kings.'},
+  {id:'alchemy',name:'Afsoon Alchemy',url:'/alchemy/',cat:'Puzzle',badge:'',
+   desc:'Brew sparks, merge them into potions and crystals, and fill the orders of the royal court.'}
+];
+const CATS={
+  Puzzle:'<path d="M9 3h6v3a2 2 0 1 0 4 0h2v6h-3a2 2 0 1 0 0 4h3v5H3V3h6z"/>',
+  Arcade:'<rect x="3" y="7" width="18" height="11" rx="4"/><path d="M8 11v3M6.5 12.5h3M15 12h.01M17.5 13.5h.01"/>',
+  Card:'<rect x="4" y="5" width="11" height="15" rx="2"/><path d="M9 3h9a2 2 0 0 1 2 2v13"/>'
+};
+const ico=p=>'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">'+p+'</svg>';
+const play='<span class="play">'+ico('<path d="M7 4v16l13-8z" fill="currentColor" stroke="none"/>')+'</span>';
+function tile(g){
+  const b=g.badge?'<span class="badge'+(g.badge=='Hot'?' hot':'')+'">'+g.badge+'</span>':'';
+  return '<a class="tile" href="'+g.url+'" data-id="'+g.id+'">'+b+'<img src="/img/thumbs/'+g.id+'.webp" alt="" loading="lazy" width="640" height="360">'+
+    '<div class="meta"><div><div class="c">'+g.cat+'</div><div class="t">'+g.name+'</div><span class="d">'+g.desc+'</span></div>'+play+'</div></a>';
+}
+const $=id=>document.getElementById(id);
+$('featured').innerHTML=GAMES.slice(0,3).map(tile).join('');
+const counts={};GAMES.forEach(g=>counts[g.cat]=(counts[g.cat]||0)+1);
+$('chips').innerHTML='<button class="chip on" data-cat="">All <span class="n">'+GAMES.length+'</span></button>'+
+  Object.keys(CATS).map(c=>'<button class="chip" data-cat="'+c+'">'+ico(CATS[c])+c+' <span class="n">'+(counts[c]||0)+'</span></button>').join('');
+$('railCats').innerHTML=Object.keys(CATS).map(c=>'<a href="#all" data-cat="'+c+'">'+ico(CATS[c])+'<span>'+c+' games</span><b class="n">'+(counts[c]||0)+'</b></a>').join('');
+$('nAll').textContent=GAMES.length;
+function showAll(cat){
+  const list=cat?GAMES.filter(g=>g.cat==cat):GAMES;
+  $('allTitle').textContent=cat?cat+' games':'All games';$('allCount').textContent=list.length+(list.length==1?' game':' games');
+  $('allTiles').innerHTML=list.map(tile).join('');
+  document.querySelectorAll('.chip').forEach(c=>c.classList.toggle('on',c.dataset.cat===(cat||'')));
+}
+showAll('');
+document.addEventListener('click',e=>{
+  const c=e.target.closest('[data-cat]');
+  if(c){e.preventDefault();showAll(c.dataset.cat);$('all').scrollIntoView({behavior:'smooth',block:'start'});closeRail()}
+  const t=e.target.closest('.tile');
+  if(t){try{let r=JSON.parse(localStorage.getItem('afsoon-recent')||'[]');r=[t.dataset.id,...r.filter(x=>x!=t.dataset.id)].slice(0,8);localStorage.setItem('afsoon-recent',JSON.stringify(r))}catch(_){}}
+  if(e.target.closest('.rail a:not([data-cat])'))closeRail();
+});
+let recent=[];try{recent=JSON.parse(localStorage.getItem('afsoon-recent')||'[]')}catch(_){}
+const rec=recent.map(id=>GAMES.find(g=>g.id==id)).filter(Boolean);
+if(rec.length){$('recent').hidden=false;$('recentTiles').innerHTML=rec.map(tile).join('')}
+$('q').addEventListener('input',e=>{
+  const v=e.target.value.trim().toLowerCase();
+  if(!v){$('results').hidden=true;$('home').hidden=false;return}
+  const list=GAMES.filter(g=>(g.name+' '+g.cat+' '+g.desc).toLowerCase().includes(v));
+  $('home').hidden=true;$('results').hidden=false;
+  $('rcount').textContent=list.length+(list.length==1?' game':' games');
+  $('rtiles').innerHTML=list.length?list.map(tile).join(''):'<div class="empty">No games match "'+e.target.value.replace(/[<>&"]/g,'')+'". Try "card", "puzzle" or "run".</div>';
+});
+const mq=matchMedia('(max-width:900px)');
+function closeRail(){document.body.classList.remove('open');$('burger').setAttribute('aria-expanded','false')}
+$('burger').onclick=()=>{
+  if(mq.matches){const o=document.body.classList.toggle('open');$('burger').setAttribute('aria-expanded',o)}
+  else{const m=document.body.classList.toggle('mini');$('burger').setAttribute('aria-expanded',!m)}
+};
+$('scrim').onclick=closeRail;
+</script>
+</body>
+</html>
