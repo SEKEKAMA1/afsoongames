@@ -7,10 +7,10 @@
 <link rel="icon" type="image/png" href="/img/favicon-64.png">
 <link rel="apple-touch-icon" href="/img/apple-touch-icon.png">
 <title>Afsoon Mahjong</title>
-<meta name="description" content="Afsoon Mahjong by Afsoon Games. Classic mahjong solitaire with Persian tiles: lapis circles, cypress trees, Persian numerals, lions and pomegranates. Ten boards, free in your browser.">
+<meta name="description" content="Afsoon Mahjong by Afsoon Games. Classic mahjong solitaire with tiles painted in Persian miniature style: old buildings, gardens, cypress trees, a bulbul and a prince. Ten boards, free in your browser.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@600;700&family=Nunito:wght@600;700;800&family=Vazirmatn:wght@700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@600;700&family=Nunito:wght@600;700;800&display=swap" rel="stylesheet">
 <style>
 /* Layout: level picker (10 boards) and a play screen whose board scales to the window. Single dark lapis theme. */
 :root{
@@ -60,7 +60,7 @@ button:focus-visible,a:focus-visible{outline:2px solid var(--gold-2);outline-off
 .t .sd{position:absolute;left:var(--d);top:var(--d);width:100%;height:100%;border-radius:calc(var(--tw) * .14);background:#9c7d47}
 .t .sd2{position:absolute;left:calc(var(--d) / 2);top:calc(var(--d) / 2);width:100%;height:100%;border-radius:calc(var(--tw) * .14);background:#d6bd86}
 .t .fc{position:absolute;inset:0;border-radius:calc(var(--tw) * .14);background:linear-gradient(160deg,#fffaf0,#efe2c6);border:max(1px,calc(var(--tw) * .03)) solid #c9a764;box-shadow:inset 0 0 0 max(1px,calc(var(--tw) * .045)) #fffdf6}
-.t svg{position:absolute;left:8%;top:7%;width:84%;height:86%}
+.t svg{position:absolute;left:5%;top:4%;width:90%;height:92%}
 .t.blk .fc{background:linear-gradient(160deg,#e7dfcd,#d3c4a2)}
 .t.blk svg{opacity:.62}
 .t.sel .fc{background:linear-gradient(160deg,#fff4c4,#ffd978);border-color:#e09a12;box-shadow:0 0 0 3px #ffd36b,0 0 18px #ffd36b}
@@ -127,31 +127,69 @@ label.tg{display:inline-flex;align-items:center;gap:6px;font-size:.82rem;font-we
 (function(){
 'use strict';
 /* ---------- tile faces: 36 kinds (3 suits x 9, plus 9 honours) ---------- */
-const L='#2f5fc9',LL='#a9c8ff',R='#c4553b',J='#2c9a62',G='#c9971c',P='#8a4fd6';
-const FA='۱۲۳۴۵۶۷۸۹';
-const POS={1:[[24,32]],2:[[24,16],[24,48]],3:[[12,14],[24,32],[36,50]],4:[[13,17],[35,17],[13,47],[35,47]],5:[[13,15],[35,15],[24,32],[13,49],[35,49]],
- 6:[[13,13],[35,13],[13,32],[35,32],[13,51],[35,51]],7:[[12,10],[24,18],[36,26],[13,40],[35,40],[13,54],[35,54]],8:[[13,9],[35,9],[13,24],[35,24],[13,39],[35,39],[13,54],[35,54]],
- 9:[[11,12],[24,12],[37,12],[11,32],[24,32],[37,32],[11,52],[24,52],[37,52]]};
-function dots(n){const r=n==1?14:n<=4?9:n<=6?7.5:6.5;return POS[n].map(([x,y])=>`<circle cx="${x}" cy="${y}" r="${r}" fill="${L}"/><circle cx="${x}" cy="${y}" r="${r*.5}" fill="${LL}"/>${n==1?`<circle cx="${x}" cy="${y}" r="${r*.2}" fill="${G}"/>`:''}`).join('')}
-function trees(n){const s=n==1?1.6:n<=4?1:n<=6?.85:.72;return POS[n].map(([x,y])=>`<g transform="translate(${x} ${y}) scale(${s})"><path d="M0 -11c-5 5-6 12 0 19 6-7 5-14 0-19z" fill="${J}"/><path d="M0 -8v15" stroke="#bff3d8" stroke-width="1"/><rect x="-1.2" y="8" width="2.4" height="3.5" fill="#7a5233"/></g>`).join('')}
-function num(n){return `<text x="24" y="38" text-anchor="middle" font-family="Vazirmatn,Tahoma,sans-serif" font-size="34" font-weight="700" fill="${R}">${FA[n-1]}</text><path d="M10 47h28" stroke="${R}" stroke-width="2.5"/><text x="24" y="60" text-anchor="middle" font-family="Nunito,sans-serif" font-size="10" font-weight="800" fill="${R}">${n}</text>`}
-const HON=[
- ['Lion',`<circle cx="24" cy="30" r="17" fill="${G}"/><g fill="#a77510">${Array.from({length:12},(_,i)=>{const a=i/12*Math.PI*2;return `<circle cx="${24+Math.cos(a)*16}" cy="${30+Math.sin(a)*16}" r="4"/>`}).join('')}</g><circle cx="24" cy="31" r="11" fill="#f2c96a"/><circle cx="20" cy="28" r="1.6" fill="#3a2a10"/><circle cx="28" cy="28" r="1.6" fill="#3a2a10"/><path d="M21 34q3 3 6 0" stroke="#3a2a10" stroke-width="1.6" fill="none"/><path d="M22 31h4l-2 2z" fill="#3a2a10"/><text x="24" y="60" text-anchor="middle" font-family="Nunito,sans-serif" font-size="8" font-weight="800" fill="#a77510">LION</text>`],
- ['Sun',`<g stroke="#e57a1a" stroke-width="3" stroke-linecap="round">${Array.from({length:12},(_,i)=>{const a=i/12*Math.PI*2;return `<path d="M${24+Math.cos(a)*13} ${29+Math.sin(a)*13}L${24+Math.cos(a)*19} ${29+Math.sin(a)*19}"/>`}).join('')}</g><circle cx="24" cy="29" r="10" fill="#f5a623"/><text x="24" y="60" text-anchor="middle" font-family="Nunito,sans-serif" font-size="8" font-weight="800" fill="#e57a1a">SUN</text>`],
- ['Moon',`<path d="M30 10a18 18 0 1 0 6 32 15 15 0 1 1-6-32z" fill="${L}"/><circle cx="34" cy="16" r="1.6" fill="${G}"/><circle cx="38" cy="26" r="1.2" fill="${G}"/><text x="24" y="60" text-anchor="middle" font-family="Nunito,sans-serif" font-size="8" font-weight="800" fill="${L}">MOON</text>`],
- ['Bird',`<path d="M8 38c8-14 20-16 30-10-4-6-2-14 4-16-10-2-16 4-18 10-6-4-14-2-16 16z" fill="${L}"/><circle cx="36" cy="14" r="1.8" fill="#fff"/><path d="M6 42h34" stroke="${G}" stroke-width="2.5"/><text x="24" y="60" text-anchor="middle" font-family="Nunito,sans-serif" font-size="8" font-weight="800" fill="${L}">BIRD</text>`],
- ['Pomegranate',`<circle cx="24" cy="32" r="15" fill="${R}"/><path d="M18 17l6-8 6 8z" fill="#8e3523"/><circle cx="19" cy="30" r="2.6" fill="#ffd0c4"/><circle cx="28" cy="36" r="2.6" fill="#ffd0c4"/><circle cx="25" cy="27" r="2.6" fill="#ffd0c4"/><circle cx="20" cy="38" r="2.2" fill="#ffd0c4"/><text x="24" y="60" text-anchor="middle" font-family="Nunito,sans-serif" font-size="7" font-weight="800" fill="${R}">ANAR</text>`],
- ['Flame',`<path d="M24 6c4 10 14 14 14 25a14 14 0 0 1-28 0c0-11 10-15 14-25z" fill="${R}"/><path d="M24 22c2 6 7 8 7 13a7 7 0 0 1-14 0c0-5 5-7 7-13z" fill="${G}"/><text x="24" y="60" text-anchor="middle" font-family="Nunito,sans-serif" font-size="8" font-weight="800" fill="${R}">FIRE</text>`],
- ['Rose',`<circle cx="24" cy="28" r="14" fill="#d94f7e"/><path d="M24 28c0-6 6-7 7-2s-5 9-10 6-4-11 3-12 13 3 12 10" stroke="#8f1f47" stroke-width="2" fill="none"/><path d="M24 42v8M24 47c-5-1-7-4-7-6 4 0 6 2 7 6z" stroke="${J}" stroke-width="2.5" fill="${J}"/><text x="24" y="61" text-anchor="middle" font-family="Nunito,sans-serif" font-size="8" font-weight="800" fill="#b2335f">ROSE</text>`],
- ['Star',`<path d="M24 6l5 9 10-3-3 10 9 5-9 5 3 10-10-3-5 9-5-9-10 3 3-10-9-5 9-5-3-10 10 3z" fill="${G}"/><circle cx="24" cy="27" r="6" fill="${L}"/><text x="24" y="60" text-anchor="middle" font-family="Nunito,sans-serif" font-size="8" font-weight="800" fill="#a77510">STAR</text>`],
- ['Gate',`<rect x="8" y="12" width="32" height="6" fill="#8a5a35"/><rect x="10" y="18" width="9" height="28" fill="#b07a4c"/><rect x="29" y="18" width="9" height="28" fill="#b07a4c"/><rect x="6" y="46" width="36" height="4" fill="#8a5a35"/><path d="M12 24l5-4M12 30l5-4" stroke="#7a4a28" stroke-width="1.5"/><text x="24" y="60" text-anchor="middle" font-family="Nunito,sans-serif" font-size="8" font-weight="800" fill="#8a5a35">GATE</text>`]
+/* Persian miniature palette: flat jewel colours, fine dark outlines, gold illumination */
+const O='#2b1a0f',LA='#1f4fa8',TQ='#2aa6a0',VM='#c0392b',MA='#2e7d4f',MAL='#5fae7c',GD='#d4a52c',GL='#f2d27a',CR='#fbf3df',OC='#c98b3a',PK='#e0739a',SK='#bfe4ee',ST='#ead9b3',BR='#b9784a',PU='#8d6bb8';
+const POS={1:[[24,32]],2:[[24,17],[24,47]],3:[[13,15],[24,32],[35,49]],4:[[14,18],[34,18],[14,46],[34,46]],5:[[14,15],[34,15],[24,32],[14,49],[34,49]],
+ 6:[[14,14],[34,14],[14,32],[34,32],[14,50],[34,50]],7:[[13,11],[24,19],[35,27],[14,40],[34,40],[14,53],[34,53]],8:[[14,10],[34,10],[14,25],[34,25],[14,39],[34,39],[14,54],[34,54]],
+ 9:[[12,13],[24,13],[36,13],[12,32],[24,32],[36,32],[12,51],[24,51],[36,51]]};
+const FRAME=`<rect x="1.4" y="1.4" width="45.2" height="61.2" rx="4" fill="none" stroke="${GD}" stroke-width="1.3"/><rect x="3.4" y="3.4" width="41.2" height="57.2" rx="2.6" fill="none" stroke="${GD}" stroke-width=".5"/>`+
+ [[3.4,3.4,0],[44.6,3.4,90],[44.6,60.6,180],[3.4,60.6,270]].map(([x,y,r])=>`<path transform="translate(${x} ${y}) rotate(${r})" d="M0 0h5.5c-1 2-3 4-5.5 5.5z" fill="${GD}"/>`).join('');
+const inner=c=>`<g transform="translate(4.6 5) scale(.81 .845)">${c}</g>`;
+function med(x,y,r){let p='';for(let i=0;i<8;i++){const a=i/8*Math.PI*2;p+=`<circle cx="${(x+Math.cos(a)*r).toFixed(1)}" cy="${(y+Math.sin(a)*r).toFixed(1)}" r="${(r*.3).toFixed(2)}" fill="${GD}" stroke="${O}" stroke-width=".35"/>`}
+  return p+`<circle cx="${x}" cy="${y}" r="${r}" fill="${LA}" stroke="${O}" stroke-width=".6"/><circle cx="${x}" cy="${y}" r="${(r*.62).toFixed(2)}" fill="${GL}" stroke="${O}" stroke-width=".4"/><circle cx="${x}" cy="${y}" r="${(r*.3).toFixed(2)}" fill="${VM}"/>`}
+function shamseh(n){const r=n==1?12:n<=4?7.8:n<=6?6.4:5.4;return inner(POS[n].map(([x,y])=>med(x,y,r)).join(''))}
+function cyp(x,y,s){return `<g transform="translate(${x} ${y}) scale(${s})"><path d="M0 12C-6 8-7 0-4-6c2-4 3-6 4-9 1.5 1 2.5 2.2 2 4 3 5 4 11 1.5 16-1 3-2 5-3.5 7z" fill="${MA}" stroke="${O}" stroke-width=".7"/><path d="M0 8c-2-3-2-8 0-13M1 9c1.6-3 2-7 1-11" stroke="${MAL}" stroke-width=".9" fill="none"/><path d="M1.6-15c1.6 0 2.6 1 2 2.4" stroke="${O}" stroke-width=".6" fill="none"/><rect x="-1" y="12" width="2" height="3" fill="${OC}"/></g>`}
+function cypress(n){const s=n==1?1.9:n<=4?1.15:n<=6?.95:.78;return inner(POS[n].map(([x,y])=>cyp(x,y,s)).join(''))}
+const sky=(c)=>`<rect x="4" y="4" width="40" height="56" rx="2.4" fill="${c||SK}"/>`;
+const ground=(c,y)=>`<path d="M4 ${y||50}c10-3 30-3 40 0v8a2.4 2.4 0 0 1-2.4 2.4H6.4A2.4 2.4 0 0 1 4 58z" fill="${c||'#c9b07a'}"/>`;
+const BUILD=[
+ ['Persepolis gate',sky()+ground()+`<rect x="9" y="22" width="11" height="28" fill="${ST}" stroke="${O}" stroke-width=".7"/><rect x="28" y="22" width="11" height="28" fill="${ST}" stroke="${O}" stroke-width=".7"/><rect x="7" y="17" width="34" height="6" fill="${OC}" stroke="${O}" stroke-width=".7"/><rect x="5.5" y="14" width="37" height="3.5" fill="${BR}" stroke="${O}" stroke-width=".6"/>
+  <path d="M10 46v-9h3l2-4h3v13M29 46v-9h3l2-4h3v13" fill="${OC}" stroke="${O}" stroke-width=".5"/><path d="M12 34l5-7M31 34l5-7" stroke="${GD}" stroke-width="1.6"/><rect x="20" y="23" width="8" height="27" fill="#6b4a2c"/>`],
+ ['Dome mosque',sky()+ground('#d9c48e',52)+`<rect x="7" y="22" width="4" height="30" fill="${TQ}" stroke="${O}" stroke-width=".6"/><rect x="37" y="22" width="4" height="30" fill="${TQ}" stroke="${O}" stroke-width=".6"/><path d="M7 22l2-5 2 5zM37 22l2-5 2 5z" fill="${GD}" stroke="${O}" stroke-width=".5"/>
+  <path d="M12 36c0-11 5-17 12-21 7 4 12 10 12 21z" fill="${TQ}" stroke="${O}" stroke-width=".7"/><path d="M15 33c2-7 5-11 9-14M33 33c-2-7-5-11-9-14M24 15v19" stroke="${GD}" stroke-width=".7" fill="none"/><path d="M24 15v-5" stroke="${GD}" stroke-width="1.2"/><circle cx="24" cy="9.5" r="1.3" fill="${GD}"/>
+  <rect x="12" y="36" width="24" height="16" fill="${CR}" stroke="${O}" stroke-width=".7"/><path d="M19 52V43c0-4 2.5-6 5-7 2.5 1 5 3 5 7v9z" fill="${LA}" stroke="${GD}" stroke-width=".8"/>`],
+ ['Minarets',sky('#cfe9f0')+ground()+[14,34].map(x=>`<path d="M${x-4} 52V18h8v34z" fill="${TQ}" stroke="${O}" stroke-width=".7"/><path d="M${x-5.5} 26h11v3h-11zM${x-5.5} 40h11v3h-11z" fill="${GD}" stroke="${O}" stroke-width=".5"/><path d="M${x-4} 18c0-5 2-7 4-9 2 2 4 4 4 9z" fill="${LA}" stroke="${O}" stroke-width=".6"/><path d="M${x} 9V5" stroke="${GD}" stroke-width="1"/><path d="M${x-4} 32h8M${x-4} 36h8M${x-4} 47h8" stroke="${LA}" stroke-width=".8"/>`).join('')],
+ ['Garden pavilion',sky()+`<rect x="4" y="46" width="40" height="14" fill="${LA}" opacity=".85"/><path d="M8 50h32M10 54h28" stroke="#9fc4ff" stroke-width=".7"/><rect x="8" y="20" width="32" height="5" fill="${OC}" stroke="${O}" stroke-width=".7"/><path d="M6 20 24 11l18 9z" fill="${VM}" stroke="${O}" stroke-width=".7"/>
+  ${[10,17,24,31,38].map(x=>`<rect x="${x-1}" y="25" width="2" height="18" fill="${CR}" stroke="${O}" stroke-width=".4"/>`).join('')}<rect x="7" y="43" width="34" height="3" fill="${ST}" stroke="${O}" stroke-width=".6"/><rect x="11" y="27" width="26" height="12" fill="${GL}" opacity=".5"/>`],
+ ['Bridge',sky()+`<rect x="4" y="40" width="40" height="20" rx="2.4" fill="${LA}"/><path d="M6 46h10M22 50h12M10 56h26" stroke="#9fc4ff" stroke-width=".8"/><rect x="4" y="24" width="40" height="7" fill="${OC}" stroke="${O}" stroke-width=".7"/><rect x="4" y="31" width="40" height="11" fill="${BR}" stroke="${O}" stroke-width=".7"/>
+  ${[9,19,29,39].map(x=>`<path d="M${x-3.5} 42v-5c0-2.5 1.5-4 3.5-4s3.5 1.5 3.5 4v5z" fill="${LA}" stroke="${O}" stroke-width=".5"/><path d="M${x-2} 30v-4h4v4z" fill="#6b4a2c"/>`).join('')}<path d="M4 24h40" stroke="${GD}" stroke-width="1"/>`],
+ ['Windcatcher',sky('#f7d9a6')+ground('#d6b37a')+`<rect x="8" y="34" width="32" height="16" fill="${OC}" stroke="${O}" stroke-width=".7"/><rect x="20" y="10" width="10" height="26" fill="#d4a067" stroke="${O}" stroke-width=".7"/>
+  ${[12,15,18,21,24,27].map(y=>`<rect x="21.5" y="${y}" width="2" height="2.4" fill="#5a3a20"/><rect x="26.5" y="${y}" width="2" height="2.4" fill="#5a3a20"/>`).join('')}<rect x="19" y="8" width="12" height="2.5" fill="${BR}" stroke="${O}" stroke-width=".5"/><path d="M12 50v-8c0-2 1.5-3.5 3-3.5s3 1.5 3 3.5v8z" fill="#5a3a20"/><path d="M8 38c4-3 8-3 12 0" stroke="${O}" stroke-width=".5" fill="none"/>`],
+ ['Caravanserai',sky()+ground()+`<rect x="5" y="28" width="38" height="22" fill="${ST}" stroke="${O}" stroke-width=".7"/><rect x="14" y="14" width="20" height="36" fill="${ST}" stroke="${O}" stroke-width=".7"/><rect x="15.5" y="15.5" width="17" height="33" fill="none" stroke="${TQ}" stroke-width="1.4"/>
+  <path d="M18 50V30c0-5 3-8 6-9 3 1 6 4 6 9v20z" fill="${LA}" stroke="${GD}" stroke-width=".8"/><path d="M20 50V36c0-3 2-5 4-5s4 2 4 5v14z" fill="#3a2614"/>${[7,40].map(x=>`<path d="M${x} 44v-6c0-1.4 1-2 1.5-2s1.5.6 1.5 2v6z" fill="#7a5a3a"/>`).join('')}`],
+ ['Fire temple',sky('#f6c98a')+ground('#c9a26a')+`<rect x="10" y="30" width="28" height="20" fill="${ST}" stroke="${O}" stroke-width=".7"/><path d="M10 30c0-10 6-15 14-17 8 2 14 7 14 17z" fill="${OC}" stroke="${O}" stroke-width=".7"/>
+  ${[16,32].map(x=>`<path d="M${x-3.5} 50V40c0-2.5 1.6-4 3.5-4s3.5 1.5 3.5 4v10z" fill="#5a3a20"/>`).join('')}<path d="M20 50v-7c0-2.4 1.8-4 4-4s4 1.6 4 4v7z" fill="#3a2614"/><path d="M24 50c-2.6 0-3.6-1.6-3.6-3.4 0-2.6 2.6-3.6 3.6-7 1 3.4 3.6 4.4 3.6 7 0 1.8-1 3.4-3.6 3.4z" fill="${VM}" stroke="${O}" stroke-width=".4"/><path d="M24 50c-1.2 0-1.8-.8-1.8-1.8 0-1.3 1.2-1.8 1.8-3.4.6 1.6 1.8 2.1 1.8 3.4 0 1-.6 1.8-1.8 1.8z" fill="${GD}"/>`],
+ ['Tomb tower',sky('#cfe3f2')+ground()+`<path d="M15 50V22h18v28z" fill="${BR}" stroke="${O}" stroke-width=".7"/>${[18,22,26,30].map(x=>`<path d="M${x} 22v28" stroke="#8e5532" stroke-width="1.2"/>`).join('')}<path d="M13 22 24 6l11 16z" fill="${TQ}" stroke="${O}" stroke-width=".7"/><path d="M15 30h18M15 44h18" stroke="${GD}" stroke-width="1.2"/><path d="M21 50v-6c0-2 1.5-3 3-3s3 1 3 3v6z" fill="#3a2614"/>`]
+];
+const HONS=[
+ ['Mountains',sky('#cfe9f0')+`<path d="M4 44c6-14 10-22 14-26 3 3 4 8 7 8 3-6 6-10 9-12 4 6 7 16 10 30z" fill="${PU}" stroke="${O}" stroke-width=".7"/><path d="M14 30c2-2 4-2 5 0M28 22c2-2 4-2 5 0M20 38c2-2 4-2 5 0" stroke="${GL}" stroke-width=".9" fill="none"/>
+  <path d="M8 16c3-3 6-1 7 0 2-3 6-2 6 1" stroke="${CR}" stroke-width="2" fill="none" stroke-linecap="round"/><path d="M4 44h40v13.6a2.4 2.4 0 0 1-2.4 2.4H6.4A2.4 2.4 0 0 1 4 57.6z" fill="${MAL}"/><path d="M8 60c6-6 18-4 22-10 3-4 8-5 14-5" stroke="${LA}" stroke-width="3.2" fill="none"/>`+cyp(38,44,.8)],
+ ['Garden',sky()+`<rect x="4" y="30" width="40" height="30" rx="2.4" fill="${MAL}"/><path d="M24 30v30M4 45h40" stroke="${LA}" stroke-width="3"/><circle cx="24" cy="45" r="4.5" fill="${LA}" stroke="${GD}" stroke-width=".8"/>
+  ${[[11,37],[37,37],[11,53],[37,53]].map(([x,y])=>`<circle cx="${x}" cy="${y}" r="2" fill="${PK}" stroke="${O}" stroke-width=".4"/><circle cx="${x+3}" cy="${y+2}" r="1.5" fill="${GL}"/>`).join('')}`+[10,17,31,38].map(x=>cyp(x,20,.75)).join('')],
+ ['Sun',`<rect x="4" y="4" width="40" height="56" rx="2.4" fill="${LA}"/>${Array.from({length:16},(_,i)=>{const a=i/16*Math.PI*2,r1=12,r2=i%2?17:20;return `<path d="M${(24+Math.cos(a-.12)*r1).toFixed(1)} ${(30+Math.sin(a-.12)*r1).toFixed(1)}L${(24+Math.cos(a)*r2).toFixed(1)} ${(30+Math.sin(a)*r2).toFixed(1)}L${(24+Math.cos(a+.12)*r1).toFixed(1)} ${(30+Math.sin(a+.12)*r1).toFixed(1)}z" fill="${i%2?VM:GD}" stroke="${O}" stroke-width=".35"/>`}).join('')}
+  <circle cx="24" cy="30" r="12" fill="${GL}" stroke="${O}" stroke-width=".7"/><path d="M18 27q2-2 4 0M26 27q2-2 4 0" stroke="${O}" stroke-width=".7" fill="none"/><path d="M18.6 29q1.4 1 2.8 0M26.6 29q1.4 1 2.8 0" stroke="${O}" stroke-width=".9" fill="none"/><path d="M24 29v4h-1.2" stroke="${O}" stroke-width=".6" fill="none"/><path d="M22 36q2 1.2 4 0" stroke="${VM}" stroke-width="1" fill="none"/>`],
+ ['Moon',`<rect x="4" y="4" width="40" height="56" rx="2.4" fill="#16245a"/>${[[10,12],[38,16],[33,48],[12,50],[40,36],[8,30]].map(([x,y])=>`<path d="M${x} ${y-2}l.6 1.4 1.4.6-1.4.6-.6 1.4-.6-1.4-1.4-.6 1.4-.6z" fill="${GL}"/>`).join('')}<path d="M29 14a16 16 0 1 0 6 28 13 13 0 1 1-6-28z" fill="${GL}" stroke="${O}" stroke-width=".7"/><path d="M19 30q1.5-1.5 3 0" stroke="${O}" stroke-width=".7" fill="none"/>`],
+ ['Bulbul',`<rect x="4" y="4" width="40" height="56" rx="2.4" fill="${CR}"/><path d="M6 46c10-4 22-6 36-14" stroke="${OC}" stroke-width="2" fill="none"/>${[[14,43],[22,40],[33,35]].map(([x,y],i)=>`<path d="M${x} ${y}c-2-3-1-6 2-6 0 3-1 5-2 6z" fill="${MA}" stroke="${O}" stroke-width=".4"/>`).join('')}
+  <circle cx="36" cy="44" r="4" fill="${PK}" stroke="${O}" stroke-width=".5"/><path d="M34 44q2-2 4 0q-2 2-4 0" stroke="${VM}" stroke-width=".7" fill="none"/>
+  <path d="M14 30c0-7 6-12 13-11 4 .5 6 3 6 6l5 1-5 2c-1 5-6 8-12 8-3 0-5-1-7-3l-6 2 3-4z" fill="${LA}" stroke="${O}" stroke-width=".7"/><path d="M20 30c3 3 8 3 11 0" fill="${VM}"/><path d="M18 26c3-2 7-2 9 0" stroke="${TQ}" stroke-width="1.2" fill="none"/><circle cx="29" cy="23" r="1" fill="${O}"/><path d="M28 18c1-3 3-4 4-3" stroke="${O}" stroke-width=".8" fill="none"/>`],
+ ['Pomegranate',`<rect x="4" y="4" width="40" height="56" rx="2.4" fill="${CR}"/><path d="M14 22c-4-3-6-8-3-12 4 1 6 5 5 10zM34 22c4-3 6-8 3-12-4 1-6 5-5 10z" fill="${MA}" stroke="${O}" stroke-width=".5"/>
+  <circle cx="24" cy="36" r="14" fill="${VM}" stroke="${O}" stroke-width=".8"/><path d="M19 22l2-4 3 3 3-3 2 4z" fill="${VM}" stroke="${O}" stroke-width=".6"/><path d="M14 36a10 10 0 0 1 10-10" stroke="#e86a5a" stroke-width="2" fill="none"/>
+  ${[[22,36],[27,34],[25,40],[20,41],[29,40],[23,45]].map(([x,y])=>`<ellipse cx="${x}" cy="${y}" rx="1.4" ry="1.8" fill="#ffd0c4" stroke="#8e2a1e" stroke-width=".3"/>`).join('')}<path d="M10 52c4 2 24 2 28 0" stroke="${GD}" stroke-width="1" fill="none"/>`],
+ ['Fire altar',`<rect x="4" y="4" width="40" height="56" rx="2.4" fill="${LA}"/><path d="M24 8c4 6 10 9 10 17 0 6-4 10-10 10s-10-4-10-10c0-8 6-11 10-17z" fill="${VM}" stroke="${O}" stroke-width=".7"/><path d="M24 18c2 4 5 6 5 10a5 5 0 0 1-10 0c0-4 3-6 5-10z" fill="${GD}"/><path d="M24 25c1 2 2 3 2 5a2 2 0 0 1-4 0c0-2 1-3 2-5z" fill="${CR}"/>
+  <path d="M13 35h22l-3 4H16z" fill="${GD}" stroke="${O}" stroke-width=".6"/><rect x="19" y="39" width="10" height="11" fill="${ST}" stroke="${O}" stroke-width=".6"/><path d="M14 50h20l2 5H12z" fill="${GD}" stroke="${O}" stroke-width=".6"/><path d="M21 43h6M21 46h6" stroke="${OC}" stroke-width=".7"/>`],
+ ['Prince',`<rect x="4" y="4" width="40" height="56" rx="2.4" fill="${GL}"/><path d="M8 60c0-12 7-18 16-18s16 6 16 18z" fill="${LA}" stroke="${O}" stroke-width=".7"/><path d="M18 43l6 8 6-8" stroke="${GD}" stroke-width="2" fill="none"/>
+  <path d="M15 31c0 8 4 12 9 12s9-4 9-12" fill="#f3d2b0" stroke="${O}" stroke-width=".7"/><path d="M15 31c-2 3-2 8 0 10M33 31c2 3 2 8 0 10" stroke="#2b1a0f" stroke-width="2.2" fill="none"/>
+  <path d="M13 28c0-9 5-14 11-14s11 5 11 14c-4 2-18 2-22 0z" fill="${CR}" stroke="${O}" stroke-width=".7"/><path d="M14 24c6 3 14 3 20 0M15 19c5 3 13 3 18 0" stroke="${VM}" stroke-width="1.2" fill="none"/><path d="M27 14c2-5 6-7 8-6-2 2-4 4-5 7" fill="${VM}" stroke="${O}" stroke-width=".5"/><circle cx="24" cy="20" r="1.6" fill="${GD}"/>
+  <path d="M19.5 33q1.5-1.2 3 0M25.5 33q1.5-1.2 3 0" stroke="${O}" stroke-width=".8" fill="none"/><path d="M24 34v3" stroke="#c49a74" stroke-width=".6"/><path d="M22.5 39q1.5.8 3 0" stroke="${VM}" stroke-width=".9" fill="none"/>`],
+ ['Lion',`<rect x="4" y="4" width="40" height="56" rx="2.4" fill="${CR}"/>${Array.from({length:14},(_,i)=>{const a=i/14*Math.PI*2;return `<path d="M24 32L${(24+Math.cos(a-.2)*15).toFixed(1)} ${(32+Math.sin(a-.2)*15).toFixed(1)}Q${(24+Math.cos(a)*21).toFixed(1)} ${(32+Math.sin(a)*21).toFixed(1)} ${(24+Math.cos(a+.2)*15).toFixed(1)} ${(32+Math.sin(a+.2)*15).toFixed(1)}z" fill="${i%2?OC:GD}" stroke="${O}" stroke-width=".4"/>`}).join('')}
+  <circle cx="24" cy="33" r="10" fill="${GL}" stroke="${O}" stroke-width=".7"/><path d="M18.5 30q2-1.6 4 0M25.5 30q2-1.6 4 0" stroke="${O}" stroke-width=".8" fill="none"/><path d="M22 34h4l-2 2.4z" fill="${O}"/><path d="M24 36.4v1.6M21 39q3 2 6 0" stroke="${O}" stroke-width=".7" fill="none"/><path d="M15 25l2-4 3 3M33 25l-2-4-3 3" fill="${OC}" stroke="${O}" stroke-width=".5"/>`]
 ];
 const KINDS=[];
-for(let n=1;n<=9;n++)KINDS.push({name:'Lapis '+n,svg:dots(n)});
-for(let n=1;n<=9;n++)KINDS.push({name:'Cypress '+n,svg:trees(n)});
-for(let n=1;n<=9;n++)KINDS.push({name:'Number '+n,svg:num(n)});
-HON.forEach(([n,s])=>KINDS.push({name:n,svg:s}));
-const face=k=>`<svg viewBox="0 0 48 64" aria-hidden="true">${KINDS[k].svg}</svg>`;
+for(let n=1;n<=9;n++)KINDS.push({name:'Medallion '+n,svg:`<rect x="4" y="4" width="40" height="56" rx="2.4" fill="${CR}"/>`+shamseh(n)});
+for(let n=1;n<=9;n++)KINDS.push({name:'Cypress '+n,svg:`<rect x="4" y="4" width="40" height="56" rx="2.4" fill="${CR}"/>`+cypress(n)});
+BUILD.forEach(([n,s])=>KINDS.push({name:n,svg:s}));
+HONS.forEach(([n,s])=>KINDS.push({name:n,svg:s}));
+const face=k=>`<svg viewBox="0 0 48 64" aria-hidden="true">${KINDS[k].svg}${FRAME}</svg>`;
 
 /* ---------- boards: layers of rows; each '#' is a tile. dx/dy shift a layer by half tiles ---------- */
 const LAYOUTS=[
