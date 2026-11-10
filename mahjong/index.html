@@ -438,8 +438,7 @@ function blast(a,b){
   const g=game;
   setTimeout(()=>{if(g!==game)return;                        // the bump
     tone(120,.12,'square',.06);tone(240,.08,'triangle',.06);
-    sparks(mx,my);$('stage').animate([{transform:'translate(0,0)'},{transform:'translate(-5px,3px)'},{transform:'translate(4px,-3px)'},{transform:'translate(-3px,2px)'},{transform:'translate(0,0)'}],{duration:260,easing:'ease-out'});
-    if(navigator.vibrate){try{navigator.vibrate(25)}catch(e){}}
+    sparks(mx,my);
   },T*hit);
   setTimeout(()=>{if(g!==game)return;                        // the blast
     pair.forEach(([t])=>{if(!t.alive)t.el.classList.add('gone')});
