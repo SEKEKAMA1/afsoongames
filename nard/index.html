@@ -115,11 +115,13 @@ const ckSVG=c=>`<svg viewBox="0 0 52 52"><defs><radialGradient id="g${c}" cx=".3
 
 /* ---------- rules ---------- */
 const opp=p=>p=='w'?'b':'w';
-function fresh(){const pts=Array(26).fill(0);pts[24]=2;pts[13]=5;pts[8]=3;pts[6]=5;pts[1]=-2;pts[12]=-5;pts[17]=-3;pts[19]=-5;return{pts,bar:{w:0,b:0},off:{w:0,b:0}}}
-const clone=s=>({pts:s.pts.slice(),bar:{...s.bar},off:{...s.off}});
+function fresh(){const pts=Array(26).fill(0);pts[24]=2;pts[13]=5;pts[8]=3;pts[6]=5;pts[1]=-2;pts[12]=-5;pts[17]=-3;pts[19]=-5;return{pts,bar:{w:0,b:0},off:{w:0,b:0},lock:0}}
+const clone=s=>({pts:s.pts.slice(),bar:{...s.bar},off:{...s.off},lock:s.lock||0});
+/* Persian rule: a checker that hits in its own home board (without doubles) may move on this turn, but not onto a point held by its own checkers. lock = point of that checker. */
+let curDbl=false;
 const own=(s,p,i)=>p=='w'?s.pts[i]>0:s.pts[i]<0;
 const cnt=(s,i)=>Math.abs(s.pts[i]);
-const key=s=>s.pts.join(',')+'|'+s.bar.w+s.bar.b+'|'+s.off.w+','+s.off.b;
+const key=s=>s.pts.join(',')+'|'+s.bar.w+s.bar.b+'|'+s.off.w+','+s.off.b+'|'+(s.lock||0);
 function allHome(s,p){if(s.bar[p])return false;for(let i=1;i<=24;i++)if(own(s,p,i)&&(p=='w'?i>6:i<19))return false;return true}
 function canLand(s,p,to){const v=s.pts[to];return p=='w'?v>=-1:v<=1}
 function options(s,p,d){
@@ -127,7 +129,7 @@ function options(s,p,d){
   if(s.bar[p]){const to=(p=='w'?25:0)+dir*d;if(canLand(s,p,to))out.push({from:'bar',to,d});return out}
   const home=allHome(s,p);
   for(let i=1;i<=24;i++){if(!own(s,p,i))continue;const to=i+dir*d;
-    if(to>=1&&to<=24){if(canLand(s,p,to))out.push({from:i,to,d})}
+    if(to>=1&&to<=24){if(canLand(s,p,to)&&!(s.lock===i&&cnt(s,i)===1&&own(s,p,to)))out.push({from:i,to,d})}
     else if(home){const exact=p=='w'?to==0:to==25;let far=false;
       if(!exact){if(p=='w'){for(let j=i+1;j<=6;j++)if(own(s,p,j))far=true}else{for(let j=19;j<i;j++)if(own(s,p,j))far=true}}
       if(exact||!far)out.push({from:i,to:'off',d})}}
@@ -135,7 +137,11 @@ function options(s,p,d){
 }
 function apply(s,p,m){const n=clone(s),sg=p=='w'?1:-1;let hit=false;
   if(m.from=='bar')n.bar[p]--;else n.pts[m.from]-=sg;
+  const wasLocked=m.from!=='bar'&&s.lock===m.from&&cnt(s,m.from)===1;
   if(m.to=='off')n.off[p]++;else{if(n.pts[m.to]===-sg){n.pts[m.to]=0;n.bar[opp(p)]++;hit=true}n.pts[m.to]+=sg}
+  if(wasLocked)n.lock=m.to=='off'?0:m.to;
+  else if(n.lock&&m.to===n.lock)n.lock=0;
+  if(hit&&!curDbl&&(p=='w'?m.to<=6:m.to>=19))n.lock=m.to;
   n.hit=hit;return n}
 const without=(rem,d)=>{const r=rem.slice();r.splice(r.indexOf(d),1);return r};
 let memo=new Map();
@@ -261,7 +267,7 @@ function opening(){
 function animDice(){$('dice').querySelectorAll('.die').forEach(d=>{d.classList.remove('roll');void d.offsetWidth;d.classList.add('roll')})}
 function rollTurn(){if(phase!=='roll')return;sfx.dice();const a=rollDie(),b=rollDie();startTurn([a,b])}
 function startTurn(d){
-  memo=new Map();dice=d;rem=d[0]===d[1]?[d[0],d[0],d[0],d[0]]:d.slice();usedMask=rem.map(()=>false);if(d[0]===d[1])dice=rem.slice();
+  memo=new Map();curDbl=d[0]===d[1];S.lock=0;dice=d;rem=d[0]===d[1]?[d[0],d[0],d[0],d[0]]:d.slice();usedMask=rem.map(()=>false);if(d[0]===d[1])dice=rem.slice();
   firstMove=true;turnHist=[];sel=null;phase='move';render();animDice();
   const lg=legalNow();
   if(!lg.length){status(`${name(turn)} rolled ${d.join(' and ')}. No legal moves.`);phase='busy';render();setTimeout(endTurn,1500);return}
@@ -315,7 +321,7 @@ $('undo').onclick=()=>{if(!(phase==='move'||phase==='busy')||!isHuman(turn)||!tu
 addEventListener('keydown',e=>{if(e.key===' '&&(phase==='roll'||phase==='opening')){e.preventDefault();$('roll').click()}});
 function dialog(h){$('dlg').innerHTML=h;$('ov').hidden=false;const p=$('dlg').querySelector('.btn.primary');if(p)p.focus()}
 function menu(){dialog(`<h2>Nard</h2><p>Backgammon was born in ancient Persia, where it is still called <b>nard</b>. Race all fifteen checkers home and bear them off before your opponent.</p>
-  <ul><li>Tap a checker, then a gold dot to move it by one die. Tap it twice to move by the larger die.</li><li>Land on a single enemy checker to send it to the bar.</li><li>Doubles let you move four times.</li></ul>
+  <ul><li>Tap a checker, then a gold dot to move it by one die. Tap it twice to move by the larger die.</li><li>Land on a single enemy checker to send it to the bar.</li><li>Doubles let you move four times.</li><li>Persian rule: a checker that hits inside your own home board may keep moving, but not onto a point with your own checkers that turn. With doubles this rule does not apply.</li></ul>
   <div class="btns"><button class="btn" data-a="two">Two players</button><button class="btn primary" data-a="cpu">Play the computer</button></div>`)}
 $('dlg').addEventListener('click',e=>{const a=e.target.closest('[data-a]');if(!a)return;$('ov').hidden=true;const act=a.dataset.a;
   if(act==='cpu'||act==='two'){score={w:0,b:0};newGame(act)}else if(act==='again')newGame();else if(act==='menu')menu()});
