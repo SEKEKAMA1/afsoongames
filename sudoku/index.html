@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#071a22">
+<link rel="icon" type="image/png" href="/img/favicon-64.png">
+<link rel="apple-touch-icon" href="/img/apple-touch-icon.png">
+<title>Afsoon Sudoku</title>
+<meta name="description" content="Afsoon Sudoku by Afsoon Games. Fresh sudoku puzzles with one solution each, on four levels from Easy to Expert, with notes, hints and a turquoise tile board. Free in your browser.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@600;700&family=Nunito:wght@600;700;800&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#071a22;--line:rgba(212,165,44,.35);--gold:#d4a52c;--gold-2:#f6d999;--text:#f1f6f5;--muted:#9fbcc0;
+  --display:Cinzel,Georgia,serif;--ui:Nunito,system-ui,sans-serif;color-scheme:dark;--cell:min(10.2vw,6.6vh,58px)}
+*{box-sizing:border-box}
+html,body{margin:0;min-height:100%}
+body{background:radial-gradient(90% 80% at 50% 40%,#123a4a 0%,var(--bg) 70%);background-attachment:fixed;color:var(--text);font-family:var(--ui);-webkit-tap-highlight-color:transparent;
+  padding-left:max(8px,env(safe-area-inset-left,0px));padding-right:max(8px,env(safe-area-inset-right,0px))}
+[hidden]{display:none!important}
+button{font:inherit;color:inherit;cursor:pointer}
+button:focus-visible,a:focus-visible{outline:2px solid var(--gold-2);outline-offset:2px}
+.app{max-width:640px;margin:0 auto;padding-top:max(8px,env(safe-area-inset-top,0px));padding-bottom:max(10px,env(safe-area-inset-bottom,0px));display:flex;flex-direction:column;gap:8px;align-items:center}
+.top{width:100%;display:flex;align-items:center;gap:8px}
+.brand{font-family:var(--display);font-weight:700;font-size:1.25rem;letter-spacing:.08em;color:var(--gold-2);margin-right:auto;line-height:1.05}
+.brand small{display:block;font:800 .58rem var(--ui);letter-spacing:.24em;color:var(--gold);margin-top:3px}
+.ib{background:rgba(255,255,255,.06);border:1px solid var(--line);border-radius:10px;height:36px;min-width:36px;padding:0 10px;display:inline-flex;align-items:center;justify-content:center;gap:6px;font-weight:800;font-size:.85rem;text-decoration:none;color:var(--text)}
+.ib svg{width:18px;height:18px}
+.info{width:calc(var(--cell)*9 + 20px);display:flex;justify-content:space-between;font-weight:800;font-size:.85rem;color:var(--muted)}
+.info b{color:var(--gold-2);font-variant-numeric:tabular-nums}
+.frame{padding:8px;border-radius:14px;background:linear-gradient(135deg,#0f5f6a,#0a3f47);border:2px solid var(--gold);box-shadow:0 14px 40px rgba(0,0,0,.45)}
+.grid{display:grid;grid-template-columns:repeat(9,var(--cell));grid-template-rows:repeat(9,var(--cell));background:#d4a52c;gap:1px;border:2px solid #d4a52c}
+.c{background:#fbf3df;display:flex;align-items:center;justify-content:center;font-size:calc(var(--cell)*.58);font-weight:800;color:#0f5f6a;cursor:pointer;user-select:none;position:relative}
+.c.given{color:#1d2a36}
+.c.bx{background:#f2e6c6}
+.c.rel{background:#d8efe9}
+.c.same{background:#a7dcd3}
+.c.sel{background:#2aa6a0;color:#fff}
+.c.sel.given{color:#fff}
+.c.err{color:#c0392b}
+.c.sel.err{color:#ffd0c8}
+.c.hint{animation:glow .8s ease}
+@keyframes glow{50%{background:#ffe08a}}
+.c.vr{border-right:2px solid #d4a52c}.c.hr{border-bottom:2px solid #d4a52c}
+.notes{position:absolute;inset:2px;display:grid;grid-template-columns:repeat(3,1fr);grid-template-rows:repeat(3,1fr);font-size:calc(var(--cell)*.22);font-weight:800;color:#5a7a80;line-height:1}
+.notes span{display:flex;align-items:center;justify-content:center}
+.c.sel .notes{color:#e6fffb}
+.tools{display:flex;gap:6px;flex-wrap:wrap;justify-content:center}
+.tool{width:66px;height:54px;border-radius:12px;border:1px solid var(--line);background:rgba(10,40,50,.8);font-weight:800;font-size:.72rem;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;position:relative}
+.tool svg{width:20px;height:20px}
+.tool.on{background:var(--gold);color:#2a1c06}
+.tool .badge{position:absolute;top:-6px;right:-6px;background:#c0504a;color:#fff;border-radius:10px;font-size:.66rem;padding:1px 6px}
+.pad{display:grid;grid-template-columns:repeat(9,1fr);gap:5px;width:calc(var(--cell)*9 + 20px)}
+.pad button{height:min(13vw,56px);border-radius:12px;border:1px solid var(--line);background:#fbf3df;color:#0f5f6a;font-size:min(7vw,1.6rem);font-weight:800;display:flex;flex-direction:column;align-items:center;justify-content:center;line-height:1}
+.pad button small{font-size:.55rem;color:#7a8f92;margin-top:2px}
+.pad button.done{opacity:.3}
+.pad button:active{transform:scale(.94)}
+.status{min-height:1.4em;font-weight:800;text-align:center;color:var(--gold-2)}
+.btn{height:44px;padding:0 20px;border-radius:22px;border:1px solid var(--line);background:rgba(10,40,50,.8);font-weight:800;display:inline-flex;align-items:center;gap:7px}
+.btn.primary{background:var(--gold);color:#2a1c06;border-color:var(--gold)}
+.btn.primary:hover{background:var(--gold-2)}
+.btn.on{background:var(--gold);color:#2a1c06}
+.ov{position:fixed;inset:0;z-index:50;background:rgba(3,12,16,.72);display:grid;place-items:center;padding:20px;backdrop-filter:blur(3px)}
+.dlg{width:min(440px,100%);background:linear-gradient(180deg,#14404d,#0b2630);border:1px solid rgba(212,165,44,.5);border-radius:20px;padding:22px;text-align:center;display:flex;flex-direction:column;gap:12px;box-shadow:0 30px 80px rgba(0,0,0,.6);animation:in .3s cubic-bezier(.2,.8,.3,1.2)}
+@keyframes in{from{transform:scale(.85);opacity:0}}
+.dlg h2{font-family:var(--display);margin:0;color:var(--gold-2);font-size:1.6rem}
+.dlg h3{margin:4px 0 0;font-size:.8rem;letter-spacing:.18em;color:var(--gold);text-transform:uppercase}
+.dlg p{margin:0;color:#d9e8e8;line-height:1.55}
+.dlg ul{text-align:left;margin:0;padding-left:20px;color:#cfe0e0;line-height:1.5;font-size:.9rem}
+.btns{display:flex;gap:8px;justify-content:center;flex-wrap:wrap}
+.credit{font-size:.74rem;color:var(--muted);text-align:center;margin:0}.credit a{color:var(--gold)}
+@media (max-width:560px){.brand{font-size:1rem}.tool{width:58px;height:50px}.frame{padding:5px}}
+</style>
+</head>
+<body>
+<div class="app">
+  <header class="top">
+    <div class="brand">Sudoku<small>AFSOON NUMBER PUZZLE</small></div>
+    <button class="ib" id="menuBtn" aria-label="Game menu"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M4 7h16M4 12h16M4 17h16"/></svg></button>
+    <a class="ib" href="/" aria-label="More Afsoon games"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"><path d="M3 11 12 4l9 7v9h-6v-6H9v6H3z"/></svg></a>
+  </header>
+  <div class="info"><span>Level <b id="lvl">Easy</b></span><span>Mistakes <b id="mis">0/3</b></span><span>Time <b id="tm">0:00</b></span></div>
+  <div class="frame"><div class="grid" id="grid" role="grid" aria-label="Sudoku board"></div></div>
+  <div class="tools">
+    <button class="tool" id="undo"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M9 14 4 9l5-5"/><path d="M4 9h11a5 5 0 0 1 0 10h-3"/></svg>Undo</button>
+    <button class="tool" id="erase"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"><path d="M20 20H8l-5-5 10-10 8 8-6 6"/></svg>Erase</button>
+    <button class="tool" id="notes"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"><path d="M4 20h4L19 9l-4-4L4 16z"/></svg>Notes</button>
+    <button class="tool" id="hint"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M9 18h6M10 21h4M12 3a6 6 0 0 0-3.5 10.9V16h7v-2.1A6 6 0 0 0 12 3z"/></svg>Hint<span class="badge" id="hintN">3</span></button>
+  </div>
+  <div class="pad" id="pad"></div>
+  <div class="status" id="status" aria-live="polite"></div>
+  <p class="credit">A game by <a href="/">Afsoon Games</a>. Fill every row, column and 3×3 box with the numbers 1 to 9.</p>
+</div>
+<div class="ov" id="ov" hidden><div class="dlg" id="dlg" role="dialog" aria-modal="true"></div></div>
+
+<script>
+/* ===== LOGIC START ===== */
+/* grid: array of 81 numbers, 0 = empty */
+const ROW=i=>Math.floor(i/9),COL=i=>i%9,BOX=i=>Math.floor(ROW(i)/3)*3+Math.floor(COL(i)/3);
+const PEERS=[];for(let i=0;i<81;i++){const s=new Set();for(let j=0;j<81;j++)if(j!==i&&(ROW(j)===ROW(i)||COL(j)===COL(i)||BOX(j)===BOX(i)))s.add(j);PEERS.push([...s])}
+function cands(g,i){const used=new Set();for(const j of PEERS[i])if(g[j])used.add(g[j]);const o=[];for(let n=1;n<=9;n++)if(!used.has(n))o.push(n);return o}
+function shuffled(a){a=a.slice();for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]]}return a}
+/* count solutions up to limit, choosing the most constrained cell first */
+function countSol(g,limit){let best=-1,bc=null;for(let i=0;i<81;i++)if(!g[i]){const c=cands(g,i);if(!c.length)return 0;if(!bc||c.length<bc.length){best=i;bc=c;if(c.length===1)break}}
+  if(best<0)return 1;let n=0;for(const v of bc){g[best]=v;n+=countSol(g,limit-n);if(n>=limit)break}g[best]=0;return n}
+function fillFull(g){let best=-1,bc=null;for(let i=0;i<81;i++)if(!g[i]){const c=cands(g,i);if(!c.length)return false;if(!bc||c.length<bc.length){best=i;bc=c}}
+  if(best<0)return true;for(const v of shuffled(bc)){g[best]=v;if(fillFull(g))return true}g[best]=0;return false}
+/* how many givens to keep for each level */
+const KEEP=[40,32,27,23];
+function generate(level){const sol=Array(81).fill(0);fillFull(sol);const g=sol.slice();
+  const order=shuffled([...Array(81).keys()]);let filled=81;
+  for(const i of order){if(filled<=KEEP[level])break;const v=g[i];if(!v)continue;g[i]=0;
+    if(countSol(g.slice(),2)!==1){g[i]=v}else filled--}
+  return{puzzle:g,solution:sol}}
+/* ===== LOGIC END ===== */
+
+(function(){
+'use strict';
+const $=id=>document.getElementById(id);
+const LV=['Easy','Medium','Hard','Expert'];
+let level=0,P,SOL,G,notes,sel=-1,noteMode=false,mistakes=0,hints=3,hist=[],t0=0,elapsed=0,timer=null,over=false;
+let stats={};
+try{const x=JSON.parse(localStorage.getItem('afsoon-sudoku')||'null');if(x){stats=x.stats||{};level=x.level||0;if(x.save&&!x.save.over){restore(x.save)}}}catch(e){}
+function persist(){try{localStorage.setItem('afsoon-sudoku',JSON.stringify({stats,level,save:G?{P,SOL,G,notes:notes.map(s=>[...s]),mistakes,hints,elapsed:curTime(),level,over}:null}))}catch(e){}}
+function restore(s){P=s.P;SOL=s.SOL;G=s.G;notes=s.notes.map(a=>new Set(a));mistakes=s.mistakes;hints=s.hints;elapsed=s.elapsed;level=s.level;over=false}
+function curTime(){return elapsed+(timer?Date.now()-t0:0)}
+function startTimer(){stopTimer();t0=Date.now();timer=setInterval(drawTime,1000)}
+function stopTimer(){if(timer){elapsed+=Date.now()-t0;clearInterval(timer);timer=null}}
+const fmtT=ms=>{const s=Math.floor(ms/1000);return Math.floor(s/60)+':'+String(s%60).padStart(2,'0')};
+function drawTime(){$('tm').textContent=fmtT(curTime())}
+function status(t){$('status').textContent=t}
+
+function newGame(lv){level=lv;status('Making a fresh puzzle...');setTimeout(()=>{const r=generate(level);P=r.puzzle;SOL=r.solution;G=P.slice();notes=Array.from({length:81},()=>new Set());
+  mistakes=0;hints=3;hist=[];sel=P.indexOf(0);over=false;elapsed=0;if($('ov').hidden)startTimer();status('');render();persist()},30)}
+function render(){
+  $('lvl').textContent=LV[level];$('mis').textContent=mistakes+'/3';$('hintN').textContent=hints;$('hint').disabled=!hints;drawTime();
+  const sv=sel>=0?G[sel]:0;let h='';
+  for(let i=0;i<81;i++){const cls=['c'];if(P[i])cls.push('given');if((BOX(i)%2)===0)cls.push('bx');
+    if(sel>=0&&i!==sel&&(ROW(i)===ROW(sel)||COL(i)===COL(sel)||BOX(i)===BOX(sel)))cls.push('rel');
+    if(COL(i)===2||COL(i)===5)cls.push('vr');if(ROW(i)===2||ROW(i)===5)cls.push('hr');
+    if(sv&&G[i]===sv&&i!==sel)cls.push('same');if(i===sel)cls.push('sel');if(G[i]&&G[i]!==SOL[i])cls.push('err');
+    let inner='';if(G[i])inner=G[i];else if(notes[i].size){inner='<div class="notes">'+[1,2,3,4,5,6,7,8,9].map(n=>`<span>${notes[i].has(n)?n:''}</span>`).join('')+'</div>'}
+    h+=`<div class="${cls.join(' ')}" data-i="${i}" role="gridcell" aria-label="Row ${ROW(i)+1} column ${COL(i)+1} ${G[i]||'empty'}">${inner}</div>`}
+  $('grid').innerHTML=h;
+  const cnt=Array(10).fill(0);for(let i=0;i<81;i++)if(G[i]&&G[i]===SOL[i])cnt[G[i]]++;
+  $('pad').innerHTML=[1,2,3,4,5,6,7,8,9].map(n=>`<button data-n="${n}" class="${cnt[n]>=9?'done':''}" aria-label="${n}">${n}<small>${9-cnt[n]}</small></button>`).join('');
+  $('notes').classList.toggle('on',noteMode)}
+function put(n){if(over||sel<0||P[sel])return;const i=sel;
+  if(noteMode){if(G[i])return;hist.push({i,v:G[i],n:new Set(notes[i])});notes[i].has(n)?notes[i].delete(n):notes[i].add(n);render();persist();return}
+  if(G[i]===n)return;hist.push({i,v:G[i],n:new Set(notes[i]),peers:PEERS[i].map(j=>[j,new Set(notes[j])])});G[i]=n;notes[i].clear();
+  if(n!==SOL[i]){mistakes++;status(`${n} does not fit there.`);if(mistakes>=3){render();return lose()}}
+  else{status('');for(const j of PEERS[i])notes[j].delete(n)}
+  render();persist();if(G.every((v,k)=>v===SOL[k]))win()}
+function win(){over=true;stopTimer();const t=curTime();const k=LV[level];const best=stats[k];if(!best||t<best)stats[k]=t;persist();
+  dialog(`<h2>Solved!</h2><p>${LV[level]} puzzle in <b>${fmtT(t)}</b>${mistakes?` with ${mistakes} mistake${mistakes>1?'s':''}`:' with no mistakes'}.</p><p style="font-size:.9rem;color:var(--muted)">Best ${LV[level]} time: ${fmtT(stats[k])}</p>
+   <div class="btns"><button class="btn" data-a="menu">Change level</button><button class="btn primary" data-a="again">Next puzzle</button></div>`)}
+function lose(){over=true;stopTimer();persist();dialog(`<h2>Three mistakes</h2><p>This puzzle is over. Try again with a fresh one?</p><div class="btns"><button class="btn" data-a="cont">Keep looking</button><button class="btn primary" data-a="again">New puzzle</button></div>`)}
+$('grid').addEventListener('click',e=>{const c=e.target.closest('.c');if(!c)return;sel=+c.dataset.i;render()});
+$('pad').addEventListener('click',e=>{const b=e.target.closest('[data-n]');if(b)put(+b.dataset.n)});
+$('notes').onclick=()=>{noteMode=!noteMode;render()};
+$('erase').onclick=()=>{if(over||sel<0||P[sel])return;hist.push({i:sel,v:G[sel],n:new Set(notes[sel])});G[sel]=0;notes[sel].clear();render();persist()};
+$('undo').onclick=()=>{const h=hist.pop();if(!h||over)return;G[h.i]=h.v;notes[h.i]=h.n;if(h.peers)for(const[j,s]of h.peers)notes[j]=s;sel=h.i;render();persist()};
+$('hint').onclick=()=>{if(over||!hints)return;let i=sel>=0&&!P[sel]&&G[sel]!==SOL[sel]?sel:-1;
+  if(i<0){const empty=[];for(let k=0;k<81;k++)if(G[k]!==SOL[k])empty.push(k);empty.sort((a,b)=>cands(G,a).length-cands(G,b).length);i=empty[0]}
+  if(i==null||i<0)return;hints--;sel=i;hist=[];G[i]=SOL[i];notes[i].clear();for(const j of PEERS[i])notes[j].delete(SOL[i]);render();
+  const el=$('grid').children[i];el.classList.add('hint');status(`Hint: this cell is ${SOL[i]}.`);persist();if(G.every((v,k)=>v===SOL[k]))win()};
+addEventListener('keydown',e=>{if(!$('ov').hidden)return;
+  if(e.key>='1'&&e.key<='9'){put(+e.key);return}
+  if(e.key==='Backspace'||e.key==='Delete'||e.key==='0'){$('erase').click();return}
+  if(e.key==='n'||e.key==='N'){$('notes').click();return}
+  const mv={ArrowUp:-9,ArrowDown:9,ArrowLeft:-1,ArrowRight:1}[e.key];if(mv!=null){e.preventDefault();if(sel<0)sel=0;const n=sel+mv;if(n>=0&&n<81&&!(mv===1&&COL(sel)===8)&&!(mv===-1&&COL(sel)===0))sel=n;render()}});
+document.addEventListener('visibilitychange',()=>{if(document.hidden){stopTimer();persist()}else if(G&&!over&&$('ov').hidden)startTimer()});
+function dialog(h){stopTimer();$('dlg').innerHTML=h;$('ov').hidden=false;const p=$('dlg').querySelector('.btn.primary');if(p)p.focus()}
+function menu(){dialog(`<h2>Sudoku</h2><p>Fill every row, every column and every 3×3 box with the numbers 1 to 9. Each puzzle is new and has exactly one solution.</p>
+  <h3>Level</h3><div class="btns">${LV.map((l,i)=>`<button class="btn${i===level?' on':''}" data-lv="${i}">${l}</button>`).join('')}</div>
+  <ul><li>Tap a cell, then a number. Use <b>Notes</b> to pencil in small guesses.</li><li>Three mistakes and the puzzle ends. You get three hints.</li><li>On a computer: arrow keys, 1 to 9, Backspace and N for notes.</li></ul>
+  <div class="btns">${G&&!over?'<button class="btn" data-a="cont">Continue</button>':''}<button class="btn primary" data-a="again">New puzzle</button></div>`);
+  $('dlg').querySelectorAll('[data-lv]').forEach(b=>b.onclick=e=>{e.stopPropagation();level=+b.dataset.lv;menu()})}
+$('dlg').addEventListener('click',e=>{const a=e.target.closest('[data-a]');if(!a)return;$('ov').hidden=true;const act=a.dataset.a;
+  if(act==='again')newGame(level);else if(act==='menu')menu();else if(act==='cont'){if(!over)startTimer();render()}});
+$('menuBtn').onclick=menu;
+if(G){render();status('Welcome back. Your puzzle is waiting.');startTimer()}else{newGame(level);menu()}
+})();
+</script>
+</body>
+</html>

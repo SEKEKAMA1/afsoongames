@@ -14,7 +14,7 @@
 <style>
 :root{--bg:#071a22;--line:rgba(212,165,44,.35);--gold:#d4a52c;--gold-2:#f6d999;--text:#f1f6f5;--muted:#9fbcc0;
   --display:Cinzel,Georgia,serif;--ui:Nunito,system-ui,sans-serif;color-scheme:dark;
-  --cw:min(9.5vw,7.4vh,64px);--ch:calc(var(--cw)*1.42)}
+  --cw:min(13vw,10vh,92px);--ch:calc(var(--cw)*1.42)}
 *{box-sizing:border-box}
 html,body{margin:0;height:100%}
 body{background:radial-gradient(90% 80% at 50% 40%,#123a4a 0%,var(--bg) 70%);color:var(--text);font-family:var(--ui);-webkit-tap-highlight-color:transparent;overflow-x:hidden}
@@ -38,9 +38,9 @@ button:focus-visible,a:focus-visible,input:focus-visible{outline:2px solid var(-
 .pot{font-weight:800;background:rgba(5,25,30,.7);border:1px solid var(--line);border-radius:12px;padding:2px 12px;color:var(--gold-2);font-variant-numeric:tabular-nums}
 .seat{position:absolute;transform:translate(-50%,-50%);display:flex;flex-direction:column;align-items:center;gap:3px;width:max(96px,17%)}
 .seat .cards{display:flex;gap:2px;height:calc(var(--ch)*.82)}
-.seat .cards .card{--cw:min(7vw,5.6vh,48px)}
+.seat .cards .card{--cw:min(10vw,7.6vh,68px)}
 .seat.me .cards{height:var(--ch)}
-.seat.me .cards .card{--cw:min(11vw,8vh,70px)}
+.seat.me .cards .card{--cw:min(17vw,12vh,110px)}
 .plate{background:rgba(5,25,30,.85);border:1.5px solid var(--line);border-radius:12px;padding:3px 8px;text-align:center;min-width:88px;line-height:1.2;position:relative}
 .plate .nm{font-weight:800;font-size:.8rem;white-space:nowrap}
 .plate .ch{font-weight:800;font-size:.85rem;color:var(--gold-2);font-variant-numeric:tabular-nums}
@@ -164,8 +164,8 @@ const $=id=>document.getElementById(id);
 const NAMES=['You','Kourosh','Roxana','Dariush','Shirin','Arash'];
 /* tightness: higher folds more. aggression: higher raises more. */
 const STYLE=[null,{t:.05,a:.55,bl:.06},{t:.0,a:.35,bl:.04},{t:.08,a:.75,bl:.1},{t:-.03,a:.45,bl:.05},{t:.12,a:.6,bl:.03}];
-const POS=[[50,90],[12,74],[13,25],[50,10],[87,25],[88,74]];
-const BETPOS=[[50,70],[26,66],[27,36],[50,28],[73,36],[74,66]];
+const POS=[[50,83],[12,74],[13,25],[50,10],[87,25],[88,74]];
+const BETPOS=[[50,63],[26,66],[27,36],[50,28],[73,36],[74,66]];
 let P=[],dealer=-1,board=[],deckA=[],handNo=0,sb=10,bb=20,startChips=1000,speed=1,muted=false,actx,curBet=0,minRaise=20,turn=-1,showdown=false,resolveHuman=null,running=false,lastAct={};
 let stats={w:0,l:0,best:0};
 try{const x=JSON.parse(localStorage.getItem('afsoon-poker')||'null');if(x){stats=x.stats||stats;muted=!!x.muted;startChips=x.chips||1000}}catch(e){}

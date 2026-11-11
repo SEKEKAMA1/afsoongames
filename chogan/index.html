@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, user-scalable=no">
+<meta name="theme-color" content="#071a22">
+<link rel="icon" type="image/png" href="/img/favicon-64.png">
+<link rel="apple-touch-icon" href="/img/apple-touch-icon.png">
+<title>Chogan: Paddle Ball</title>
+<meta name="description" content="Chogan by Afsoon Games. The classic TV tennis game: two paddles, one ball. Play the computer on three levels or a friend on the same device. Free in your browser.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@600;700&family=Nunito:wght@600;700;800&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#071a22;--line:rgba(212,165,44,.35);--gold:#d4a52c;--gold-2:#f6d999;--text:#f1f6f5;--muted:#9fbcc0;--display:Cinzel,Georgia,serif;--ui:Nunito,system-ui,sans-serif;color-scheme:dark}
+*{box-sizing:border-box}
+html,body{margin:0;height:100%;overflow:hidden}
+body{background:radial-gradient(90% 80% at 50% 40%,#123a4a 0%,var(--bg) 70%);color:var(--text);font-family:var(--ui);-webkit-tap-highlight-color:transparent;touch-action:none;user-select:none;-webkit-user-select:none}
+[hidden]{display:none!important}
+button{font:inherit;color:inherit;cursor:pointer}
+.app{height:100%;display:flex;flex-direction:column;align-items:center;gap:6px;padding:max(6px,env(safe-area-inset-top,0px)) 8px max(6px,env(safe-area-inset-bottom,0px))}
+.top{width:min(100%,900px);display:flex;align-items:center;gap:8px}
+.brand{font-family:var(--display);font-weight:700;font-size:1.2rem;letter-spacing:.08em;color:var(--gold-2);margin-right:auto;line-height:1.05}
+.brand small{display:block;font:800 .56rem var(--ui);letter-spacing:.24em;color:var(--gold);margin-top:3px}
+.ib{background:rgba(255,255,255,.06);border:1px solid var(--line);border-radius:10px;height:36px;min-width:36px;padding:0 10px;display:inline-flex;align-items:center;justify-content:center;font-weight:800;text-decoration:none;color:var(--text)}
+.ib svg{width:18px;height:18px}
+.stage{flex:1;min-height:0;width:100%;display:flex;align-items:center;justify-content:center}
+canvas{display:block;border-radius:12px;border:2px solid var(--gold);box-shadow:0 14px 40px rgba(0,0,0,.5);cursor:none}
+.hint{font-size:.75rem;color:var(--muted);text-align:center}
+.ov{position:fixed;inset:0;z-index:50;background:rgba(3,12,16,.72);display:grid;place-items:center;padding:20px;backdrop-filter:blur(3px)}
+.dlg{width:min(420px,100%);max-height:100%;overflow:auto;background:linear-gradient(180deg,#14404d,#0b2630);border:1px solid rgba(212,165,44,.5);border-radius:20px;padding:22px;text-align:center;display:flex;flex-direction:column;gap:12px;box-shadow:0 30px 80px rgba(0,0,0,.6);animation:in .3s cubic-bezier(.2,.8,.3,1.2)}
+@keyframes in{from{transform:scale(.85);opacity:0}}
+.dlg h2{font-family:var(--display);margin:0;color:var(--gold-2);font-size:1.6rem}
+.dlg h3{margin:4px 0 0;font-size:.8rem;letter-spacing:.18em;color:var(--gold);text-transform:uppercase}
+.dlg p{margin:0;color:#d9e8e8;line-height:1.55}
+.dlg ul{text-align:left;margin:0;padding-left:20px;color:#cfe0e0;line-height:1.5;font-size:.9rem}
+.btns{display:flex;gap:8px;justify-content:center;flex-wrap:wrap}
+.btn{height:44px;padding:0 18px;border-radius:22px;border:1px solid var(--line);background:rgba(10,40,50,.8);font-weight:800}
+.btn.primary{background:var(--gold);color:#2a1c06;border-color:var(--gold)}
+.btn.on{background:var(--gold);color:#2a1c06}
+</style>
+</head>
+<body>
+<div class="app">
+  <header class="top">
+    <div class="brand">Chogan<small>CLASSIC PADDLE BALL</small></div>
+    <button class="ib" id="menuBtn" aria-label="Menu"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M4 7h16M4 12h16M4 17h16"/></svg></button>
+    <button class="ib" id="snd" aria-label="Sound on"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"><path d="M4 10v4h4l5 4V6L8 10z"/><path id="wave" d="M16 9a4 4 0 0 1 0 6M18.5 6.5a8 8 0 0 1 0 11"/></svg></button>
+    <a class="ib" href="/" aria-label="More Afsoon games"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"><path d="M3 11 12 4l9 7v9h-6v-6H9v6H3z"/></svg></a>
+  </header>
+  <div class="stage" id="stage"><canvas id="cv" aria-label="Chogan game field"></canvas></div>
+  <div class="hint" id="hint"></div>
+</div>
+<div class="ov" id="ov"><div class="dlg" id="dlg" role="dialog" aria-modal="true"></div></div>
+<script>
+(function(){
+'use strict';
+const $=id=>document.getElementById(id);
+const cv=$('cv'),ctx=cv.getContext('2d');
+/* The game runs in a field 800 long and 480 wide. Player 1 is on the left (x small), player 2 on the right.
+   On a tall phone screen the field is drawn turned, with player 1 at the bottom. */
+const L=800,Wd=480,PW=14,PH=90,BR=9,M=26;
+const LEVELS=[{n:'Easy',sp:4.2,err:70,react:.5},{n:'Normal',sp:6.2,err:34,react:.75},{n:'Hard',sp:8.4,err:12,react:1}];
+let mode='cpu',lvl=1,target=7,muted=false,actx,portrait=false,scale=1,state='menu',paused=false;
+let P=[{y:Wd/2,score:0,tgt:null},{y:Wd/2,score:0,tgt:null}],ball,serveT=0,server=0,keys={},rally=0,flash=0,aiAim=0;
+try{const x=JSON.parse(localStorage.getItem('afsoon-chogan')||'null');if(x){lvl=x.lvl??1;target=x.target||7;muted=!!x.muted}}catch(e){}
+function persist(){try{localStorage.setItem('afsoon-chogan',JSON.stringify({lvl,target,muted}))}catch(e){}}
+function tone(f,d,type,vol){if(muted)return;try{actx=actx||new (window.AudioContext||window.webkitAudioContext)();const o=actx.createOscillator(),g=actx.createGain();o.type=type||'square';o.frequency.value=f;g.gain.setValueAtTime(vol||.05,actx.currentTime);g.gain.exponentialRampToValueAtTime(.0001,actx.currentTime+d);o.connect(g).connect(actx.destination);o.start();o.stop(actx.currentTime+d)}catch(e){}}
+const sfx={pad:()=>tone(460,.06,'square',.05),wall:()=>tone(230,.05,'square',.04),point:()=>tone(150,.35,'sawtooth',.05),win:()=>[523,659,784,1046].forEach((f,i)=>setTimeout(()=>tone(f,.2,'triangle',.07),i*120))};
+
+function fit(){const st=$('stage').getBoundingClientRect();portrait=st.height>st.width*1.1;
+  const fw=portrait?Wd:L,fh=portrait?L:Wd;scale=Math.min(st.width/fw,st.height/fh);
+  const dpr=Math.min(2,window.devicePixelRatio||1);cv.width=Math.round(fw*scale*dpr);cv.height=Math.round(fh*scale*dpr);
+  cv.style.width=Math.round(fw*scale)+'px';cv.style.height=Math.round(fh*scale)+'px';ctx.setTransform(1,0,0,1,0,0);ctx.scale(scale*dpr,scale*dpr);
+  $('hint').textContent=mode==='two'?(portrait?'Each player drags on their own half of the screen':'Player 1: W / S · Player 2: ↑ / ↓ · or drag on your half'):'Move your paddle with the mouse, a finger, or ↑ / ↓ (W / S) · P to pause'}
+/* screen point to field coordinates */
+function toField(cx,cy){const r=cv.getBoundingClientRect();const sx=(cx-r.left)/scale,sy=(cy-r.top)/scale;
+  return portrait?{x:L-sy,y:sx}:{x:sx,y:sy}}
+
+function newMatch(){P[0].score=P[1].score=0;P[0].y=P[1].y=Wd/2;server=Math.random()<.5?0:1;state='play';paused=false;serve();$('ov').hidden=true}
+function serve(){const dir=server===0?1:-1;const ang=(Math.random()-.5)*.8;ball={x:L/2,y:Wd/2,vx:0,vy:0,sp:6.5};ball.next={vx:Math.cos(ang)*dir,vy:Math.sin(ang)};serveT=60;rally=0;aiAim=(Math.random()-.5)*PH*.6}
+function update(){
+  /* paddles */
+  const pspeed=9;
+  for(let i=0;i<2;i++){const p=P[i];const human=i===0||mode==='two';
+    if(human){const up=i===0?(keys.w||(mode==='cpu'&&keys.up)):keys.up,dn=i===0?(keys.s||(mode==='cpu'&&keys.down)):keys.down;
+      if(up||dn){p.tgt=null;p.y+=(dn?pspeed:0)-(up?pspeed:0)}else if(p.tgt!=null){const d=p.tgt-p.y;p.y+=Math.max(-14,Math.min(14,d))}}
+    else{const lv=LEVELS[lvl];let ty=Wd/2;
+      if(ball.vx>0){/* predict where the ball will arrive */let bx=ball.x,by=ball.y,vx=ball.vx,vy=ball.vy;let n=0;while(bx<L-M-PW&&n++<400){bx+=vx;by+=vy;if(by<BR||by>Wd-BR){vy=-vy;by=Math.max(BR,Math.min(Wd-BR,by))}}
+        ty=by+aiAim+(Math.sin(performance.now()/300)*lv.err)*(1-lv.react*.3)}
+      else ty=Wd/2+(ball.y-Wd/2)*.3;
+      const d=ty-p.y;p.y+=Math.max(-lv.sp,Math.min(lv.sp,d*.25*(1+lv.react)))}
+    p.y=Math.max(PH/2,Math.min(Wd-PH/2,p.y))}
+  if(serveT>0){serveT--;if(!serveT){ball.vx=ball.next.vx*ball.sp;ball.vy=ball.next.vy*ball.sp}return}
+  /* ball, in small steps so it never passes through a paddle */
+  const steps=Math.ceil(Math.hypot(ball.vx,ball.vy)/6);
+  for(let s=0;s<steps;s++){ball.x+=ball.vx/steps;ball.y+=ball.vy/steps;
+    if(ball.y<BR){ball.y=BR;ball.vy=Math.abs(ball.vy);sfx.wall()}if(ball.y>Wd-BR){ball.y=Wd-BR;ball.vy=-Math.abs(ball.vy);sfx.wall()}
+    for(let i=0;i<2;i++){const p=P[i],px=i===0?M:L-M-PW;const dir=i===0?1:-1;
+      if((dir>0?ball.vx<0:ball.vx>0)&&ball.x+BR>px&&ball.x-BR<px+PW&&Math.abs(ball.y-p.y)<PH/2+BR){
+        const off=(ball.y-p.y)/(PH/2);const ang=off*1.0;ball.sp=Math.min(17,ball.sp+.45);ball.vx=Math.cos(ang)*ball.sp*dir;ball.vy=Math.sin(ang)*ball.sp;
+        ball.x=dir>0?px+PW+BR:px-BR;rally++;sfx.pad();if(i===0)aiAim=(Math.random()-.5)*PH*.7;break}}
+    if(ball.x<-BR*2){return point(1)}if(ball.x>L+BR*2){return point(0)}}
+}
+function point(w){P[w].score++;sfx.point();flash=30;server=1-w;
+  if(P[w].score>=target){state='over';sfx.win();
+    const t=mode==='two'?`Player ${w+1} wins!`:w===0?'You win!':'The computer wins';
+    setTimeout(()=>dlg(`<h2>${t}</h2><p>${P[0].score} – ${P[1].score}</p><div class="btns"><button class="btn" data-a="menu">Menu</button><button class="btn primary" data-a="again">Play again</button></div>`),500);return}
+  serve()}
+function draw(){ctx.save();if(portrait){ctx.translate(0,L);ctx.rotate(-Math.PI/2)}
+  /* field: polo green with gold lines, like an old palace maidan */
+  const g=ctx.createLinearGradient(0,0,L,0);g.addColorStop(0,'#0f5f6a');g.addColorStop(.5,'#1b8a86');g.addColorStop(1,'#0f5f6a');ctx.fillStyle=g;ctx.fillRect(0,0,L,Wd);
+  ctx.strokeStyle='rgba(246,217,153,.35)';ctx.lineWidth=3;ctx.setLineDash([14,12]);ctx.beginPath();ctx.moveTo(L/2,8);ctx.lineTo(L/2,Wd-8);ctx.stroke();ctx.setLineDash([]);
+  ctx.beginPath();ctx.arc(L/2,Wd/2,60,0,7);ctx.stroke();ctx.strokeRect(6,6,L-12,Wd-12);
+  /* score */
+  ctx.save();ctx.fillStyle=flash>0&&flash%10<5?'#fff':'rgba(246,217,153,.55)';ctx.font='700 64px Cinzel,serif';ctx.textAlign='center';ctx.textBaseline='middle';
+  if(portrait){ctx.translate(L/4,Wd/2);ctx.rotate(Math.PI/2);ctx.fillText(P[0].score,0,0);ctx.restore();ctx.save();ctx.fillStyle=flash>0&&flash%10<5?'#fff':'rgba(246,217,153,.55)';ctx.font='700 64px Cinzel,serif';ctx.textAlign='center';ctx.textBaseline='middle';ctx.translate(L*3/4,Wd/2);ctx.rotate(Math.PI/2);ctx.fillText(P[1].score,0,0)}
+  else{ctx.fillText(P[0].score,L/4,70);ctx.fillText(P[1].score,L*3/4,70)}ctx.restore();
+  /* paddles */
+  const pad=(x,y,c)=>{ctx.fillStyle=c;ctx.shadowColor=c;ctx.shadowBlur=12;ctx.beginPath();ctx.roundRect?ctx.roundRect(x,y-PH/2,PW,PH,6):ctx.rect(x,y-PH/2,PW,PH);ctx.fill();ctx.shadowBlur=0};
+  pad(M,P[0].y,'#f6d999');pad(L-M-PW,P[1].y,'#ff8a7a');
+  /* ball */
+  if(ball&&state!=='menu'){ctx.fillStyle='#fffaf0';ctx.shadowColor='#ffe08a';ctx.shadowBlur=16;ctx.beginPath();ctx.arc(ball.x,ball.y,BR,0,7);ctx.fill();ctx.shadowBlur=0;
+    if(serveT>0&&state==='play'){ctx.strokeStyle='rgba(255,224,138,.6)';ctx.lineWidth=3;ctx.beginPath();ctx.arc(ball.x,ball.y,BR+6+serveT/4,0,7);ctx.stroke()}}
+  if(paused){ctx.fillStyle='rgba(0,0,0,.45)';ctx.fillRect(0,0,L,Wd);ctx.save();ctx.translate(L/2,Wd/2);if(portrait)ctx.rotate(Math.PI/2);ctx.fillStyle='#f6d999';ctx.font='700 40px Cinzel,serif';ctx.textAlign='center';ctx.fillText('Paused',0,12);ctx.restore()}
+  ctx.restore();if(flash>0)flash--}
+let acc=0,last=0;
+function frame(t){requestAnimationFrame(frame);if(!last)last=t;acc+=Math.min(100,t-last);last=t;
+  if(state==='play'&&!paused){while(acc>=1000/60){update();acc-=1000/60;if(state!=='play')break}}else acc=0;draw()}
+/* ---------- input ---------- */
+const KM={w:'w',W:'w',s:'s',S:'s',ArrowUp:'up',ArrowDown:'down'};
+addEventListener('keydown',e=>{if(KM[e.key]){keys[KM[e.key]]=true;e.preventDefault()}if((e.key==='p'||e.key==='P'||e.key==='Escape')&&state==='play')paused=!paused});
+addEventListener('keyup',e=>{if(KM[e.key])keys[KM[e.key]]=false});
+const pointers=new Map();
+function handle(e){const f=toField(e.clientX,e.clientY);let side=f.x<L/2?0:1;if(mode==='cpu')side=0;P[side].tgt=f.y}
+cv.addEventListener('pointerdown',e=>{cv.setPointerCapture(e.pointerId);handle(e);if(!actx&&!muted){try{actx=new (window.AudioContext||window.webkitAudioContext)()}catch(_){}}});
+cv.addEventListener('pointermove',e=>{if(e.pointerType==='mouse'||e.buttons||e.pressure>0)handle(e)});
+document.addEventListener('visibilitychange',()=>{if(document.hidden&&state==='play')paused=true});
+/* ---------- menus ---------- */
+function dlg(h){$('dlg').innerHTML=h;$('ov').hidden=false;const p=$('dlg').querySelector('.btn.primary');if(p)p.focus()}
+function menu(){if(state==='play')paused=true;
+  dlg(`<h2>Chogan</h2><p>The classic TV tennis game. Two paddles face each other. Hit the ball past your opponent to score.</p>
+  <h3>Computer level</h3><div class="btns">${LEVELS.map((l,i)=>`<button class="btn${i===lvl?' on':''}" data-lv="${i}">${l.n}</button>`).join('')}</div>
+  <h3>Points to win</h3><div class="btns">${[5,7,11].map(n=>`<button class="btn${n===target?' on':''}" data-t="${n}">${n}</button>`).join('')}</div>
+  <ul><li>Where the ball hits your paddle decides the angle. Hit it with the edge for a sharp shot.</li><li>The ball gets faster on every hit.</li></ul>
+  <div class="btns">${state==='play'?'<button class="btn" data-a="resume">Resume</button>':''}<button class="btn" data-a="two">Two players</button><button class="btn primary" data-a="cpu">Play the computer</button></div>`);
+  $('dlg').querySelectorAll('[data-lv]').forEach(b=>b.onclick=e=>{e.stopPropagation();lvl=+b.dataset.lv;persist();state==='play'?(paused=true,menu()):menu()});
+  $('dlg').querySelectorAll('[data-t]').forEach(b=>b.onclick=e=>{e.stopPropagation();target=+b.dataset.t;persist();menu()})}
+$('dlg').addEventListener('click',e=>{const a=e.target.closest('[data-a]');if(!a)return;const act=a.dataset.a;$('ov').hidden=true;
+  if(!actx&&!muted){try{actx=new (window.AudioContext||window.webkitAudioContext)()}catch(_){}}
+  if(act==='cpu'){mode='cpu';fit();newMatch()}else if(act==='two'){mode='two';fit();newMatch()}else if(act==='again')newMatch();else if(act==='menu'){state='menu';menu()}else if(act==='resume'){paused=false}});
+$('menuBtn').onclick=menu;
+$('snd').onclick=()=>{muted=!muted;persist();$('wave').style.display=muted?'none':''};$('wave').style.display=muted?'none':'';
+addEventListener('resize',fit);fit();ball={x:L/2,y:Wd/2,vx:0,vy:0,sp:6};menu();requestAnimationFrame(frame);
+window.__cg={P,get ball(){return ball},get state(){return state}};
+})();
+</script>
+</body>
+</html>
