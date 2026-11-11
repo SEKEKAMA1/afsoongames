@@ -1,0 +1,268 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#071a22">
+<link rel="icon" type="image/png" href="/img/favicon-64.png">
+<link rel="apple-touch-icon" href="/img/apple-touch-icon.png">
+<title>Hokm: Persian Card Game</title>
+<meta name="description" content="Hokm by Afsoon Games. The favourite card game of Iran for four players. Team up with your partner against two rivals, let the Hakem name the trump and win seven tricks. Free in your browser.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@600;700&family=Nunito:wght@600;700;800&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#071a22;--line:rgba(212,165,44,.35);--gold:#d4a52c;--gold-2:#f6d999;--text:#f1f6f5;--muted:#9fbcc0;
+  --display:Cinzel,Georgia,serif;--ui:Nunito,system-ui,sans-serif;color-scheme:dark;
+  --cw:min(13.2vw,8.6vh,86px);--ch:calc(var(--cw)*1.42);--sw:calc(var(--cw)*.55);--sh:calc(var(--sw)*1.42)}
+*{box-sizing:border-box}
+html,body{margin:0;height:100%}
+body{background:radial-gradient(90% 80% at 50% 40%,#123a4a 0%,var(--bg) 70%);color:var(--text);font-family:var(--ui);-webkit-tap-highlight-color:transparent;overflow-x:hidden}
+[hidden]{display:none!important}
+button{font:inherit;color:inherit;cursor:pointer}
+button:focus-visible,a:focus-visible{outline:2px solid var(--gold-2);outline-offset:2px}
+.app{max-width:980px;height:100%;margin:0 auto;padding:max(8px,env(safe-area-inset-top,0px)) max(8px,env(safe-area-inset-right,0px)) max(8px,env(safe-area-inset-bottom,0px)) max(8px,env(safe-area-inset-left,0px));display:flex;flex-direction:column;gap:6px}
+.top{display:flex;align-items:center;gap:8px}
+.brand{font-family:var(--display);font-weight:700;font-size:1.25rem;letter-spacing:.08em;color:var(--gold-2);margin-right:auto;line-height:1.05}
+.brand small{display:block;font:800 .58rem var(--ui);letter-spacing:.24em;color:var(--gold);margin-top:3px}
+.ib{background:rgba(255,255,255,.06);border:1px solid var(--line);border-radius:10px;height:36px;min-width:36px;padding:0 10px;display:inline-flex;align-items:center;justify-content:center;gap:6px;font-weight:800;font-size:.85rem;text-decoration:none;color:var(--text)}
+.ib svg{width:18px;height:18px}
+.hud{display:flex;gap:6px;flex-wrap:wrap;justify-content:center;font-weight:800;font-size:.85rem}
+.pill{background:rgba(255,255,255,.06);border:1px solid var(--line);border-radius:12px;padding:4px 10px;white-space:nowrap;font-variant-numeric:tabular-nums}
+.pill b{color:var(--gold-2)}
+.pill .red{color:#ff7b6b}
+.table{flex:1;min-height:0;position:relative;border-radius:22px;background:radial-gradient(70% 70% at 50% 45%,#1b8a86 0%,#0f5f6a 60%,#0a3f47 100%);border:3px solid var(--gold);box-shadow:inset 0 0 0 6px rgba(212,165,44,.18),inset 0 0 60px rgba(0,0,0,.35),0 14px 40px rgba(0,0,0,.4);overflow:hidden}
+.table::before{content:"";position:absolute;inset:14%;border-radius:50%;border:2px dashed rgba(246,217,153,.18);pointer-events:none}
+.seat{position:absolute;display:flex;flex-direction:column;align-items:center;gap:4px}
+.seat.n{top:8px;left:50%;transform:translateX(-50%)}
+.seat.w{left:8px;top:42%;transform:translateY(-50%)}
+.seat.e{right:8px;top:42%;transform:translateY(-50%)}
+.tag{font-weight:800;font-size:.8rem;background:rgba(5,25,30,.7);border:1px solid var(--line);border-radius:10px;padding:2px 8px;white-space:nowrap}
+.tag.turn{background:var(--gold);color:#2a1c06}
+.tag .crown{color:var(--gold-2)}.tag.turn .crown{color:#7a4b00}
+.backs{position:relative;height:var(--sh);display:flex}
+.backs .bk{width:var(--sw);height:var(--sh);border-radius:5px;background:#3a2a10 url(/img/card-back.webp) center/cover;border:1.5px solid #d4a52c;box-shadow:0 2px 4px rgba(0,0,0,.35)}
+.backs .bk+.bk{margin-left:calc(var(--sw)*-.78)}
+.seat.w .backs,.seat.e .backs{flex-direction:column;height:auto;width:var(--sh)}
+.seat.w .bk,.seat.e .bk{width:var(--sh);height:var(--sw)}
+.seat.w .bk+.bk,.seat.e .bk+.bk{margin-left:0;margin-top:calc(var(--sw)*-.8)}
+.trick{position:absolute;left:50%;top:42%;width:0;height:0}
+.card{width:var(--cw);height:var(--ch);border-radius:8px;background:linear-gradient(180deg,#fffdf6,#f6ecd3);border:1.5px solid #c9a64a;box-shadow:0 3px 8px rgba(0,0,0,.35);position:relative;color:#1d2a36;user-select:none;flex:none}
+.card.red{color:#b3261e}
+.card .ix{position:absolute;left:5%;top:3%;display:flex;flex-direction:column;align-items:center;line-height:.95;font-weight:800;font-size:calc(var(--cw)*.24)}
+.card .ix i{font-style:normal;font-size:calc(var(--cw)*.22)}
+.card .ix.b{left:auto;top:auto;right:5%;bottom:3%;transform:rotate(180deg)}
+.card .mid{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-size:calc(var(--cw)*.5)}
+.card .face{position:absolute;inset:22% 18%;border-radius:5px;border:1.5px solid currentColor;display:flex;flex-direction:column;align-items:center;justify-content:center;background:rgba(212,165,44,.12);font-family:var(--display);font-weight:700;font-size:calc(var(--cw)*.34);line-height:1}
+.card .face small{font-size:calc(var(--cw)*.26)}
+.trick .card{position:absolute;margin-left:calc(var(--cw)/-2);margin-top:calc(var(--ch)/-2);animation:fly .28s ease-out}
+.trick .card.p0{transform:translate(0,52%)}.trick .card.p1{transform:translate(78%,0) rotate(6deg)}.trick .card.p2{transform:translate(0,-52%)}.trick .card.p3{transform:translate(-78%,0) rotate(-6deg)}
+.trick .card.win{box-shadow:0 0 0 3px #ffe08a,0 0 18px #ffe08a}
+@keyframes fly{from{opacity:0;scale:.6}}
+.trick.gone .card{transition:transform .45s ease,opacity .45s ease;opacity:0}
+.hand{display:flex;justify-content:center;padding:14px 4px 0;min-height:calc(var(--ch) + 14px);align-items:flex-end}
+.hand .card{cursor:pointer;transition:transform .15s,margin .2s}
+.hand .card+.card{margin-left:min(calc(var(--cw)*-.42),calc((100% - var(--cw))/12 - var(--cw)))}
+.hand .card.ok{transform:translateY(-12px)}
+.hand .card.ok:hover{transform:translateY(-20px)}
+.hand .card.no{filter:brightness(.62) saturate(.6);cursor:default}
+.mytag{display:flex;justify-content:center}
+.trumpbox{position:absolute;right:10px;bottom:10px;text-align:center;font-weight:800;font-size:.72rem;letter-spacing:.12em;color:var(--gold-2);background:rgba(5,25,30,.65);border:1px solid var(--line);border-radius:12px;padding:5px 9px}
+.trumpbox .s{display:block;font-size:1.8rem;letter-spacing:0;line-height:1.1}
+.tc{position:absolute;left:10px;bottom:10px;font-weight:800;font-size:.8rem;background:rgba(5,25,30,.65);border:1px solid var(--line);border-radius:12px;padding:5px 9px;line-height:1.4}
+.tc b{color:var(--gold-2)}
+.status{min-height:1.4em;font-weight:800;text-align:center;color:var(--gold-2)}
+.btn{height:44px;padding:0 20px;border-radius:22px;border:1px solid var(--line);background:rgba(10,40,50,.8);font-weight:800;display:inline-flex;align-items:center;gap:7px}
+.btn.primary{background:var(--gold);color:#2a1c06;border-color:var(--gold)}
+.btn.primary:hover{background:var(--gold-2)}
+.btn.on{background:var(--gold);color:#2a1c06}
+.ov{position:fixed;inset:0;z-index:50;background:rgba(3,12,16,.72);display:grid;place-items:center;padding:20px;backdrop-filter:blur(3px)}
+.dlg{width:min(460px,100%);max-height:100%;overflow:auto;background:linear-gradient(180deg,#14404d,#0b2630);border:1px solid rgba(212,165,44,.5);border-radius:20px;padding:22px;text-align:center;display:flex;flex-direction:column;gap:12px;box-shadow:0 30px 80px rgba(0,0,0,.6);animation:in .3s cubic-bezier(.2,.8,.3,1.2)}
+@keyframes in{from{transform:scale(.85);opacity:0}}
+.dlg h2{font-family:var(--display);margin:0;color:var(--gold-2);font-size:1.6rem}
+.dlg h3{margin:4px 0 0;font-size:.8rem;letter-spacing:.18em;color:var(--gold);text-transform:uppercase}
+.dlg p{margin:0;color:#d9e8e8;line-height:1.55}
+.dlg ul{text-align:left;margin:0;padding-left:20px;color:#cfe0e0;line-height:1.5;font-size:.9rem}
+.btns{display:flex;gap:8px;justify-content:center;flex-wrap:wrap}
+.suits{display:flex;gap:10px;justify-content:center}
+.suits button{width:70px;height:78px;border-radius:14px;background:#fffaf0;border:2px solid var(--gold);font-size:2.4rem;color:#1d2a36;display:flex;flex-direction:column;align-items:center;justify-content:center;line-height:1}
+.suits button small{font:800 .7rem var(--ui);margin-top:3px}
+.suits button.red{color:#b3261e}
+.suits button:hover{background:#fff1c9}
+.five{display:flex;justify-content:center;gap:4px;flex-wrap:wrap}
+.five .card{--cw:58px}
+.credit{font-size:.74rem;color:var(--muted);text-align:center;margin:0}.credit a{color:var(--gold)}
+@media (max-width:560px){.brand{font-size:1rem}.hud{font-size:.75rem}.pill{padding:3px 7px}.tc,.trumpbox{font-size:.65rem}.trumpbox .s{font-size:1.4rem}.btn{height:42px;padding:0 14px}}
+@media (prefers-reduced-motion:reduce){.trick .card{animation:none}.hand .card{transition:none}}
+</style>
+</head>
+<body>
+<div class="app">
+  <header class="top">
+    <div class="brand">Hokm<small>THE CARD GAME OF IRAN</small></div>
+    <div class="hud"><span class="pill">Us <b id="ptsUs">0</b> – <b id="ptsThem">0</b> Them</span><span class="pill">to <b id="tgt">7</b></span></div>
+    <button class="ib" id="menuBtn" aria-label="Game menu"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M4 7h16M4 12h16M4 17h16"/></svg></button>
+    <button class="ib" id="snd" aria-label="Sound on"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"><path d="M4 10v4h4l5 4V6L8 10z"/><path id="wave" d="M16 9a4 4 0 0 1 0 6M18.5 6.5a8 8 0 0 1 0 11"/></svg></button>
+    <a class="ib" href="/" aria-label="More Afsoon games"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"><path d="M3 11 12 4l9 7v9h-6v-6H9v6H3z"/></svg></a>
+  </header>
+  <div class="table" id="table">
+    <div class="seat n"><div class="tag" id="tag2"></div><div class="backs" id="backs2"></div></div>
+    <div class="seat w"><div class="tag" id="tag3"></div><div class="backs" id="backs3"></div></div>
+    <div class="seat e"><div class="tag" id="tag1"></div><div class="backs" id="backs1"></div></div>
+    <div class="trick" id="trick"></div>
+    <div class="tc" id="tc"></div>
+    <div class="trumpbox" id="trumpbox" hidden>TRUMP<span class="s" id="trumpS"></span></div>
+  </div>
+  <div class="status" id="status" aria-live="polite"></div>
+  <div class="mytag"><div class="tag" id="tag0"></div></div>
+  <div class="hand" id="hand"></div>
+</div>
+<div class="ov" id="ov" hidden><div class="dlg" id="dlg" role="dialog" aria-modal="true"></div></div>
+
+<script>
+/* ===== LOGIC START ===== */
+/* Seats go counter-clockwise like in Iran: 0 you (south), 1 east, 2 partner (north), 3 west. Team 0 = seats 0 and 2. */
+const SUITS=['s','h','d','c'],SYM={s:'♠',h:'♥',d:'♦',c:'♣'},SNAME={s:'Spades',h:'Hearts',d:'Diamonds',c:'Clubs'};
+const RN={11:'J',12:'Q',13:'K',14:'A'};
+const rankTxt=r=>RN[r]||String(r);
+const team=s=>s%2;
+function deck(){const d=[];for(const s of SUITS)for(let r=2;r<=14;r++)d.push({s,r,id:s+r});return d}
+function shuffle(a){for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]]}return a}
+function sortHand(h,trump){const ord=trump?[trump,...SUITS.filter(x=>x!==trump)]:SUITS;
+  /* alternate colours for readability */
+  const order=ord.slice().sort((a,b)=>ord.indexOf(a)-ord.indexOf(b));
+  return h.sort((a,b)=>order.indexOf(a.s)-order.indexOf(b.s)||b.r-a.r)}
+function legalCards(hand,trick){if(!trick.length)return hand.slice();const ls=trick[0].c.s;const f=hand.filter(c=>c.s===ls);return f.length?f:hand.slice()}
+function beats(a,b,lead,trump){/* does card a beat card b */
+  if(a.s===b.s)return a.r>b.r;if(a.s===trump)return true;if(b.s===trump)return false;return false}
+function trickWinner(trick,trump){let w=trick[0];for(const t of trick.slice(1))if(beats(t.c,w.c,trick[0].c.s,trump))w=t;return w}
+function chooseTrump(five){let best=null,bv=-1;for(const s of SUITS){const cs=five.filter(c=>c.s===s);const v=cs.length*10+cs.reduce((a,c)=>a+c.r,0)/3+(cs.some(c=>c.r===14)?4:0);if(v>bv){bv=v;best=s}}return best}
+/* AI: knows its own hand and every card already played. */
+function aiChoose(G,seat){const hand=G.hands[seat],trick=G.trick,trump=G.trump;const legal=legalCards(hand,trick);
+  if(legal.length===1)return legal[0];
+  const gone=new Set(G.played.map(c=>c.id));hand.forEach(c=>gone.add(c.id));
+  const outside=s=>{const o=[];for(let r=2;r<=14;r++)if(!gone.has(s+r))o.push(r);return o};
+  const isBoss=c=>{const o=outside(c.s);return !o.some(r=>r>c.r)};
+  const low=cs=>cs.slice().sort((a,b)=>a.r-b.r)[0];
+  const high=cs=>cs.slice().sort((a,b)=>b.r-a.r)[0];
+  const lowDiscard=cs=>{const nt=cs.filter(c=>c.s!==trump);return low(nt.length?nt:cs)};
+  if(!trick.length){
+    const trumps=hand.filter(c=>c.s===trump);
+    const bossNT=hand.filter(c=>c.s!==trump&&isBoss(c)&&outside(c.s).length>0);
+    if(trumps.length>=4&&isBoss(high(trumps))&&outside(trump).length>0)return high(trumps);
+    if(bossNT.length)return high(bossNT);
+    const nt=hand.filter(c=>c.s!==trump);if(!nt.length)return low(hand);
+    /* lead low from the longest side suit */
+    const by={};nt.forEach(c=>(by[c.s]=by[c.s]||[]).push(c));
+    const suit=Object.keys(by).sort((a,b)=>by[b].length-by[a].length)[0];return low(by[suit])}
+  const lead=trick[0].c.s,win=trickWinner(trick,trump),pos=trick.length,lastToPlay=pos===3;
+  const partnerWins=team(win.p)===team(seat);
+  const partnerSafe=partnerWins&&(lastToPlay||(win.c.s===trump&&lead!==trump?!outside(trump).some(r=>r>win.c.r):isBoss(win.c)));
+  const winners=legal.filter(c=>beats(c,win.c,lead,trump));
+  if(hand.some(c=>c.s===lead)){
+    if(partnerSafe)return low(legal);
+    if(winners.length){const w=low(winners);if(lastToPlay||isBoss(w)||pos===2)return w;}
+    return low(legal)}
+  /* void in the led suit */
+  if(partnerSafe)return lowDiscard(legal);
+  const tw=winners.filter(c=>c.s===trump);if(tw.length)return low(tw);
+  return lowDiscard(legal)}
+/* ===== LOGIC END ===== */
+
+(function(){
+'use strict';
+const $=id=>document.getElementById(id);
+const NAMES=['You','Kourosh','Roxana','Dariush'];
+const ROLE=['','rival','partner','rival'];
+let G,target=7,speed=1,muted=false,actx,busy=false,stats={w:0,l:0};
+try{const x=JSON.parse(localStorage.getItem('afsoon-hokm')||'null');if(x){stats=x.stats||stats;target=x.target||7;muted=!!x.muted}}catch(e){}
+function persist(){try{localStorage.setItem('afsoon-hokm',JSON.stringify({stats,target,muted}))}catch(e){}}
+function tone(f,d,type,vol){if(muted)return;try{actx=actx||new (window.AudioContext||window.webkitAudioContext)();const o=actx.createOscillator(),g=actx.createGain();o.type=type||'sine';o.frequency.value=f;g.gain.setValueAtTime(vol||.06,actx.currentTime);g.gain.exponentialRampToValueAtTime(.0001,actx.currentTime+d);o.connect(g).connect(actx.destination);o.start();o.stop(actx.currentTime+d)}catch(e){}}
+const sfx={card:()=>tone(520+Math.random()*80,.05,'triangle',.06),trick:()=>{tone(700,.08,'sine',.05);setTimeout(()=>tone(940,.1,'sine',.05),80)},
+  deal:()=>{for(let i=0;i<5;i++)setTimeout(()=>tone(400+Math.random()*300,.03,'square',.025),i*50)},
+  win:()=>[523,659,784,1046].forEach((f,i)=>setTimeout(()=>tone(f,.25,'triangle',.07),i*130)),lose:()=>[392,330,262].forEach((f,i)=>setTimeout(()=>tone(f,.3,'sine',.07),i*170))};
+function drawSnd(){$('wave').style.display=muted?'none':'';$('snd').setAttribute('aria-label',muted?'Sound off':'Sound on')}
+const wait=ms=>new Promise(r=>setTimeout(r,ms*speed));
+function status(t){$('status').textContent=t}
+
+function cardHTML(c,cls){const red=c.s==='h'||c.s==='d';const sy=SYM[c.s]+'︎';
+  const mid=c.r>10&&c.r<14?`<div class="face">${rankTxt(c.r)}<small>${sy}</small></div>`:`<div class="mid">${sy}</div>`;
+  return `<div class="card${red?' red':''}${cls?' '+cls:''}" data-id="${c.id}" role="button" aria-label="${rankTxt(c.r)} of ${SNAME[c.s]}"><div class="ix">${rankTxt(c.r)}<i>${sy}</i></div>${mid}<div class="ix b">${rankTxt(c.r)}<i>${sy}</i></div></div>`}
+
+function render(){
+  $('ptsUs').textContent=G.pts[0];$('ptsThem').textContent=G.pts[1];$('tgt').textContent=target;
+  for(let s=0;s<4;s++){const t=$('tag'+s);
+    t.innerHTML=(G.hakem===s?'<span class="crown">♛</span> ':'')+NAMES[s]+(ROLE[s]?` <span style="opacity:.7;font-weight:700">${ROLE[s]}</span>`:'')+(G.hakem===s?' <span style="opacity:.8">Hakem</span>':'');
+    t.classList.toggle('turn',G.turn===s&&G.phase==='play');
+    if(s){const n=G.phase==='choose'&&G.hakem!==s?0:G.hands[s].length;const show=G.phase==='choose'?(G.hakem===s?5:0):n;
+      $('backs'+s).innerHTML='<div class="bk"></div>'.repeat(Math.min(show,13))}}
+  const showN=G.phase==='choose'?(G.hakem===0?5:0):13;
+  const mine=G.phase==='choose'?G.hands[0].slice(0,showN):G.hands[0];
+  const legal=G.phase==='play'&&G.turn===0&&!busy?legalCards(G.hands[0],G.trick).map(c=>c.id):null;
+  $('hand').innerHTML=sortHand(mine.slice(),G.trump).map(c=>cardHTML(c,legal?(legal.includes(c.id)?'ok':'no'):'')).join('');
+  $('trick').innerHTML=G.trick.map(t=>cardHTML(t.c,'p'+t.p+(G.trickWin===t.p?' win':''))).join('');
+  $('trumpbox').hidden=!G.trump;if(G.trump){$('trumpS').textContent=SYM[G.trump]+'︎';$('trumpS').style.color=G.trump==='h'||G.trump==='d'?'#ff8a7a':'#fffaf0'}
+  $('tc').innerHTML=`Tricks<br>Us <b>${G.tricks[0]}</b> · Them <b>${G.tricks[1]}</b>`;
+}
+
+function newMatch(){G={pts:[0,0],hakem:-1,hands:[[],[],[],[]],trick:[],played:[],trump:null,tricks:[0,0],turn:-1,phase:'idle',trickWin:-1};render();pickHakem()}
+async function pickHakem(){busy=true;status('Dealing one card each to find the Hakem. The first ace wins...');
+  const d=shuffle(deck());let s=Math.floor(Math.random()*4);
+  for(const c of d){G.trick=[{p:s,c}];render();sfx.card();await wait(260);if(c.r===14){break}s=(s+1)%4}
+  G.hakem=s;G.trickWin=s;render();status(`${NAMES[s]} ${s===0?'get':'gets'} the ace and ${s===0?'are':'is'} the Hakem!`);await wait(1500);G.trickWin=-1;newHand()}
+async function newHand(){busy=true;G.trick=[];G.played=[];G.trump=null;G.tricks=[0,0];G.trickWin=-1;
+  const d=shuffle(deck());G.hands=[[],[],[],[]];
+  /* deal 5 each starting with the Hakem; the Hakem chooses trump from those 5; then 4 and 4 */
+  for(const n of[5,4,4])for(let k=0;k<4;k++){const s=(G.hakem+k)%4;for(let i=0;i<n;i++)G.hands[s].push(d.pop())}
+  G.phase='choose';sfx.deal();render();
+  if(G.hakem===0){status('You are the Hakem. Look at your five cards and choose the trump (hokm).');busy=false;askTrump()}
+  else{status(`${NAMES[G.hakem]} is looking at five cards to choose the trump...`);await wait(1300);setTrump(chooseTrump(G.hands[G.hakem].slice(0,5)))}}
+function askTrump(){const five=G.hands[0].slice(0,5);
+  dialog(`<h2>Choose the hokm</h2><p>These are your first five cards. Which suit will be trump?</p><div class="five">${sortHand(five.slice()).map(c=>cardHTML(c)).join('')}</div>
+   <div class="suits">${SUITS.map(s=>`<button data-t="${s}" class="${s==='h'||s==='d'?'red':''}">${SYM[s]}︎<small>${SNAME[s]}</small></button>`).join('')}</div>`);
+  $('dlg').querySelectorAll('[data-t]').forEach(b=>b.onclick=()=>{$('ov').hidden=true;setTrump(b.dataset.t)})}
+async function setTrump(t){G.trump=t;G.phase='play';G.turn=G.hakem;sfx.deal();render();
+  status(`Hokm is ${SNAME[t]} ${SYM[t]}︎. ${G.hakem===0?'You lead':NAMES[G.hakem]+' leads'} the first trick.`);await wait(1200);next()}
+async function next(){if(G.phase!=='play')return;render();
+  if(G.turn===0){busy=false;render();status(G.trick.length?`Your turn. ${G.hands[0].some(c=>c.s===G.trick[0].c.s)?'Follow '+SNAME[G.trick[0].c.s]+'.':'You have no '+SNAME[G.trick[0].c.s]+', play any card.'}`:'Your lead. Play any card.');return}
+  busy=true;status(`${NAMES[G.turn]} is playing...`);await wait(650);play(G.turn,aiChoose(G,G.turn))}
+async function play(seat,card){const h=G.hands[seat];h.splice(h.findIndex(c=>c.id===card.id),1);G.trick.push({p:seat,c:card});G.played.push(card);sfx.card();
+  if(G.trick.length<4){G.turn=(seat+1)%4;render();return next()}
+  busy=true;G.turn=-1;render();const w=trickWinner(G.trick,G.trump);G.trickWin=w.p;render();
+  status(`${NAMES[w.p]} ${w.p===0?'win':'wins'} the trick.`);sfx.trick();await wait(1100);
+  $('trick').classList.add('gone');const dir=['translate(0,180%)','translate(260%,0)','translate(0,-180%)','translate(-260%,0)'][w.p];
+  $('trick').querySelectorAll('.card').forEach(c=>c.style.transform=dir);await wait(420);$('trick').classList.remove('gone');
+  G.tricks[team(w.p)]++;G.trick=[];G.trickWin=-1;
+  if(G.tricks[0]===7||G.tricks[1]===7)return endHand();
+  G.turn=w.p;next()}
+async function endHand(){G.phase='done';render();busy=true;
+  const wt=G.tricks[0]===7?0:1,lt=1-wt,ht=team(G.hakem);let pts=1,kind='';
+  if(G.tricks[lt]===0){if(lt===ht){pts=3;kind='Hakem kot! The Hakem’s team took no tricks: 3 points.'}else{pts=2;kind='Kot! A clean sweep, 7 to 0: 2 points.'}}
+  G.pts[wt]+=pts;render();wt===0?sfx.win():sfx.lose();
+  const msg=`${wt===0?'Your team':'The rivals'} won the hand ${G.tricks[wt]} to ${G.tricks[lt]}. ${kind||'1 point.'}`;
+  if(G.pts[wt]>=target){if(wt===0)stats.w++;else stats.l++;persist();
+    return dialog(`<h2>${wt===0?'You win the match!':'The rivals win the match'}</h2><p>${msg}</p><p>Final score: Us ${G.pts[0]}, Them ${G.pts[1]}.</p><p style="font-size:.9rem;color:var(--muted)">Matches: ${stats.w} won, ${stats.l} lost.</p>
+     <div class="btns"><button class="btn" data-a="menu">Menu</button><button class="btn primary" data-a="again">New match</button></div>`)}
+  /* the Hakem keeps the crown if his team won; otherwise it passes to the next player, who is on the other team */
+  const oldH=G.hakem;if(wt!==ht)G.hakem=(G.hakem+1)%4;
+  dialog(`<h2>${wt===0?'Hand won':'Hand lost'}</h2><p>${msg}</p><p>Score: Us <b>${G.pts[0]}</b>, Them <b>${G.pts[1]}</b> (first to ${target}).</p><p>${G.hakem===oldH?NAMES[G.hakem]+(G.hakem===0?' stay':' stays')+' Hakem.':'The Hakem passes to '+NAMES[G.hakem]+'.'}</p>
+    <div class="btns"><button class="btn primary" data-a="hand">Next hand</button></div>`)}
+
+$('hand').addEventListener('click',e=>{const el=e.target.closest('.card.ok');if(!el||busy||G.turn!==0||G.phase!=='play')return;
+  if(!actx&&!muted){try{actx=new (window.AudioContext||window.webkitAudioContext)()}catch(_){}}
+  const c=G.hands[0].find(x=>x.id===el.dataset.id);if(c){busy=true;play(0,c)}});
+function dialog(h){$('dlg').innerHTML=h;$('ov').hidden=false;const p=$('dlg').querySelector('.btn.primary');if(p)p.focus()}
+function menu(){dialog(`<h2>Hokm</h2><p>The favourite card game of Iran. You and your partner <b>Roxana</b> (across the table) play against <b>Kourosh</b> and <b>Dariush</b>.</p>
+  <ul><li>The <b>Hakem</b> sees five cards and names the trump suit, the <i>hokm</i>.</li><li>Follow the suit that was led if you can. If you cannot, play any card. A trump beats every other suit.</li><li>The first team to win <b>7 tricks</b> wins the hand and 1 point.</li><li><b>Kot</b> (7 to 0) is worth 2 points, or 3 if the Hakem's team is shut out.</li><li>If the Hakem's team loses, the next player becomes Hakem.</li></ul>
+  <h3>Match length</h3><div class="btns">${[3,5,7].map(n=>`<button class="btn${n===target?' on':''}" data-g="${n}">First to ${n}</button>`).join('')}</div>
+  <div class="btns">${G&&G.phase!=='idle'&&G.pts?'<button class="btn" data-a="close">Continue</button>':''}<button class="btn primary" data-a="again">New match</button></div>`);
+  $('dlg').querySelectorAll('[data-g]').forEach(b=>b.onclick=e=>{e.stopPropagation();target=+b.dataset.g;persist();menu()})}
+$('dlg').addEventListener('click',e=>{const a=e.target.closest('[data-a]');if(!a)return;const act=a.dataset.a;
+  if(act==='close'){$('ov').hidden=true;if(G.phase==='choose'&&G.hakem===0)askTrump();return}
+  $('ov').hidden=true;if(act==='again')newMatch();else if(act==='hand')newHand();else if(act==='menu')menu()});
+$('menuBtn').onclick=menu;$('snd').onclick=()=>{muted=!muted;persist();drawSnd()};
+drawSnd();G={pts:[0,0],hakem:-1,hands:[[],[],[],[]],trick:[],played:[],trump:null,tricks:[0,0],turn:-1,phase:'idle',trickWin:-1};render();menu();
+})();
+</script>
+</body>
+</html>
