@@ -7,7 +7,7 @@
 <link rel="icon" type="image/png" href="/img/favicon-64.png">
 <link rel="apple-touch-icon" href="/img/apple-touch-icon.png">
 <title>Hokm – Play the Persian Card Game Online Free | Afsoon Games</title>
-<meta name="description" content="Hokm by Afsoon Games. The favourite card game of Iran for four players. Team up with your partner against two rivals, let the Hakem name the trump and win seven tricks. Free in your browser.">
+<meta name="description" content="Hokm by Afsoon Games. A Persian card game for four players. Team up with your partner against two rivals, let the Hakem name the trump and win seven tricks. Free in your browser.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@600;700&family=Nunito:wght@600;700;800&display=swap" rel="stylesheet">
@@ -99,14 +99,14 @@ button:focus-visible,a:focus-visible{outline:2px solid var(--gold-2);outline-off
 <!--afs-seo--><meta property="og:type" content="website">
 <!--afs-seo--><meta property="og:site_name" content="Afsoon Games">
 <!--afs-seo--><meta property="og:title" content="Hokm – Play the Persian Card Game Online Free | Afsoon Games">
-<!--afs-seo--><meta property="og:description" content="Hokm by Afsoon Games. The favourite card game of Iran for four players. Team up with your partner against two rivals, let the Hakem name the trump and win seven tricks. Free in your browser.">
+<!--afs-seo--><meta property="og:description" content="Hokm by Afsoon Games. A Persian card game for four players. Team up with your partner against two rivals, let the Hakem name the trump and win seven tricks. Free in your browser.">
 <!--afs-seo--><meta property="og:url" content="https://afsoongames.com/hokm/">
 <!--afs-seo--><meta property="og:image" content="https://afsoongames.com/img/covers/hokm.webp">
 <!--afs-seo--><meta name="twitter:card" content="summary_large_image">
 <!--afs-seo--><link rel="alternate" hreflang="en" href="https://afsoongames.com/hokm/">
 <!--afs-seo--><link rel="alternate" hreflang="fa" href="https://afsoongames.com/fa/hokm/">
 <!--afs-seo--><link rel="alternate" hreflang="x-default" href="https://afsoongames.com/hokm/">
-<!--afs-seo--><script type="application/ld+json">{"@context": "https://schema.org", "@type": "VideoGame", "name": "Hokm", "url": "https://afsoongames.com/hokm/", "description": "Hokm by Afsoon Games. The favourite card game of Iran for four players. Team up with your partner against two rivals, let the Hakem name the trump and win seven tricks. Free in your browser.", "genre": "Card game", "image": "https://afsoongames.com/img/covers/hokm.webp", "gamePlatform": "Web browser", "applicationCategory": "Game", "operatingSystem": "Any", "offers": {"@type": "Offer", "price": "0", "priceCurrency": "EUR"}, "publisher": {"@type": "Organization", "name": "Afsoon Games", "url": "https://afsoongames.com/"}}</script>
+<!--afs-seo--><script type="application/ld+json">{"@context": "https://schema.org", "@type": "VideoGame", "name": "Hokm", "url": "https://afsoongames.com/hokm/", "description": "Hokm by Afsoon Games. A Persian card game for four players. Team up with your partner against two rivals, let the Hakem name the trump and win seven tricks. Free in your browser.", "genre": "Card game", "image": "https://afsoongames.com/img/covers/hokm.webp", "gamePlatform": "Web browser", "applicationCategory": "Game", "operatingSystem": "Any", "offers": {"@type": "Offer", "price": "0", "priceCurrency": "EUR"}, "publisher": {"@type": "Organization", "name": "Afsoon Games", "url": "https://afsoongames.com/"}}</script>
 <!--afs-seo--><script src="/js/site.js" defer></script>
 </head>
 <body>
@@ -265,7 +265,7 @@ $('hand').addEventListener('click',e=>{const el=e.target.closest('.card.ok');if(
   if(!actx&&!muted){try{actx=new (window.AudioContext||window.webkitAudioContext)()}catch(_){}}
   const c=G.hands[0].find(x=>x.id===el.dataset.id);if(c){busy=true;play(0,c)}});
 function dialog(h){$('dlg').innerHTML=h;$('ov').hidden=false;const p=$('dlg').querySelector('.btn.primary');if(p)p.focus()}
-function menu(){dialog(`<h2>Hokm</h2><p>The favourite card game of Iran. You and your partner <b>Roxana</b> (across the table) play against <b>Kourosh</b> and <b>Dariush</b>.</p>
+function menu(){dialog(`<h2>Hokm</h2><p>You and your partner <b>Roxana</b> (across the table) play against <b>Kourosh</b> and <b>Dariush</b>.</p>
   <ul><li>The <b>Hakem</b> sees five cards and names the trump suit, the <i>hokm</i>.</li><li>Follow the suit that was led if you can. If you cannot, play any card. A trump beats every other suit.</li><li>The first team to win <b>7 tricks</b> wins the hand and 1 point.</li><li><b>Kot</b> (7 to 0) is worth 2 points, or 3 if the Hakem's team is shut out.</li><li>If the Hakem's team loses, the next player becomes Hakem.</li></ul>
   <h3>Match length</h3><div class="btns">${[3,5,7].map(n=>`<button class="btn${n===target?' on':''}" data-g="${n}">First to ${n}</button>`).join('')}</div>
   <div class="btns">${G&&G.phase!=='idle'&&G.pts?'<button class="btn" data-a="close">Continue</button>':''}<button class="btn primary" data-a="again">New match</button></div>`);
@@ -294,7 +294,7 @@ drawSnd();G={pts:[0,0],hakem:-1,hands:[[],[],[],[]],trick:[],played:[],trump:nul
 </style>
 <section class="afs-info" id="how-to-play" aria-labelledby="afs-h">
 <h2 id="afs-h">How to play Hokm</h2>
-<p>Hokm is the favourite card game of Iran. Four players play in two teams, and you can play it here free against the computer.</p>
+<p>Hokm is a Persian card game for four players in two teams, and you can play it here free against the computer.</p>
 <h3>Rules and controls</h3>
 <ol><li>You and your partner Roxana, across the table, play against Kourosh and Dariush.</li><li>The Hakem looks at the first five cards and names the trump suit (hokm).</li><li>Each player plays one card per trick. You must follow the suit that was led if you can. The highest trump wins the trick, otherwise the highest card of the suit led.</li><li>The first team to win seven tricks wins the hand and 1 point. A 7 to 0 win (Kot) is worth 2 points, or 3 if the Hakem&#x27;s team is shut out.</li><li>If the Hakem&#x27;s team loses the hand, the next player becomes Hakem. Choose a match of 3, 5 or 7 points.</li></ol>
 <h3>Tips</h3>
