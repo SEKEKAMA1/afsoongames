@@ -2,7 +2,8 @@
    - Google tag (Google Analytics) with Consent Mode: nothing is stored until the visitor accepts.
    - Small cookie message (required in Europe). The choice is remembered on the device. */
 (function () {
-  var TAG = 'GTM-WQHNLM5D';
+  var TAG = 'GTM-WQHNLM5D';      // Google tag container
+  var GA = 'G-JN6MGSM3G0';       // Google Analytics stream: Afsoon website
   var KEY = 'afsoon-consent';
   var choice = null;
   try { choice = localStorage.getItem(KEY); } catch (e) {}
@@ -19,6 +20,11 @@
   s.async = true;
   s.src = 'https://www.googletagmanager.com/gtm.js?id=' + TAG;
   document.head.appendChild(s);
+  var a = document.createElement('script');
+  a.async = true;
+  a.src = 'https://www.googletagmanager.com/gtag/js?id=' + GA;
+  document.head.appendChild(a);
+  gtag('config', GA);
 
   if (choice === 'yes' || choice === 'no') return;
 
