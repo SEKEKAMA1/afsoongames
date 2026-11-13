@@ -70,7 +70,7 @@ const cv=$('cv'),ctx=cv.getContext('2d');
 /* The game runs in a field 800 long and 480 wide. Player 1 is on the left (x small), player 2 on the right.
    On a tall phone screen the field is drawn turned, with player 1 at the bottom. */
 const L=800,Wd=480,PW=14,PH=90,BR=9,M=26;
-const LEVELS=[{n:'Easy',sp:4.2,err:70,react:.5},{n:'Normal',sp:6.2,err:34,react:.75},{n:'Hard',sp:8.4,err:12,react:1}];
+const LEVELS=[{n:'Easy',sp:3,err:120,react:.25},{n:'Normal',sp:6.2,err:34,react:.75},{n:'Hard',sp:8.4,err:12,react:1}];
 let mode='cpu',lvl=1,target=7,muted=false,actx,portrait=false,scale=1,state='menu',paused=false;
 let P=[{y:Wd/2,score:0,tgt:null},{y:Wd/2,score:0,tgt:null}],ball,serveT=0,server=0,keys={},rally=0,flash=0,aiAim=0;
 try{const x=JSON.parse(localStorage.getItem('afsoon-chogan')||'null');if(x){lvl=x.lvl??1;target=x.target||7;muted=!!x.muted}}catch(e){}

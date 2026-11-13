@@ -117,7 +117,7 @@ function countSol(g,limit){let best=-1,bc=null;for(let i=0;i<81;i++)if(!g[i]){co
 function fillFull(g){let best=-1,bc=null;for(let i=0;i<81;i++)if(!g[i]){const c=cands(g,i);if(!c.length)return false;if(!bc||c.length<bc.length){best=i;bc=c}}
   if(best<0)return true;for(const v of shuffled(bc)){g[best]=v;if(fillFull(g))return true}g[best]=0;return false}
 /* how many givens to keep for each level */
-const KEEP=[40,32,27,23];
+const KEEP=[47,32,27,23];
 function generate(level){const sol=Array(81).fill(0);fillFull(sol);const g=sol.slice();
   const order=shuffled([...Array(81).keys()]);let filled=81;
   for(const i of order){if(filled<=KEEP[level])break;const v=g[i];if(!v)continue;g[i]=0;
@@ -142,7 +142,7 @@ function drawTime(){$('tm').textContent=fmtT(curTime())}
 function status(t){$('status').textContent=t}
 
 function newGame(lv){level=lv;status('Making a fresh puzzle...');setTimeout(()=>{const r=generate(level);P=r.puzzle;SOL=r.solution;G=P.slice();notes=Array.from({length:81},()=>new Set());
-  mistakes=0;hints=3;hist=[];sel=P.indexOf(0);over=false;elapsed=0;if($('ov').hidden)startTimer();status('');render();persist()},30)}
+  mistakes=0;hints=level===0?5:3;hist=[];sel=P.indexOf(0);over=false;elapsed=0;if($('ov').hidden)startTimer();status('');render();persist()},30)}
 function render(){
   $('lvl').textContent=LV[level];$('mis').textContent=mistakes+'/3';$('hintN').textContent=hints;$('hint').disabled=!hints;drawTime();
   const sv=sel>=0?G[sel]:0;let h='';

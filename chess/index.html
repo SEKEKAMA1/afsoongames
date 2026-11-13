@@ -178,8 +178,10 @@ function search(s,depth,a,be,ply){if(depth<=0)return quiesce(s,a,be,4);nodes++;
   const ms=legalMoves(s,false);if(!ms.length)return inCheck(s,s.turn)?-100000+ply:0;if(s.half>=100)return 0;
   for(const m of order(s,ms)){const v=-search(make(s,m),depth-1,-be,-a,ply+1);if(v>=be)return be;if(v>a)a=v}return a}
 function bestMove(s,level,seen){const ms=order(s,legalMoves(s,false));if(!ms.length)return null;nodes=0;
-  const depth=level===0?1:level===1?2:3,noise=level===0?120:level===1?25:4;let best=null,bv=-1e9;
-  for(const m of ms){const n=make(s,m);let v=-search(n,depth-1,-1e9,1e9,1);
+  /* Easy: often plays a random move and does not look ahead at captures, so it leaves pieces hanging */
+  if(level===0&&Math.random()<.35)return ms[Math.floor(Math.random()*ms.length)];
+  const depth=level===0?1:level===1?2:3,noise=level===0?300:level===1?25:4;let best=null,bv=-1e9;
+  for(const m of ms){const n=make(s,m);let v=level===0?-evaluate(n):-search(n,depth-1,-1e9,1e9,1);
     if(seen&&seen[posKey(n)])v-=40;/* avoid repeating */
     v+=Math.random()*noise;if(v>bv){bv=v;best=m}}
   return best}
