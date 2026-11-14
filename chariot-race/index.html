@@ -41,7 +41,9 @@ h1{font-family:var(--display);font-size:clamp(1.5rem,4.5vw,2.3rem);margin:4px 0 
 .tr .in{padding:10px 12px 12px;display:flex;flex-direction:column;gap:4px}
 .tr b{font-size:1rem}.tr .m{font-size:.8rem;color:var(--muted);font-weight:700;display:flex;justify-content:space-between}.tr .s{color:var(--gold)}
 
-#race{position:fixed;inset:0;background:#000;touch-action:none;user-select:none;-webkit-user-select:none}
+#race{position:fixed;inset:0;z-index:40;background:#000;touch-action:none;user-select:none;-webkit-user-select:none;-webkit-touch-callout:none}
+body.racing{overflow:hidden}
+body.racing .afs-info{display:none}
 #cv{position:absolute;inset:0;width:100%;height:100%;display:block}
 .hud{position:absolute;left:0;right:0;top:0;padding:max(10px,env(safe-area-inset-top,0px)) max(12px,env(safe-area-inset-right,0px)) 0 max(12px,env(safe-area-inset-left,0px));display:flex;gap:8px;align-items:flex-start;pointer-events:none}
 .pill{background:rgba(16,8,26,.62);border:1px solid rgba(255,220,140,.4);border-radius:12px;padding:5px 11px;font-weight:800;font-size:clamp(13px,2.2vw,18px);display:flex;align-items:center;gap:6px;font-variant-numeric:tabular-nums;white-space:nowrap}
@@ -393,7 +395,7 @@ const fmt=s=>Math.floor(s/60)+':'+(s%60).toFixed(1).padStart(4,'0');
 function startRace(i){
   ti=i;T=TRACKS[i];buildTrack(T,i);
   position=0;speed=0;playerX=0;boost=0;boosting=0;coins=0;crash=0;raceTime=0;finishOrder=[];playerDone=false;paused=false;keyL=keyR=false;bgOff=0;
-  $('pick').hidden=true;$('race').hidden=false;$('ov').hidden=true;resize();
+  $('pick').hidden=true;$('race').hidden=false;$('ov').hidden=true;document.body.classList.add('racing');scrollTo(0,0);resize();
   $('hintTouch').style.opacity=matchMedia('(pointer:coarse)').matches?1:0;
   countdown=3.6;running=true;lastTs=0;requestAnimationFrame(loop);
   const c=$('count');c.hidden=false;c.classList.remove('go');
@@ -416,7 +418,7 @@ $('dlg').addEventListener('click',e=>{const a=e.target.closest('[data-a]');if(!a
   if(act=='resume'){paused=false}else if(act=='quit'){running=false;renderPick()}else if(act=='retry')startRace(ti);else if(act=='next')startRace(ti+1)});
 
 function renderPick(){
-  $('race').hidden=true;$('pick').hidden=false;
+  $('race').hidden=true;$('pick').hidden=false;document.body.classList.remove('racing');
   $('tracks').innerHTML=TRACKS.map((t,i)=>{const b=save.best[i];return `<button class="tr" data-i="${i}" ${unlocked(i)?'':'disabled'}><canvas width="320" height="180" data-i="${i}"></canvas>
     <span class="in"><b>${i+1}. ${t.name}</b><span class="m"><span>${t.time} · ${(t.len/1000*.6).toFixed(1)} km</span><span class="s">${b?'★'.repeat(b.stars)+' '+ord(b.place):unlocked(i)?'New':'\u{1F512} Top 3 to unlock'}</span></span></span></button>`}).join('');
   $('tracks').querySelectorAll('canvas').forEach(c=>{const t=TRACKS[+c.dataset.i],g=c.getContext('2d');
