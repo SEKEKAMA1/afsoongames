@@ -1,0 +1,312 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#0b1230">
+<link rel="icon" type="image/png" href="/img/favicon-64.png?v=5">
+<link rel="apple-touch-icon" href="/img/apple-touch-icon.png?v=5">
+<title>Afsoon Bubble Shooter – Free Bubble Shooter Game Online | Afsoon Games</title>
+<meta name="description" content="Afsoon Bubble Shooter by Afsoon Games. Aim, bounce and match three or more jewel bubbles to pop them. Free in your browser on phone and computer, no download.">
+<link rel="canonical" href="https://afsoongames.com/bubble-shooter/">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="Afsoon Games">
+<meta property="og:title" content="Afsoon Bubble Shooter – Free Bubble Shooter Game Online">
+<meta property="og:description" content="Aim, bounce and match three or more jewel bubbles to pop them. Free in your browser.">
+<meta property="og:url" content="https://afsoongames.com/bubble-shooter/">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@600;700&family=Nunito:wght@600;700;800&display=swap" rel="stylesheet">
+<script src="/js/site.js" defer></script>
+<style>
+:root{--bg:#0b1230;--line:rgba(230,184,92,.35);--gold:#e6b85c;--gold-2:#f6d999;--text:#f1f2fa;--muted:#a9b0d0;
+  --display:Cinzel,Georgia,serif;--ui:Nunito,system-ui,sans-serif;color-scheme:dark}
+*{box-sizing:border-box}
+html,body{margin:0}
+body{background:radial-gradient(90% 70% at 50% 35%,#1c2a63 0%,var(--bg) 72%);background-attachment:fixed;color:var(--text);font-family:var(--ui);-webkit-tap-highlight-color:transparent}
+[hidden]{display:none!important}
+button{font:inherit;color:inherit;cursor:pointer}
+button:focus-visible,a:focus-visible{outline:2px solid var(--gold-2);outline-offset:2px}
+.app{height:100vh;height:100svh;max-width:620px;margin:0 auto;display:flex;flex-direction:column;gap:6px;
+  padding:max(6px,env(safe-area-inset-top,0px)) max(8px,env(safe-area-inset-right,0px)) max(6px,env(safe-area-inset-bottom,0px)) max(8px,env(safe-area-inset-left,0px))}
+.top{display:flex;align-items:center;gap:8px}
+.brand{font-family:var(--display);font-weight:700;font-size:1.15rem;letter-spacing:.06em;color:var(--gold-2);margin-right:auto;line-height:1.05}
+.brand small{display:block;font:800 .55rem var(--ui);letter-spacing:.24em;color:var(--gold);margin-top:3px}
+.st{background:rgba(255,255,255,.06);border:1px solid var(--line);border-radius:10px;padding:2px 10px;text-align:center;min-width:62px}
+.st b{display:block;font-size:1.05rem;color:var(--gold-2);font-variant-numeric:tabular-nums;line-height:1.2}
+.st span{font-size:.6rem;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);font-weight:800}
+.ib{background:rgba(255,255,255,.06);border:1px solid var(--line);border-radius:10px;height:38px;min-width:38px;padding:0 9px;display:inline-flex;align-items:center;justify-content:center;text-decoration:none;color:var(--text)}
+.ib svg{width:18px;height:18px}
+.stage{flex:1;min-height:0;display:flex;align-items:center;justify-content:center;touch-action:none}
+canvas{display:block;border-radius:14px;border:2px solid var(--gold);box-shadow:0 14px 40px rgba(0,0,0,.5);touch-action:none;user-select:none;-webkit-user-select:none}
+.hint{font-size:.78rem;color:var(--muted);text-align:center;margin:0}
+.ov{position:fixed;inset:0;z-index:50;background:rgba(5,8,24,.72);display:grid;place-items:center;padding:20px;backdrop-filter:blur(3px)}
+.dlg{max-height:100%;overflow:auto;width:min(420px,100%);background:linear-gradient(180deg,#22336f,#121c44);border:1px solid rgba(230,184,92,.5);border-radius:20px;padding:22px;text-align:center;display:flex;flex-direction:column;gap:12px;box-shadow:0 30px 80px rgba(0,0,0,.6);animation:in .3s cubic-bezier(.2,.8,.3,1.2)}
+@keyframes in{from{transform:scale(.85);opacity:0}}
+.dlg h2{font-family:var(--display);margin:0;color:var(--gold-2);font-size:1.6rem}
+.dlg p{margin:0;color:#dfe3f5;line-height:1.55}
+.dlg ul{text-align:left;margin:0;padding-left:20px;color:#d3d8ee;line-height:1.5;font-size:.92rem}
+.big{font-size:2.4rem;font-weight:800;color:var(--gold-2);font-variant-numeric:tabular-nums}
+.btns{display:flex;gap:8px;justify-content:center;flex-wrap:wrap}
+.btn{height:46px;padding:0 22px;border-radius:23px;border:1px solid var(--line);background:rgba(20,30,70,.8);font-weight:800}
+.btn.primary{background:var(--gold);color:#2a1c06;border-color:var(--gold)}
+@media (orientation:landscape) and (max-height:520px){.hint{display:none}.app{max-width:none}.brand small{display:none}}
+@media (pointer:coarse){.hint .pc{display:none}}
+@media (pointer:fine){.hint .ph{display:none}}
+</style>
+</head>
+<body>
+<div class="app">
+  <header class="top">
+    <div class="brand">Bubble Shooter<small>AFSOON GAMES</small></div>
+    <div class="st"><b id="score">0</b><span>Score</span></div>
+    <div class="st"><b id="lvl">1</b><span>Level</span></div>
+    <button class="ib" id="pauseBtn" aria-label="Pause"><svg viewBox="0 0 24 24" fill="currentColor"><rect x="6" y="5" width="4" height="14" rx="1"/><rect x="14" y="5" width="4" height="14" rx="1"/></svg></button>
+    <button class="ib" id="snd" aria-label="Sound on"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"><path d="M4 10v4h4l5 4V6L8 10z"/><path id="wave" d="M16 9a4 4 0 0 1 0 6M18.5 6.5a8 8 0 0 1 0 11"/></svg></button>
+    <a class="ib" href="/" aria-label="Home" title="Home"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"><path d="M3 11 12 4l9 7v9h-6v-6H9v6H3z"/></svg></a>
+  </header>
+  <div class="stage" id="stage"><canvas id="cv" aria-label="Bubble Shooter game"></canvas></div>
+  <p class="hint"><span class="ph">Drag to aim, let go to shoot. Tap the small bubble to swap.</span><span class="pc">Move the mouse to aim, click to shoot. Space or right-click swaps the bubble.</span></p>
+</div>
+<div class="ov" id="ov"><div class="dlg" id="dlg" role="dialog" aria-modal="true"></div></div>
+<script>
+(()=>{
+const $=id=>document.getElementById(id);
+const cv=$('cv'),ctx=cv.getContext('2d');
+
+/* ---------- board geometry (logical units) ---------- */
+const R=20,D=40,COLS=12,ROWH=R*Math.sqrt(3);
+const W=COLS*D,H=780;
+const SX=W/2,SY=H-62;            // shooter
+const DEAD=SY-58;                 // a bubble below this line ends the game
+const COLORS=[ // jewel colours: [light, mid, dark]
+  ['#9ff3ea','#1fb5a8','#0b5e63'], // turquoise
+  ['#a9c2ff','#3a63d8','#172e7a'], // lapis
+  ['#fff0b0','#e6b33a','#8a5a0c'], // gold
+  ['#ffb0b8','#d8364a','#7a1022'], // ruby
+  ['#c4f5a4','#3fa64a','#1a5a22'], // emerald
+  ['#e5c3ff','#9a52d6','#4b1f7a']  // amethyst
+];
+
+/* ---------- state ---------- */
+let grid=[],off=0,level=1,nColors=4,score=0,best=0,misses=0,missMax=6;
+let cur=0,nxt=1,shot=null,aim=null,aiming=false,state='menu',paused=false,muted=false;
+let pops=[],falls=[],parts=[],texts=[],shake=0,swapT=0;
+try{best=+localStorage.getItem('afsoon-bubbles-best')||0;muted=localStorage.getItem('afsoon-bubbles-muted')==='1'}catch(e){}
+
+const shifted=r=>((r+off)&1)===1;
+const rowLen=r=>shifted(r)?COLS-1:COLS;
+const pos=(r,c)=>({x:R+c*D+(shifted(r)?R:0),y:R+r*ROWH});
+function ensureRow(r){while(grid.length<=r){const i=grid.length;grid.push(new Array(rowLen(i)).fill(-1))}}
+const get=(r,c)=>(r>=0&&r<grid.length&&c>=0&&c<rowLen(r))?grid[r][c]:-1;
+function nbrs(r,c){const s=shifted(r),o=[[r,c-1],[r,c+1]];
+  for(const rr of [r-1,r+1]){if(s){o.push([rr,c],[rr,c+1])}else{o.push([rr,c-1],[rr,c])}}
+  return o.filter(([a,b])=>a>=0&&b>=0&&b<rowLen(a))}
+function anyLeft(){for(const row of grid)for(const v of row)if(v>=0)return true;return false}
+function present(){const s=new Set();for(const row of grid)for(const v of row)if(v>=0)s.add(v);return [...s]}
+function pickColor(){const p=present();const pool=p.length?p:Array.from({length:nColors},(_,i)=>i);return pool[Math.floor(Math.random()*pool.length)]}
+function randRow(len){const row=[];for(let c=0;c<len;c++){
+  // small runs of the same colour make the board feel fair
+  row.push(c>0&&Math.random()<.35?row[c-1]:Math.floor(Math.random()*nColors))}return row}
+
+/* ---------- sound ---------- */
+let actx=null;
+function tone(f,d,type='sine',v=.05,f2){if(muted||!actx)return;try{const o=actx.createOscillator(),g=actx.createGain();o.type=type;o.frequency.setValueAtTime(f,actx.currentTime);
+  if(f2)o.frequency.exponentialRampToValueAtTime(f2,actx.currentTime+d);g.gain.setValueAtTime(v,actx.currentTime);g.gain.exponentialRampToValueAtTime(.0001,actx.currentTime+d);
+  o.connect(g).connect(actx.destination);o.start();o.stop(actx.currentTime+d)}catch(e){}}
+const sfx={shoot:()=>tone(520,.12,'triangle',.05,900),stick:()=>tone(220,.08,'sine',.05),
+  pop:n=>{for(let i=0;i<Math.min(n,6);i++)setTimeout(()=>tone(700+i*90,.09,'sine',.05),i*35)},
+  drop:()=>tone(500,.35,'triangle',.05,160),row:()=>tone(140,.25,'sawtooth',.04,90),
+  win:()=>[660,880,990,1320].forEach((f,i)=>setTimeout(()=>tone(f,.15,'triangle',.06),i*110)),
+  lose:()=>[400,300,220].forEach((f,i)=>setTimeout(()=>tone(f,.25,'sawtooth',.05),i*160))};
+function audio(){if(!actx){try{actx=new (window.AudioContext||window.webkitAudioContext)()}catch(e){}}}
+
+/* ---------- bubble art: pre-drawn jewels with an 8-point Persian star ---------- */
+const SPR=[];
+function makeSprites(scale){SPR.length=0;const s=Math.ceil(D*scale)+4;
+  for(const [l,m,d] of COLORS){const c=document.createElement('canvas');c.width=c.height=s;const g=c.getContext('2d');const k=s/2,rr=R*scale;
+    const rg=g.createRadialGradient(k-rr*.35,k-rr*.4,rr*.1,k,k,rr);rg.addColorStop(0,l);rg.addColorStop(.45,m);rg.addColorStop(1,d);
+    g.fillStyle=rg;g.beginPath();g.arc(k,k,rr-.5,0,7);g.fill();
+    g.lineWidth=Math.max(1,scale*1.4);g.strokeStyle='rgba(255,236,170,.75)';g.stroke();
+    // star motif
+    g.save();g.translate(k,k);g.fillStyle='rgba(255,255,255,.28)';g.beginPath();
+    for(let i=0;i<16;i++){const a=i*Math.PI/8,q=i%2?rr*.26:rr*.5;g.lineTo(Math.cos(a)*q,Math.sin(a)*q)}g.closePath();g.fill();g.restore();
+    // shine
+    g.fillStyle='rgba(255,255,255,.55)';g.beginPath();g.ellipse(k-rr*.38,k-rr*.45,rr*.26,rr*.15,-.6,0,7);g.fill();
+    SPR.push(c)}}
+function bubble(x,y,ci,sc=1,a=1){const sp=SPR[ci];if(!sp)return;const s=(D+4/(view.s*dpr))*sc;ctx.globalAlpha=a;ctx.drawImage(sp,x-s/2,y-s/2,s,s);ctx.globalAlpha=1}
+
+/* ---------- game flow ---------- */
+function setupLevel(){grid=[];off=0;nColors=Math.min(6,3+level);missMax=Math.max(3,7-Math.floor(level/2));misses=0;
+  const rows=Math.min(10,5+level);for(let r=0;r<rows;r++){ensureRow(r);grid[r]=randRow(rowLen(r))}
+  cur=pickColor();nxt=pickColor();shot=null}
+function newGame(){audio();level=1;score=0;hud();setupLevel();state='play';paused=false;hideDlg()}
+function hud(){$('score').textContent=score.toLocaleString('en-US');$('lvl').textContent=level}
+function addRow(){grid.unshift(null);off^=1;grid[0]=randRow(rowLen(0));sfx.row();shake=10;checkLose()}
+function checkLose(){for(let r=0;r<grid.length;r++)for(let c=0;c<rowLen(r);c++)if(grid[r][c]>=0&&pos(r,c).y+R>DEAD){lose();return true}return false}
+function lose(){state='over';sfx.lose();if(score>best){best=score;try{localStorage.setItem('afsoon-bubbles-best',best)}catch(e){}}
+  setTimeout(()=>dlg(`<h2>Game over</h2><p>The bubbles reached the line.</p><div class="big">${score.toLocaleString('en-US')}</div><p style="color:var(--muted)">Level ${level} · Best ${best.toLocaleString('en-US')}</p><div class="btns"><button class="btn primary" id="go">Play again</button></div>`),700)}
+function winLevel(){state='clear';sfx.win();const bonus=1000*level;score+=bonus;hud();texts.push({x:W/2,y:H*.42,t:0,s:'Board clear! +'+bonus.toLocaleString('en-US'),big:1});
+  setTimeout(()=>{level++;hud();setupLevel();state='play'},1600)}
+
+function fire(){if(state!=='play'||paused||shot||!aim)return;const a=aim;
+  shot={x:SX,y:SY,vx:Math.cos(a)*15,vy:-Math.sin(a)*15,c:cur};cur=nxt;nxt=pickColor();sfx.shoot()}
+function swap(){if(state!=='play'||paused||shot)return;[cur,nxt]=[nxt,cur];swapT=1;tone(880,.06,'sine',.04)}
+
+function place(r,c,ci){ensureRow(r);grid[r][c]=ci;sfx.stick();
+  // matching cluster
+  const seen=new Set([r+','+c]),q=[[r,c]],cl=[];
+  while(q.length){const [a,b]=q.pop();cl.push([a,b]);for(const [x,y] of nbrs(a,b)){const k=x+','+y;if(!seen.has(k)&&get(x,y)===ci){seen.add(k);q.push([x,y])}}}
+  if(cl.length>=3){
+    cl.forEach(([a,b],i)=>{const p=pos(a,b);pops.push({x:p.x,y:p.y,c:grid[a][b],t:-i*2});burst(p.x,p.y,grid[a][b],6);grid[a][b]=-1});
+    let pts=cl.length*10;sfx.pop(cl.length);
+    // bubbles that no longer hang from the top fall
+    const keep=new Set(),st=[];for(let c2=0;c2<rowLen(0);c2++)if(get(0,c2)>=0){keep.add('0,'+c2);st.push([0,c2])}
+    while(st.length){const [a,b]=st.pop();for(const [x,y] of nbrs(a,b)){const k=x+','+y;if(!keep.has(k)&&get(x,y)>=0){keep.add(k);st.push([x,y])}}}
+    let nf=0;for(let a=0;a<grid.length;a++)for(let b=0;b<rowLen(a);b++)if(grid[a][b]>=0&&!keep.has(a+','+b)){const p=pos(a,b);falls.push({x:p.x,y:p.y,c:grid[a][b],vx:(Math.random()-.5)*3,vy:-Math.random()*3});grid[a][b]=-1;nf++}
+    if(nf){pts+=nf*20*Math.min(8,Math.ceil(nf/3));setTimeout(sfx.drop,120)}
+    const p=pos(r,c);texts.push({x:p.x,y:p.y,t:0,s:'+'+pts});score+=pts;hud();
+    while(grid.length&&grid[grid.length-1].every(v=>v<0))grid.pop();
+    if(!anyLeft()){winLevel();return}
+    // keep the next bubbles to colours still on the board
+    const pr=present();if(!pr.includes(cur))cur=pickColor();if(!pr.includes(nxt))nxt=pickColor();
+  }else{
+    misses++;if(checkLose())return;
+    if(misses>=missMax){misses=0;addRow()}
+  }
+}
+
+/* snap a flying bubble to the nearest free cell that touches the board (or the top) */
+function snap(x,y){const r0=Math.max(0,Math.round((y-R)/ROWH));let bestC=null,bd=1e9;
+  for(let r=Math.max(0,r0-1);r<=r0+1;r++){for(let c=0;c<rowLen(r);c++){if(get(r,c)>=0)continue;
+    if(r>0&&!nbrs(r,c).some(([a,b])=>get(a,b)>=0))continue;const p=pos(r,c),d=(p.x-x)**2+(p.y-y)**2;if(d<bd){bd=d;bestC=[r,c]}}}
+  return bestC}
+
+/* path of the aim guide: straight lines with wall bounces until it touches a bubble */
+function trace(a,maxLen){let x=SX,y=SY,vx=Math.cos(a),vy=-Math.sin(a);const pts=[[x,y]];let len=0;
+  while(len<maxLen){x+=vx*4;y+=vy*4;len+=4;
+    if(x<R){x=2*R-x;vx=-vx;pts.push([x,y])}else if(x>W-R){x=2*(W-R)-x;vx=-vx;pts.push([x,y])}
+    if(y<R||hits(x,y)){pts.push([x,y]);return {pts,end:[x,y]}}}
+  pts.push([x,y]);return {pts,end:null}}
+function hits(x,y){const r0=Math.round((y-R)/ROWH);for(let r=Math.max(0,r0-1);r<=Math.min(grid.length-1,r0+1);r++)for(let c=0;c<rowLen(r);c++){if(grid[r][c]<0)continue;const p=pos(r,c);if((p.x-x)**2+(p.y-y)**2<(D*.84)**2)return true}return false}
+
+/* ---------- update ---------- */
+function step(){
+  if(shot){for(let i=0;i<4;i++){shot.x+=shot.vx/4;shot.y+=shot.vy/4;
+      if(shot.x<R){shot.x=2*R-shot.x;shot.vx=-shot.vx;tone(300,.03,'sine',.03)}if(shot.x>W-R){shot.x=2*(W-R)-shot.x;shot.vx=-shot.vx;tone(300,.03,'sine',.03)}
+      if(shot.y<=R||hits(shot.x,shot.y)){const s=snap(shot.x,Math.max(R,shot.y));const ci=shot.c;shot=null;if(s)place(s[0],s[1],ci);break}}}
+  pops=pops.filter(p=>(p.t++)<14);
+  falls.forEach(f=>{f.vy+=.55;f.x+=f.vx;f.y+=f.vy});falls=falls.filter(f=>f.y<H+40);
+  parts.forEach(p=>{p.x+=p.vx;p.y+=p.vy;p.vy+=.2;p.l-=.03});parts=parts.filter(p=>p.l>0);
+  texts=texts.filter(t=>(t.t++)<(t.big?90:50));
+  if(shake>0)shake--;if(swapT>0)swapT=Math.max(0,swapT-.1);
+}
+function burst(x,y,ci,n){for(let i=0;i<n;i++){const a=Math.random()*7,s=1+Math.random()*3;parts.push({x,y,vx:Math.cos(a)*s,vy:Math.sin(a)*s-1,l:1,c:COLORS[ci][0]})}}
+
+/* ---------- draw ---------- */
+const view={s:1};
+function draw(){
+  ctx.setTransform(view.s*dpr,0,0,view.s*dpr,0,0);
+  const sh=shake?(Math.random()-.5)*shake*.6:0;ctx.translate(sh,0);
+  // background: night sky tiles
+  const bg=ctx.createLinearGradient(0,0,0,H);bg.addColorStop(0,'#1a2766');bg.addColorStop(1,'#0c1438');ctx.fillStyle=bg;ctx.fillRect(-10,0,W+20,H);
+  ctx.strokeStyle='rgba(230,184,92,.07)';ctx.lineWidth=1;
+  for(let y=0;y<H;y+=48)for(let x=(y/48%2)*24;x<W;x+=48){ctx.beginPath();ctx.moveTo(x,y-10);ctx.lineTo(x+10,y);ctx.lineTo(x,y+10);ctx.lineTo(x-10,y);ctx.closePath();ctx.stroke()}
+  // danger line
+  const danger=grid.some((row,r)=>row.some((v,c)=>v>=0&&pos(r,c).y+R>DEAD-ROWH*2));
+  ctx.setLineDash([8,8]);ctx.strokeStyle=danger?'rgba(255,90,90,.85)':'rgba(255,255,255,.18)';ctx.lineWidth=2;ctx.beginPath();ctx.moveTo(0,DEAD);ctx.lineTo(W,DEAD);ctx.stroke();ctx.setLineDash([]);
+  // board
+  for(let r=0;r<grid.length;r++)for(let c=0;c<rowLen(r);c++){const v=grid[r][c];if(v>=0){const p=pos(r,c);bubble(p.x,p.y,v)}}
+  for(const p of pops){if(p.t<0){bubble(p.x,p.y,p.c);continue}const k=p.t/14;bubble(p.x,p.y,p.c,1+k*.5,1-k)}
+  for(const f of falls)bubble(f.x,f.y,f.c,1,.9);
+  // aim guide
+  if(state==='play'&&!paused&&aim!=null&&!shot&&(aiming||matchMedia('(pointer:fine)').matches)){
+    const t=trace(aim,900);ctx.fillStyle=COLORS[cur][0];let acc=0;
+    for(let i=1;i<t.pts.length;i++){const [x1,y1]=t.pts[i-1],[x2,y2]=t.pts[i];const L=Math.hypot(x2-x1,y2-y1);
+      for(let d=(18-acc%18)%18;d<L;d+=18){const k=d/L;ctx.globalAlpha=Math.max(.35,1-(acc+d)/900);ctx.beginPath();ctx.arc(x1+(x2-x1)*k,y1+(y2-y1)*k,3.8,0,7);ctx.fill()}acc+=L}
+    ctx.globalAlpha=1;
+    if(t.end){const s=snap(t.end[0],Math.max(R,t.end[1]));if(s){const p=pos(s[0],s[1]);ctx.strokeStyle='rgba(255,255,255,.55)';ctx.lineWidth=2;ctx.beginPath();ctx.arc(p.x,p.y,R-2,0,7);ctx.stroke()}}
+  }
+  // shooter base
+  ctx.fillStyle='rgba(0,0,0,.25)';ctx.fillRect(0,DEAD+4,W,H-DEAD);
+  const a=aim??Math.PI/2;ctx.save();ctx.translate(SX,SY);ctx.rotate(-a+Math.PI/2);
+  ctx.fillStyle='#e6b85c';ctx.beginPath();ctx.moveTo(-9,-R-30);ctx.lineTo(9,-R-30);ctx.lineTo(13,-R+2);ctx.lineTo(-13,-R+2);ctx.closePath();ctx.fill();ctx.restore();
+  ctx.strokeStyle='#e6b85c';ctx.lineWidth=4;ctx.beginPath();ctx.arc(SX,SY,R+9,0,7);ctx.stroke();
+  ctx.strokeStyle='rgba(230,184,92,.35)';ctx.lineWidth=2;ctx.beginPath();ctx.arc(SX,SY,R+15,0,7);ctx.stroke();
+  if(state==='play'||state==='clear')bubble(SX,SY,cur,1+swapT*.2);
+  // next bubble
+  const NX=SX-92,NY=SY+14;ctx.strokeStyle='rgba(230,184,92,.5)';ctx.lineWidth=2;ctx.beginPath();ctx.arc(NX,NY,R*.85,0,7);ctx.stroke();
+  bubble(NX,NY,nxt,.7);ctx.fillStyle='#a9b0d0';ctx.font='800 11px Nunito,sans-serif';ctx.textAlign='center';ctx.fillText('NEXT',NX,NY+R+8);
+  // shots until a new row comes down
+  const left=missMax-misses,RX=SX+92;ctx.fillText('NEW ROW',RX,NY+R+8);
+  for(let i=0;i<missMax;i++){ctx.fillStyle=i<left?'#e6b85c':'rgba(255,255,255,.15)';ctx.beginPath();ctx.arc(RX-(missMax-1)*6+i*12,NY,4.2,0,7);ctx.fill()}
+  // flying bubble
+  if(shot)bubble(shot.x,shot.y,shot.c);
+  for(const p of parts){ctx.globalAlpha=p.l;ctx.fillStyle=p.c;ctx.beginPath();ctx.arc(p.x,p.y,2.6,0,7);ctx.fill()}ctx.globalAlpha=1;
+  for(const t of texts){const k=t.t/(t.big?90:50);ctx.globalAlpha=1-k*k;ctx.fillStyle='#fff3c4';ctx.font=`800 ${t.big?28:20}px Nunito,sans-serif`;ctx.textAlign='center';
+    ctx.strokeStyle='rgba(0,0,0,.5)';ctx.lineWidth=4;ctx.strokeText(t.s,t.x,t.y-k*40);ctx.fillText(t.s,t.x,t.y-k*40)}ctx.globalAlpha=1;
+  if(paused&&state==='play'){ctx.fillStyle='rgba(5,8,24,.6)';ctx.fillRect(0,0,W,H);ctx.fillStyle='#f6d999';ctx.font='700 34px Cinzel,serif';ctx.textAlign='center';ctx.fillText('Paused',W/2,H/2);
+    ctx.font='700 15px Nunito,sans-serif';ctx.fillStyle='#d3d8ee';ctx.fillText('Tap to continue',W/2,H/2+30)}
+}
+let last=0,accT=0;
+function frame(t){const dt=Math.min(60,t-(last||t));last=t;accT+=dt;
+  while(accT>=16.67){if(!paused)step();accT-=16.67}draw();requestAnimationFrame(frame)}
+
+/* ---------- input ---------- */
+function toBoard(e){const r=cv.getBoundingClientRect();return{x:(e.clientX-r.left)/r.width*W,y:(e.clientY-r.top)/r.height*H}}
+function setAim(p){let a=Math.atan2(SY-p.y,p.x-SX);if(p.y>SY-10)a=p.x<SX?Math.PI-.13:.13;aim=Math.max(.13,Math.min(Math.PI-.13,a))}
+function onNext(p){return Math.hypot(p.x-(SX-92),p.y-(SY+14))<R*1.6||Math.hypot(p.x-SX,p.y-SY)<R*1.1}
+cv.addEventListener('contextmenu',e=>{e.preventDefault();swap()});
+cv.addEventListener('pointerdown',e=>{audio();if(state!=='play')return;if(paused){paused=false;return}
+  const p=toBoard(e);if(onNext(p)){swap();return}
+  if(e.button===2)return;cv.setPointerCapture(e.pointerId);aiming=true;setAim(p)});
+cv.addEventListener('pointermove',e=>{if(state!=='play')return;const p=toBoard(e);if(aiming||e.pointerType==='mouse')setAim(p)});
+cv.addEventListener('pointerup',e=>{if(!aiming)return;aiming=false;fire()});
+cv.addEventListener('pointercancel',()=>{aiming=false});
+addEventListener('keydown',e=>{if(state!=='play')return;
+  if(e.key===' '){e.preventDefault();swap()}
+  else if(e.key==='ArrowLeft'){aim=Math.min(Math.PI-.13,(aim??Math.PI/2)+.04)}
+  else if(e.key==='ArrowRight'){aim=Math.max(.13,(aim??Math.PI/2)-.04)}
+  else if(e.key==='ArrowUp'||e.key==='Enter'){e.preventDefault();if(aim==null)aim=Math.PI/2;fire()}
+  else if(e.key==='p'||e.key==='P'||e.key==='Escape')paused=!paused});
+$('pauseBtn').onclick=()=>{if(state==='play')paused=!paused};
+document.addEventListener('visibilitychange',()=>{if(document.hidden&&state==='play')paused=true});
+$('snd').onclick=()=>{muted=!muted;try{localStorage.setItem('afsoon-bubbles-muted',muted?'1':'0')}catch(e){}$('wave').style.display=muted?'none':''};$('wave').style.display=muted?'none':'';
+
+/* ---------- dialogs ---------- */
+function dlg(h){$('dlg').innerHTML=h;$('ov').hidden=false;const b=$('go');if(b){b.onclick=newGame;b.focus()}}
+function hideDlg(){$('ov').hidden=true}
+function menu(){dlg(`<h2>Bubble Shooter</h2><p>Aim and shoot jewel bubbles. Match three or more of the same colour to pop them.</p>
+  <ul><li>Bounce shots off the walls to reach hidden spots.</li><li>Bubbles that lose their hold fall and score extra points.</li><li>Miss too often and a new row comes down. Don't let the bubbles reach the line.</li><li>Clear the board for a bonus and the next level.</li></ul>
+  <p style="color:var(--muted);font-size:.9rem">Best score: ${best.toLocaleString('en-US')}</p><div class="btns"><button class="btn primary" id="go">Play</button></div>`)}
+
+/* ---------- fit to screen ---------- */
+let dpr=1;
+function fit(){const st=$('stage').getBoundingClientRect();const s=Math.min(st.width/W,st.height/H);view.s=s;dpr=Math.min(devicePixelRatio||1,2.5);
+  cv.style.width=Math.floor(W*s)+'px';cv.style.height=Math.floor(H*s)+'px';cv.width=Math.round(W*s*dpr);cv.height=Math.round(H*s*dpr);makeSprites(s*dpr)}
+addEventListener('resize',fit);fit();
+setupLevel();menu();requestAnimationFrame(frame);
+window.__bs={get grid(){return grid},get state(){return state},get score(){return score},get cur(){return cur},set aim(v){aim=v},fire,newGame,pos,rowLen,get shot(){return shot}};
+})();
+</script>
+<section class="afs-info" id="how-to-play" aria-labelledby="afs-h">
+<h2 id="afs-h">How to play Afsoon Bubble Shooter</h2>
+<p>Afsoon Bubble Shooter is a free bubble shooter game with jewel bubbles in turquoise, lapis, gold and ruby. Aim, bounce and match colours to clear the board.</p>
+<h3>Rules and controls</h3>
+<ol><li>Shoot a bubble into the board. When three or more bubbles of the same colour touch, they pop.</li><li>Bubbles that are no longer connected to the top fall down and give bonus points.</li><li>Every few shots without a pop, a new row of bubbles comes down. If the bubbles reach the line at the bottom, the game ends.</li><li>Clear the whole board to get a bonus and move to the next level.</li><li>On a phone: drag to aim and let go to shoot. Tap the small bubble to swap it. On a computer: aim with the mouse and click, or press Space to swap.</li></ol>
+<h3>Tips</h3>
+<ul><li>Aim for bubbles that hold up big groups. Dropping them scores much more than popping.</li><li>Use the walls: a bank shot can reach places a straight shot cannot.</li><li>Swap when the bubble in your shooter doesn't fit anywhere good.</li></ul>
+<p style="margin-top:18px">Afsoon Bubble Shooter is free and runs in your browser on phone, tablet and computer. No download or account needed.</p>
+<h3>More free games</h3>
+<ul class="more"><li><a href="/sudoku/">Afsoon Sudoku</a></li><li><a href="/kashi-blocks/">Kashi Blocks</a></li><li><a href="/anshan-run/">Anshan Run</a></li><li><a href="/chariot-race/">Chariot Race</a></li><li><a href="/history-puzzles/">History Building Puzzles</a></li><li><a href="/nard/">Nard: Persian Backgammon</a></li><li><a href="/hokm/">Hokm</a></li><li><a href="/chess/">Shatranj: Persian Chess</a></li><li><a href="/mahjong/">Afsoon Mahjong</a></li><li><a href="/solitaire/">Afsoon Solitaire</a></li><li><a href="/alchemy/">Afsoon Alchemy</a></li><li><a href="/poker/">Afsoon Poker: Texas Hold&#x27;em</a></li><li><a href="/river-ride/">River Ride</a></li><li><a href="/chogan/">Chogan: Paddle Ball</a></li></ul>
+<p style="margin-top:20px"><a href="/">&larr; All games on Afsoon Games</a></p>
+</section>
+<style>
+.afs-info{box-sizing:border-box;max-width:900px;margin:0 auto;padding:40px 20px 56px;color:#d9d4ea;font:16px/1.65 Nunito,system-ui,sans-serif}
+.afs-info h2{font-family:Cinzel,Georgia,serif;color:#f6d999;font-size:1.5rem;margin:0 0 12px}
+.afs-info h3{color:#f6d999;font-size:1.1rem;margin:22px 0 8px}
+.afs-info a{color:#f6d999}
+.afs-info ul.more{display:flex;flex-wrap:wrap;gap:8px;padding:0;list-style:none}.afs-info ul.more a{display:inline-block;padding:6px 12px;border:1px solid rgba(230,184,92,.35);border-radius:16px;text-decoration:none}
+</style>
+</body>
+</html>
