@@ -34,9 +34,29 @@ canvas{display:block;border-radius:12px;border:2px solid var(--gold);box-shadow:
 .pad button.fire.on{background:#ff6b5a}
 @media (pointer:coarse){.pad{display:flex}}
 .hint{font-size:.75rem;color:var(--muted);text-align:center}
+/* tilt mode on phones: no arrow buttons, one big FIRE button */
+body.tilt .pad .grp:first-child,body.tilt .pad [data-k=up],body.tilt .pad [data-k=down]{display:none}
+body.tilt .pad{justify-content:center}body.tilt .pad .grp{flex:1;justify-content:center}
+body.tilt .pad button.fire{width:100%;max-width:360px;height:64px;font-size:1.2rem;letter-spacing:.1em}
+.tiltmsg{font-size:.85rem;color:var(--muted)}
+.ctl{display:inline-flex;border:1px solid var(--line);border-radius:22px;overflow:hidden;align-self:center}
+.ctl button{height:38px;padding:0 16px;border:0;background:transparent;font-weight:800;color:var(--text)}
+.ctl button.on{background:var(--gold);color:#2a1c06}
+/* phone held sideways: controls on both sides of the river */
+@media (orientation:landscape) and (max-height:520px){
+  .app{display:grid;grid-template-columns:1fr auto 1fr;grid-template-rows:auto 1fr;column-gap:12px;align-items:end}
+  .top{grid-column:1;grid-row:1;width:auto;flex-wrap:wrap;align-self:start}
+  .stage{grid-column:2;grid-row:1/span 2;height:100%}
+  .pad{display:contents}
+  .pad .grp:first-child{grid-column:1;grid-row:2;justify-self:start;margin-bottom:6px}
+  .pad .grp:last-child{grid-column:3;grid-row:2;justify-self:end;margin-bottom:6px;flex-wrap:wrap;justify-content:flex-end;max-width:240px}
+  body.tilt .pad .grp:last-child{grid-row:1/span 2;align-self:center}
+  body.tilt .pad button.fire{width:150px;height:110px}
+  .hint{display:none}
+}
 @media (pointer:coarse){.hint{display:none}}
 .ov{position:fixed;inset:0;z-index:50;background:rgba(3,12,16,.72);display:grid;place-items:center;padding:20px;backdrop-filter:blur(3px)}
-.dlg{width:min(420px,100%);background:linear-gradient(180deg,#14404d,#0b2630);border:1px solid rgba(212,165,44,.5);border-radius:20px;padding:22px;text-align:center;display:flex;flex-direction:column;gap:12px;box-shadow:0 30px 80px rgba(0,0,0,.6);animation:in .3s cubic-bezier(.2,.8,.3,1.2)}
+.dlg{max-height:100%;overflow:auto;width:min(420px,100%);background:linear-gradient(180deg,#14404d,#0b2630);border:1px solid rgba(212,165,44,.5);border-radius:20px;padding:22px;text-align:center;display:flex;flex-direction:column;gap:12px;box-shadow:0 30px 80px rgba(0,0,0,.6);animation:in .3s cubic-bezier(.2,.8,.3,1.2)}
 @keyframes in{from{transform:scale(.85);opacity:0}}
 .dlg h2{font-family:var(--display);margin:0;color:var(--gold-2);font-size:1.6rem}
 .dlg p{margin:0;color:#d9e8e8;line-height:1.55}
@@ -127,8 +147,11 @@ const sfx={shot:()=>tone(900,.12,'square',.03,300),boom:()=>{noise(.4,.15);tone(
 function boom(x,y,big){G.booms.push({x,y,t:0,big});sfx.boom()}
 function addScore(n){G.score+=n;if(G.score>=G.nextLife){G.lives++;G.nextLife+=10000;sfx.life()}}
 function update(){if(G.dead){G.dead--;for(const b of G.booms)b.t++;G.booms=G.booms.filter(b=>b.t<40);if(!G.dead){if(G.lives<=0)return gameOver();respawn()}return}
-  const L=keys.left,R=keys.right;G.speed=keys.up?4.2:keys.down?1.3:2.4;G.dist+=G.speed;
-  G.x+=(R?1:0)*4.2-(L?1:0)*4.2;G.x=Math.max(14,Math.min(W-14,G.x));
+  const L=keys.left,R=keys.right;
+  const tOn=useTilt&&tilt.live;
+  if(tOn&&!keys.up&&!keys.down){const p=tilt.p;G.speed=p>0?2.4-p*1.1:2.4-p*1.8}else G.speed=keys.up?4.2:keys.down?1.3:2.4;
+  G.dist+=G.speed;
+  G.x+=(tOn&&!L&&!R)?tilt.x*4.6:(R?1:0)*4.2-(L?1:0)*4.2;G.x=Math.max(14,Math.min(W-14,G.x));
   G.fuel-=.045*(G.speed/2.4*.5+.5);
   for(let k=Math.floor((G.dist-120)/SEG);k<=Math.floor((G.dist+H)/SEG);k++)if(k>=0)genSeg(k);
   /* shooting */
@@ -206,10 +229,13 @@ function frame(t){requestAnimationFrame(frame);if(!last)last=t;acc+=Math.min(100
   if(G)draw()}
 function gameOver(){state='over';if(G.score>best){best=G.score;try{localStorage.setItem('afsoon-river-best',best)}catch(e){}}
   dlg(`<h2>Game over</h2><p>Score <b>${G.score.toLocaleString('en-US')}</b>. You reached bridge ${G.cp+1}.</p><p style="color:var(--muted);font-size:.9rem">Best: ${best.toLocaleString('en-US')}</p><div class="btns"><a class="btn" href="/" style="display:inline-flex;align-items:center;text-decoration:none">More games</a><button class="btn primary" id="go">Fly again</button></div>`)}
-function dlg(h){$('dlg').innerHTML=h;$('ov').hidden=false;const b=$('go');if(b){b.onclick=()=>{if(!actx&&!muted){try{actx=new (window.AudioContext||window.webkitAudioContext)()}catch(_){}}newGame()};b.focus()}}
+function dlg(h){$('dlg').innerHTML=h;$('ov').hidden=false;
+  if($('cTilt')){$('cTilt').onclick=()=>setTilt(true,true);$('cBtn').onclick=()=>setTilt(false,true)}
+  const b=$('go');if(b){b.onclick=async()=>{if(!actx&&!muted){try{actx=new (window.AudioContext||window.webkitAudioContext)()}catch(_){}}if(useTilt)await askTilt();tilt.cal=true;newGame()};b.focus()}}
 function hideDlg(){$('ov').hidden=true}
 function menu(){dlg(`<h2>River Ride</h2><p>Fly your golden plane up the river. Shoot boats, helicopters and jets, and blow up the bridges to move on.</p>
   <ul><li>Fly <b>over</b> red FUEL depots to fill your tank. Shooting them scores points, but then they are gone.</li><li>Don't touch the river banks, the islands or anything you have not shot.</li><li>Each bridge you destroy is a checkpoint. Extra plane every 10,000 points.</li></ul>
+  ${TOUCH?`<div class="ctl" role="group" aria-label="Controls"><button id="cTilt" class="${useTilt?'on':''}">Tilt phone</button><button id="cBtn" class="${useTilt?'':'on'}">Buttons</button></div><p class="tiltmsg">${useTilt?'Tilt left or right to steer. Tip the top of the phone up to slow down, the bottom up to go faster. Tap FIRE to shoot.':'Use the arrow buttons to steer and change speed.'}</p>`:''}
   <p style="color:var(--muted);font-size:.9rem">Best score: ${best.toLocaleString('en-US')}</p><div class="btns"><button class="btn primary" id="go">Start flying</button></div>`)}
 /* ---------- input ---------- */
 const KM={ArrowLeft:'left',a:'left',A:'left',ArrowRight:'right',d:'right',D:'right',ArrowUp:'up',w:'up',W:'up',ArrowDown:'down',s:'down',S:'down',' ':'fire'};
@@ -217,15 +243,38 @@ addEventListener('keydown',e=>{if(KM[e.key]){keys[KM[e.key]]=true;e.preventDefau
 addEventListener('keyup',e=>{if(KM[e.key])keys[KM[e.key]]=false});
 $('pad').querySelectorAll('[data-k]').forEach(b=>{const k=b.dataset.k;const on=e=>{e.preventDefault();keys[k]=true;b.classList.add('on');if(!actx&&!muted){try{actx=new (window.AudioContext||window.webkitAudioContext)()}catch(_){}}};const off=e=>{e.preventDefault();keys[k]=false;b.classList.remove('on')};
   b.addEventListener('pointerdown',on);b.addEventListener('pointerup',off);b.addEventListener('pointercancel',off);b.addEventListener('pointerleave',off)});
-function togglePause(){paused=!paused}
+function togglePause(){paused=!paused;if(!paused)recal()}
 $('pauseBtn').onclick=()=>{if(state==='play')togglePause()};
 document.addEventListener('visibilitychange',()=>{if(document.hidden&&state==='play')paused=true});
 $('snd').onclick=()=>{muted=!muted;try{localStorage.setItem('afsoon-river-muted',muted?'1':'0')}catch(e){};$('wave').style.display=muted?'none':''};$('wave').style.display=muted?'none':'';
+/* ---------- tilt controls (phones) ----------
+   Left/right tilt steers. Tipping the top of the phone up slows down, tipping the bottom up speeds up.
+   The way the player holds the phone when the game starts counts as "normal speed". */
+const TOUCH=matchMedia('(pointer:coarse)').matches;
+let useTilt=TOUCH&&typeof DeviceOrientationEvent!=='undefined';
+try{const v=localStorage.getItem('afsoon-river-tilt');if(v==='0')useTilt=false}catch(e){}
+const tilt={x:0,p:0,live:false,cal:true,p0:0,last:0};
+const clamp=(v,a,b)=>Math.max(a,Math.min(b,v));
+const curve=(d,dead,full)=>{const a=Math.abs(d);return a<dead?0:Math.sign(d)*Math.min(1,(a-dead)/(full-dead))};
+function onTilt(e){if(e.beta==null||e.gamma==null)return;
+  const ang=(screen.orientation&&typeof screen.orientation.angle==='number')?screen.orientation.angle:(window.orientation||0);
+  let sx,sp; // sx: right side down = positive. sp: top of the screen up = positive
+  if(ang===90){sx=e.beta;sp=-e.gamma}else if(ang===180){sx=-e.gamma;sp=-e.beta}else if(ang===-90||ang===270){sx=-e.beta;sp=e.gamma}else{sx=e.gamma;sp=e.beta}
+  if(tilt.cal){tilt.p0=sp;tilt.cal=false}
+  tilt.x=curve(sx,3,22);tilt.p=curve(sp-tilt.p0,6,24);tilt.live=true;tilt.last=performance.now()}
+async function askTilt(){
+  try{if(typeof DeviceOrientationEvent!=='undefined'&&typeof DeviceOrientationEvent.requestPermission==='function'){await DeviceOrientationEvent.requestPermission()}}catch(e){}
+  addEventListener('deviceorientation',onTilt);
+  // no sensor answer after 2 seconds: fall back to the buttons
+  setTimeout(()=>{if(useTilt&&!tilt.live)setTilt(false,false)},2000)}
+function setTilt(on,save){useTilt=on;document.body.classList.toggle('tilt',on);if(save){try{localStorage.setItem('afsoon-river-tilt',on?'1':'0')}catch(e){}if(state!=='play')menu()}setTimeout(fit,0)}
+document.body.classList.toggle('tilt',useTilt);
+function recal(){tilt.cal=true}
 /* ---------- fit canvas ---------- */
 function fit(){const st=$('stage').getBoundingClientRect();const s=Math.min(st.width/W,st.height/H);cv.style.width=Math.floor(W*s)+'px';cv.style.height=Math.floor(H*s)+'px'}
 addEventListener('resize',fit);fit();
 G={score:0,lives:4,cp:0,nextLife:10000};respawn();menu();requestAnimationFrame(frame);
-window.__rr={get G(){return G},keys,newGame,seg,spans,SEG};
+window.__rr={get G(){return G},keys,newGame,seg,spans,SEG,tilt,onTilt,setTilt,get useTilt(){return useTilt}};
 })();
 </script></body>
 </html>

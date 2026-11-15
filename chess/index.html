@@ -56,7 +56,7 @@ button:focus-visible,a:focus-visible{outline:2px solid var(--gold-2);outline-off
 .btn svg{width:17px;height:17px}
 .status{min-height:1.5em;font-weight:800;text-align:center;color:var(--gold-2)}
 .ov{position:fixed;inset:0;z-index:50;background:rgba(3,12,16,.72);display:grid;place-items:center;padding:20px;backdrop-filter:blur(3px)}
-.dlg{width:min(440px,100%);background:linear-gradient(180deg,#14404d,#0b2630);border:1px solid rgba(212,165,44,.5);border-radius:20px;padding:22px;text-align:center;display:flex;flex-direction:column;gap:12px;box-shadow:0 30px 80px rgba(0,0,0,.6);animation:in .3s cubic-bezier(.2,.8,.3,1.2)}
+.dlg{max-height:100%;overflow:auto;width:min(440px,100%);background:linear-gradient(180deg,#14404d,#0b2630);border:1px solid rgba(212,165,44,.5);border-radius:20px;padding:22px;text-align:center;display:flex;flex-direction:column;gap:12px;box-shadow:0 30px 80px rgba(0,0,0,.6);animation:in .3s cubic-bezier(.2,.8,.3,1.2)}
 @keyframes in{from{transform:scale(.85);opacity:0}}
 .dlg h2{font-family:var(--display);margin:0;color:var(--gold-2);font-size:1.6rem}
 .dlg h3{margin:4px 0 0;font-size:.8rem;letter-spacing:.18em;color:var(--gold);text-transform:uppercase}
@@ -68,6 +68,14 @@ button:focus-visible,a:focus-visible{outline:2px solid var(--gold-2);outline-off
 .promo .pc{font-size:48px}
 .credit{font-size:.76rem;color:var(--muted);text-align:center;margin:0}.credit a{color:var(--gold)}
 @media (max-width:560px){.brand{font-size:1rem}.ib .lbl{display:none}.btn{height:42px;padding:0 14px}.frame{padding:7px}}
+/* phone held sideways: board on the left, everything else on the right */
+@media (orientation:landscape) and (max-height:560px){
+  :root{--sq:min(calc((100svh - 46px)/8),68px)}
+  .app{max-width:none;display:grid;grid-template-columns:auto minmax(220px,340px);justify-content:center;align-content:center;column-gap:18px;row-gap:8px;min-height:100svh;padding-top:6px;padding-bottom:6px}
+  .app>*{grid-column:2}
+  .app>.frame{grid-column:1;grid-row:1/span 7;align-self:center}
+  .top{grid-row:1}.credit{display:none}.status{text-align:center}
+}
 @media (prefers-reduced-motion:reduce){.pc{transition:none}}
 </style>
 <!--afs-seo--><link rel="canonical" href="https://afsoongames.com/chess/">

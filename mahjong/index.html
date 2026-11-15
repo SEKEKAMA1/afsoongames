@@ -85,7 +85,7 @@ button:focus-visible,a:focus-visible{outline:2px solid var(--gold-2);outline-off
 .toast{position:absolute;left:50%;top:10px;transform:translateX(-50%);background:rgba(10,16,40,.9);border:1px solid var(--line);border-radius:12px;padding:8px 14px;font-weight:800;z-index:999;pointer-events:none;opacity:0;transition:opacity .3s}
 .toast.on{opacity:1}
 .ov{position:fixed;inset:0;z-index:50;background:rgba(4,8,20,.72);display:grid;place-items:center;padding:20px;backdrop-filter:blur(3px)}
-.dlg{width:min(420px,100%);background:linear-gradient(180deg,#1d3266,#111f44);border:1px solid rgba(230,184,92,.45);border-radius:20px;padding:22px;text-align:center;display:flex;flex-direction:column;gap:12px;box-shadow:0 30px 80px rgba(0,0,0,.6);animation:in .3s cubic-bezier(.2,.8,.3,1.2)}
+.dlg{max-height:100%;overflow:auto;width:min(420px,100%);background:linear-gradient(180deg,#1d3266,#111f44);border:1px solid rgba(230,184,92,.45);border-radius:20px;padding:22px;text-align:center;display:flex;flex-direction:column;gap:12px;box-shadow:0 30px 80px rgba(0,0,0,.6);animation:in .3s cubic-bezier(.2,.8,.3,1.2)}
 @keyframes in{from{transform:scale(.85);opacity:0}}
 .dlg h2{font-family:var(--display);margin:0;color:var(--gold-2);font-size:1.5rem}
 .dlg p{margin:0;color:#dce3f7;line-height:1.55}
@@ -95,6 +95,17 @@ button:focus-visible,a:focus-visible{outline:2px solid var(--gold-2);outline-off
 .credit a{color:var(--gold)}
 label.tg{display:inline-flex;align-items:center;gap:6px;font-size:.82rem;font-weight:800;color:var(--muted)}
 @media (max-width:560px){.brand{display:none}.app{padding-block:6px 10px;gap:6px}.top{gap:6px;flex-wrap:nowrap}.stats{margin-right:auto}.st{min-width:58px;padding:2px 8px}.ib{height:36px;min-width:36px;padding:0 8px}.ib .lbl{display:none}.btn{height:40px;padding:0 13px;font-size:.88rem}.btn .lbl{display:none}.credit{display:none}.intro h1{font-size:1.3rem}}
+/* phone held sideways: tiles on the left, free spaces and buttons on the right */
+@media (orientation:landscape) and (max-height:520px){
+  .app{height:100svh;min-height:0;padding-block:4px;gap:4px}
+  .credit{display:none}.brand{display:none}.top{flex-wrap:nowrap}
+  .playwrap{display:grid;grid-template-columns:1fr auto;grid-template-rows:1fr auto;column-gap:12px;row-gap:8px;min-height:0}
+  .playwrap>.stage{grid-row:1/span 2;min-height:0}
+  .playwrap>.tray{align-self:end;flex-direction:column;gap:6px}
+  .playwrap>.bar{align-self:start;display:grid;grid-template-columns:1fr 1fr;gap:6px}
+  .playwrap>.bar .btn{height:38px;padding:0 10px;font-size:.85rem}
+  .slots{display:grid;grid-template-columns:repeat(2,auto);gap:6px}
+}
 @media (prefers-reduced-motion:reduce){.t,.lv{transition:none}.t.hint .fc{animation:none;box-shadow:0 0 0 3px #7fe0ff}}
 </style>
 <!--afs-seo--><link rel="canonical" href="https://afsoongames.com/mahjong/">
@@ -351,7 +362,7 @@ function start(i){
   tiles.forEach((t,j)=>{const el=document.createElement('div');el.className='t';el.dataset.j=j;el.innerHTML='<div class="sd"></div><div class="sd2"></div><div class="fc"></div>'+face(t.k);t.el=el;b.appendChild(el)});
   layout();refresh();startClock();$('time').textContent='0:00';
 }
-function sizeTray(){const sw=Math.round(Math.max(34,Math.min(58,innerHeight*.07,(innerWidth-130)/4.8)));$('slots').style.setProperty('--sw',sw+'px');$('slots').style.setProperty('--sh',Math.round(sw*1.3)+'px')}
+function sizeTray(){const side=innerWidth>innerHeight*1.25&&innerHeight<=520;const sw=Math.round(side?Math.max(30,Math.min(48,innerHeight*.11)):Math.max(34,Math.min(58,innerHeight*.07,(innerWidth-130)/4.8)));$('slots').style.setProperty('--sw',sw+'px');$('slots').style.setProperty('--sh',Math.round(sw*1.3)+'px')}
 function place(t){t.el.style.left=(t.x/2*TW)+'px';t.el.style.top=(t.y/2*TH-t.z*D*1.2+MZ*D*1.2)+'px';t.el.style.zIndex=t.z*1000+t.y*20+t.x;
   t.el.style.filter=t.z?`drop-shadow(0 ${(D*.9).toFixed(1)}px ${(D*.9).toFixed(1)}px rgba(20,12,0,.38))`:'drop-shadow(0 2px 3px rgba(0,0,0,.35))'}
 function layout(){

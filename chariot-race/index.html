@@ -67,7 +67,7 @@ body.racing .afs-info{display:none}
 .count{position:absolute;inset:0;display:grid;place-items:center;font-family:var(--display);font-size:clamp(70px,18vw,160px);color:#fff4d0;text-shadow:0 6px 30px rgba(0,0,0,.6);pointer-events:none}
 .count.go{color:#ffd36b}
 .ov{position:fixed;inset:0;z-index:50;background:rgba(6,4,14,.72);display:grid;place-items:center;padding:20px}
-.dlg{width:min(420px,100%);background:linear-gradient(180deg,#2a1d44,#17112d);border:1px solid rgba(230,184,92,.45);border-radius:20px;padding:22px;text-align:center;display:flex;flex-direction:column;gap:12px;box-shadow:0 30px 80px rgba(0,0,0,.6);animation:in .3s cubic-bezier(.2,.8,.3,1.2)}
+.dlg{max-height:100%;overflow:auto;width:min(420px,100%);background:linear-gradient(180deg,#2a1d44,#17112d);border:1px solid rgba(230,184,92,.45);border-radius:20px;padding:22px;text-align:center;display:flex;flex-direction:column;gap:12px;box-shadow:0 30px 80px rgba(0,0,0,.6);animation:in .3s cubic-bezier(.2,.8,.3,1.2)}
 @keyframes in{from{transform:scale(.85);opacity:0}}
 .dlg h2{font-family:var(--display);margin:0;color:var(--gold-2);font-size:1.6rem}
 .dlg p{margin:0;color:#ddd5ef;line-height:1.55}

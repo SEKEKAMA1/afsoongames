@@ -31,7 +31,8 @@ button:focus-visible,a:focus-visible{outline:2px solid var(--gold-2);outline-off
 .chip.w{background:#fff7e8}.chip.b{background:#8e2a2a}
 .ib{background:rgba(255,255,255,.06);border:1px solid var(--line);border-radius:10px;height:36px;min-width:36px;padding:0 10px;display:inline-flex;align-items:center;justify-content:center;gap:6px;font-weight:800;font-size:.85rem;text-decoration:none;color:var(--text)}
 .ib svg{width:18px;height:18px}
-.bw{position:relative}
+.bw{position:relative;overflow:hidden;max-width:100%}
+html,body{overflow-x:hidden}
 .board{position:absolute;left:0;top:0;width:900px;height:600px;transform-origin:0 0}
 .board svg.bg{position:absolute;inset:0}
 .ck{position:absolute;width:52px;height:52px;border-radius:50%;transition:left .32s ease,top .32s ease;pointer-events:none}
@@ -59,7 +60,7 @@ button:focus-visible,a:focus-visible{outline:2px solid var(--gold-2);outline-off
 .btn svg{width:17px;height:17px}
 .status{min-height:1.5em;font-weight:800;text-align:center;color:var(--gold-2)}
 .ov{position:fixed;inset:0;z-index:50;background:rgba(3,12,16,.72);display:grid;place-items:center;padding:20px;backdrop-filter:blur(3px)}
-.dlg{width:min(440px,100%);background:linear-gradient(180deg,#14404d,#0b2630);border:1px solid rgba(212,165,44,.5);border-radius:20px;padding:22px;text-align:center;display:flex;flex-direction:column;gap:12px;box-shadow:0 30px 80px rgba(0,0,0,.6);animation:in .3s cubic-bezier(.2,.8,.3,1.2)}
+.dlg{max-height:100%;overflow:auto;width:min(440px,100%);background:linear-gradient(180deg,#14404d,#0b2630);border:1px solid rgba(212,165,44,.5);border-radius:20px;padding:22px;text-align:center;display:flex;flex-direction:column;gap:12px;box-shadow:0 30px 80px rgba(0,0,0,.6);animation:in .3s cubic-bezier(.2,.8,.3,1.2)}
 @keyframes in{from{transform:scale(.85);opacity:0}}
 .dlg h2{font-family:var(--display);margin:0;color:var(--gold-2);font-size:1.6rem}
 .dlg p{margin:0;color:#d9e8e8;line-height:1.55}
@@ -251,8 +252,9 @@ let usedMask=[];
 function isUsed(i){return usedMask[i]}
 function markUsed(d){for(let i=0;i<dice.length;i++){if(!usedMask[i]&&dice[i]===d){usedMask[i]=true;return}}}
 function fit(){
-  const portrait=innerHeight>innerWidth*1.15;
-  const availW=Math.min(innerWidth-20,1100),availH=innerHeight-170;
+  const de=document.documentElement,vw=de.clientWidth||innerWidth,vh=de.clientHeight||innerHeight;
+  const portrait=vh>vw*1.15;
+  const availW=Math.min(vw-20,1100),availH=vh-170;
   const bw=$('bw');
   if(portrait){const s=Math.min(availW/H,availH/W);bw.style.width=H*s+'px';bw.style.height=W*s+'px';board.style.transform=`translate(${H*s}px,0) rotate(90deg) scale(${s})`}
   else{const s=Math.min(availW/W,availH/H);bw.style.width=W*s+'px';bw.style.height=H*s+'px';board.style.transform=`scale(${s})`}

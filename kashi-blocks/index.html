@@ -35,7 +35,7 @@ button:focus-visible,a:focus-visible{outline:2px solid var(--gold-2);outline-off
 .stage{position:relative;flex:1;min-height:0;display:flex;justify-content:center;touch-action:none}
 canvas{display:block;touch-action:none;user-select:none;-webkit-user-select:none}
 .ov{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;background:rgba(6,10,26,.62);backdrop-filter:blur(3px);border-radius:16px}
-.dlg{width:min(92%,380px);background:linear-gradient(180deg,#1a2a58,#111c3e);border:1px solid var(--line);border-radius:18px;padding:22px 20px;text-align:center;box-shadow:0 20px 60px rgba(0,0,0,.5)}
+.dlg{max-height:100%;overflow:auto;width:min(92%,380px);background:linear-gradient(180deg,#1a2a58,#111c3e);border:1px solid var(--line);border-radius:18px;padding:22px 20px;text-align:center;box-shadow:0 20px 60px rgba(0,0,0,.5)}
 .dlg h2{font:700 1.6rem var(--display);color:var(--gold-2);margin:0 0 6px}
 .dlg p{margin:6px 0;color:#d6dbef}
 .dlg .big{font:900 2.6rem var(--ui);color:#fff;margin:6px 0}
@@ -44,6 +44,7 @@ canvas{display:block;touch-action:none;user-select:none;-webkit-user-select:none
 .btn.primary{background:var(--gold);color:#2a1c06;border-color:var(--gold)}
 .btn.primary:hover{background:var(--gold-2)}
 .hint{text-align:center;color:var(--muted);font-size:.85rem;margin:0}
+@media (orientation:landscape) and (max-height:520px){.hint,.credit{display:none}.app{max-width:none;gap:4px}}
 .credit{text-align:center;color:var(--muted);font-size:.78rem;margin:0}
 .credit a{color:var(--gold-2)}
 </style>
@@ -133,10 +134,22 @@ function sndIcon(){$('wave').style.display=muted?'none':'';$('snd').setAttribute
 $('snd').onclick=()=>{muted=!muted;try{localStorage.setItem(KEY+'-muted',muted?'1':'0')}catch(e){};sndIcon()};sndIcon();
 
 /* ---------- layout ---------- */
-let W=0,H=0,dpr=1,cell=40,bx=0,by=0,bs=0,trayY=0,trayH=0,slotW=0,pcell=20;
+let W=0,H=0,dpr=1,cell=40,bx=0,by=0,bs=0,trayY=0,trayH=0,slotW=0,pcell=20,side=false,trayX=0,slotH=0;
+// where tray slot i sits: under the board normally, in a column to the right when the phone is sideways
+function slot(i){return side?{x:trayX,y:by+slotH*i,w:W-trayX,h:slotH}:{x:slotW*i,y:trayY,w:slotW,h:trayH}}
 function fit(){
   dpr=Math.min(window.devicePixelRatio||1,2.5);
   const r=stage.getBoundingClientRect();
+  side=r.width>r.height*1.25&&r.height<520;
+  if(side){
+    // sideways phone: board on the left, the three pieces stacked on the right
+    const availH=r.height,availW=Math.min(r.width,900);
+    bs=Math.floor(Math.min(availH-8,(availW-8)/1.6));cell=bs/N;
+    W=Math.floor(bs*1.6+8);H=Math.floor(bs+8);
+    cv.style.width=W+'px';cv.style.height=H+'px';cv.width=Math.round(W*dpr);cv.height=Math.round(H*dpr);
+    bx=4;by=4;trayX=bx+bs+bs*.06;slotH=bs/3;trayY=0;trayH=slotH;slotW=W-trayX;pcell=Math.min(cell*.66,slotH/5.3);
+    return;
+  }
   const availW=Math.min(r.width,560),availH=Math.max(320,r.height);
   // board + tray (tray ~ 0.42 of board height)
   bs=Math.floor(Math.min(availW-8,(availH-8)/1.5));cell=bs/N;
@@ -183,7 +196,7 @@ function draw(now){
   // tray
   const tk=Math.min(1,(now-spawnT)/260);
   tray.forEach((p,i)=>{if(!p||(drag&&drag.i===i))return;const [h,w]=dims(p.sh);const fits=fitsAnywhere(p.sh);
-    const s=Math.min(cell*.72,trayH/(h+.8),slotW/(w+.8)),x=slotW*i+(slotW-w*s)/2,y=trayY+(trayH-h*s)/2+(1-tk)*20;drawPiece(p,x,y,s,(fits?1:.32)*tk)});
+    const q=slot(i),s=Math.min(cell*.72,q.h/(h+.8),q.w/(w+.8)),x=q.x+(q.w-w*s)/2,y=q.y+(q.h-h*s)/2+(1-tk)*20;drawPiece(p,x,y,s,(fits?1:.32)*tk)});
   // dragged piece
   if(drag){const s=cell*.92;drawPiece(drag.p,drag.x,drag.y,s,.96)}
   // particles + popups
@@ -232,8 +245,7 @@ $('restart').onclick=()=>{if(score>0&&!over){dlg(`<h2>New game?</h2><p>Your curr
 /* ---------- input ---------- */
 function pt(e){const r=cv.getBoundingClientRect();return{x:e.clientX-r.left,y:e.clientY-r.top}}
 function cellFor(d){const s=cell*.92;const x=d.x+s*.5,y=d.y+s*.5;return{r:Math.floor((y-by)/cell),c:Math.floor((x-bx)/cell)}}
-cv.addEventListener('pointerdown',e=>{if(over)return;const {x,y}=pt(e);if(y<trayY-cell*.3)return;
-  const i=Math.min(2,Math.max(0,Math.floor(x/slotW)));const p=tray[i];if(!p)return;
+cv.addEventListener('pointerdown',e=>{if(over)return;const {x,y}=pt(e);let i;if(side){if(x<trayX-cell*.3)return;i=Math.min(2,Math.max(0,Math.floor((y-by)/slotH)))}else{if(y<trayY-cell*.3)return;i=Math.min(2,Math.max(0,Math.floor(x/slotW)))}const p=tray[i];if(!p)return;
   e.preventDefault();cv.setPointerCapture(e.pointerId);const [h,w]=dims(p.sh);const s=cell*.92;
   const lift=e.pointerType==='touch'?cell*1.7:cell*.4;
   drag={i,p,ox:w*s/2,oy:h*s+lift-h*s*.5,id:e.pointerId};drag.x=x-drag.ox;drag.y=y-drag.oy-h*s*.5;drag.cell=cellFor(drag);sfx.pick()});
