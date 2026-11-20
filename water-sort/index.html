@@ -1,0 +1,292 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#0b1230">
+<link rel="icon" type="image/png" href="/img/favicon-64.png?v=5">
+<link rel="apple-touch-icon" href="/img/apple-touch-icon.png?v=5">
+<title>Afsoon Water Sort – Free Color Sort Puzzle Online | Afsoon Games</title>
+<meta name="description" content="Afsoon Water Sort by Afsoon Games. Pour the coloured liquids between glass bottles until every bottle holds one colour. Hundreds of levels, free in your browser on phone and computer.">
+<link rel="canonical" href="https://afsoongames.com/water-sort/">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="Afsoon Games">
+<meta property="og:title" content="Afsoon Water Sort – Free Color Sort Puzzle Online">
+<meta property="og:description" content="Pour the coloured liquids until every bottle holds one colour. Free in your browser.">
+<meta property="og:url" content="https://afsoongames.com/water-sort/">
+<meta property="og:image" content="https://afsoongames.com/img/covers/water-sort.webp">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@600;700&family=Nunito:wght@600;700;800&display=swap" rel="stylesheet">
+<script src="/js/site.js" defer></script>
+<style>
+:root{--bg:#0b1230;--line:rgba(230,184,92,.35);--gold:#e6b85c;--gold-2:#f6d999;--text:#f1f2fa;--muted:#a9b0d0;
+  --display:Cinzel,Georgia,serif;--ui:Nunito,system-ui,sans-serif;color-scheme:dark}
+*{box-sizing:border-box}
+html,body{margin:0}
+body{background:radial-gradient(90% 70% at 50% 35%,#1c2a63 0%,var(--bg) 72%);background-attachment:fixed;color:var(--text);font-family:var(--ui);-webkit-tap-highlight-color:transparent}
+[hidden]{display:none!important}
+button{font:inherit;color:inherit;cursor:pointer}
+button:focus-visible,a:focus-visible{outline:2px solid var(--gold-2);outline-offset:2px}
+.app{height:100vh;height:100svh;max-width:760px;margin:0 auto;display:flex;flex-direction:column;gap:8px;
+  padding:max(6px,env(safe-area-inset-top,0px)) max(8px,env(safe-area-inset-right,0px)) max(8px,env(safe-area-inset-bottom,0px)) max(8px,env(safe-area-inset-left,0px))}
+.top{display:flex;align-items:center;gap:8px}
+.brand{font-family:var(--display);font-weight:700;font-size:1.15rem;letter-spacing:.06em;color:var(--gold-2);margin-right:auto;line-height:1.05}
+.brand small{display:block;font:800 .55rem var(--ui);letter-spacing:.24em;color:var(--gold);margin-top:3px}
+.st{background:rgba(255,255,255,.06);border:1px solid var(--line);border-radius:10px;padding:2px 10px;text-align:center;min-width:62px}
+.st b{display:block;font-size:1.05rem;color:var(--gold-2);font-variant-numeric:tabular-nums;line-height:1.2}
+.st span{font-size:.6rem;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);font-weight:800}
+.ib{background:rgba(255,255,255,.06);border:1px solid var(--line);border-radius:10px;height:38px;min-width:38px;padding:0 9px;display:inline-flex;align-items:center;justify-content:center;text-decoration:none;color:var(--text)}
+.ib svg{width:18px;height:18px}
+.stage{flex:1;min-height:0;position:relative;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:var(--rg,28px);user-select:none;-webkit-user-select:none}
+.row{display:flex;justify-content:center;gap:var(--tg,14px)}
+.tube{position:relative;width:var(--tw,52px);height:var(--th,180px);padding:0;border:0;background:none;transition:transform .18s ease;touch-action:manipulation}
+.tube .glass{position:absolute;inset:0;border:3px solid rgba(230,240,255,.55);border-top:0;border-radius:0 0 calc(var(--tw)/2) calc(var(--tw)/2);overflow:hidden;
+  background:linear-gradient(90deg,rgba(255,255,255,.05),rgba(255,255,255,.12) 30%,rgba(255,255,255,.03) 60%,rgba(255,255,255,.08));display:flex;flex-direction:column-reverse}
+.tube .lip{position:absolute;left:-5px;right:-5px;top:-4px;height:8px;border-radius:5px;background:linear-gradient(#f6d999,#b88a35);box-shadow:0 2px 4px rgba(0,0,0,.4)}
+.tube .glass::after{content:"";position:absolute;left:18%;top:8%;bottom:14%;width:12%;border-radius:8px;background:linear-gradient(rgba(255,255,255,.35),rgba(255,255,255,.05));pointer-events:none}
+.seg{flex:0 0 auto;height:calc((100% - 6%) / var(--cap,4));position:relative;display:flex;align-items:center;justify-content:center;transition:height .25s ease}
+.seg::before{content:"";position:absolute;inset:0;background:linear-gradient(90deg,rgba(0,0,0,.18),rgba(255,255,255,.18) 35%,rgba(0,0,0,.1) 75%,rgba(0,0,0,.22))}
+.seg i{position:relative;font-style:normal;font-size:calc(var(--tw) * .3);line-height:1;color:rgba(255,255,255,.55);text-shadow:0 1px 1px rgba(0,0,0,.35)}
+body.nosym .seg i{display:none}
+.seg.new{animation:fill .32s ease-out}
+@keyframes fill{from{clip-path:inset(100% 0 0 0)}to{clip-path:inset(0 0 0 0)}}
+.tube.sel{transform:translateY(-18px)}
+.tube.sel .glass{border-color:#f6d999;box-shadow:0 0 18px rgba(246,217,153,.55)}
+.tube.done .glass{border-color:rgba(246,217,153,.9)}
+.tube.done::after{content:"★";position:absolute;left:0;right:0;top:-30px;text-align:center;color:var(--gold-2);font-size:calc(var(--tw)*.38);animation:pop .4s ease}
+@keyframes pop{from{transform:scale(0)}60%{transform:scale(1.4)}}
+.tube.shake{animation:shk .3s}
+@keyframes shk{25%{transform:translateX(-5px)}75%{transform:translateX(5px)}}
+.tube.busy{z-index:5}
+.stream{position:absolute;width:6px;border-radius:3px;pointer-events:none;z-index:4;transform-origin:top}
+.bar{display:flex;justify-content:center;gap:10px;flex-wrap:wrap}
+.tool{height:46px;min-width:46px;padding:0 16px;border-radius:23px;border:1px solid var(--line);background:rgba(20,30,70,.8);font-weight:800;display:inline-flex;align-items:center;gap:7px}
+.tool svg{width:20px;height:20px}
+.tool:disabled{opacity:.4;cursor:default}
+.tool .n{font-size:.75rem;background:var(--gold);color:#2a1c06;border-radius:9px;padding:1px 6px}
+.hint{font-size:.78rem;color:var(--muted);text-align:center;margin:0}
+.ov{position:fixed;inset:0;z-index:50;background:rgba(5,8,24,.72);display:grid;place-items:center;padding:20px;backdrop-filter:blur(3px)}.ov-home{position:absolute;top:max(12px,env(safe-area-inset-top));right:max(12px,env(safe-area-inset-right));z-index:2;display:inline-flex;align-items:center;gap:6px;height:40px;padding:0 14px;border-radius:12px;border:1px solid rgba(230,184,92,.6);background:rgba(12,11,23,.85);color:#e6b85c;font:700 14px/1 system-ui,sans-serif;text-decoration:none}.ov-home:hover{background:#e6b85c;color:#0c0b17}.ov-home svg{width:18px;height:18px}
+.dlg{max-height:100%;overflow:auto;width:min(420px,100%);background:linear-gradient(180deg,#22336f,#121c44);border:1px solid rgba(230,184,92,.5);border-radius:20px;padding:22px;text-align:center;display:flex;flex-direction:column;gap:12px;box-shadow:0 30px 80px rgba(0,0,0,.6);animation:in .3s cubic-bezier(.2,.8,.3,1.2)}
+@keyframes in{from{transform:scale(.85);opacity:0}}
+.dlg h2{font-family:var(--display);margin:0;color:var(--gold-2);font-size:1.6rem}
+.dlg p{margin:0;color:#dfe3f5;line-height:1.55}
+.dlg ul{text-align:left;margin:0;padding-left:20px;color:#d3d8ee;line-height:1.5;font-size:.92rem}
+.stars{font-size:2.2rem;letter-spacing:.2em;color:var(--gold-2)}
+.stars .off{color:rgba(255,255,255,.15)}
+.btns{display:flex;gap:8px;justify-content:center;flex-wrap:wrap}
+.btn{height:46px;padding:0 22px;border-radius:23px;border:1px solid var(--line);background:rgba(20,30,70,.8);font-weight:800}
+.btn.primary{background:var(--gold);color:#2a1c06;border-color:var(--gold)}
+.chk{display:flex;align-items:center;justify-content:center;gap:8px;font-size:.9rem;color:#d3d8ee}
+.toast{position:absolute;left:50%;top:6px;transform:translateX(-50%);background:rgba(12,11,23,.9);border:1px solid var(--line);color:var(--gold-2);padding:8px 16px;border-radius:18px;font-weight:800;font-size:.9rem;opacity:0;transition:opacity .25s;pointer-events:none;white-space:nowrap;z-index:6}
+.toast.on{opacity:1}
+@media (max-width:420px){.brand{font-size:1rem}.st{min-width:52px;padding:2px 7px}.tool{padding:0 12px}.tool .lbl{display:none}}
+@media (orientation:landscape) and (max-height:520px){.hint{display:none}.brand small{display:none}.app{max-width:none}}
+</style>
+</head>
+<body>
+<div class="app">
+  <header class="top">
+    <div class="brand">Water Sort<small>AFSOON GAMES</small></div>
+    <div class="st"><b id="lvl">1</b><span>Level</span></div>
+    <div class="st"><b id="moves">0</b><span>Moves</span></div>
+    <button class="ib" id="menuBtn" aria-label="Levels and help"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M4 7h16M4 12h16M4 17h16"/></svg></button>
+    <button class="ib" id="snd" aria-label="Sound on"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"><path d="M4 10v4h4l5 4V6L8 10z"/><path id="wave" d="M16 9a4 4 0 0 1 0 6M18.5 6.5a8 8 0 0 1 0 11"/></svg></button>
+    <a class="ib" href="/" aria-label="Home" title="Home"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"><path d="M3 11 12 4l9 7v9h-6v-6H9v6H3z"/></svg></a>
+  </header>
+  <div class="stage" id="stage" aria-label="Bottles"><div class="toast" id="toast"></div></div>
+  <div class="bar">
+    <button class="tool" id="undoBtn" aria-label="Undo"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 14 4 9l5-5"/><path d="M4 9h10a6 6 0 0 1 0 12h-3"/></svg><span class="lbl">Undo</span><span class="n" id="undoN">5</span></button>
+    <button class="tool" id="restartBtn" aria-label="Restart level"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12a9 9 0 1 0 3-6.7L3 8"/><path d="M3 3v5h5"/></svg><span class="lbl">Restart</span></button>
+    <button class="tool" id="addBtn" aria-label="Add an empty bottle"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M8 3h8M9 3v6l-4 9a2 2 0 0 0 2 3h10a2 2 0 0 0 2-3l-4-9V3"/></svg><span class="lbl">+ Bottle</span><span class="n" id="addN">1</span></button>
+  </div>
+  <p class="hint">Tap a bottle, then tap another bottle to pour. You can only pour onto the same colour or into an empty bottle.</p>
+</div>
+<div class="ov" id="ov"><a class="ov-home" href="/" aria-label="Home" title="Home"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"><path d="M3 11 12 4l9 7v9h-6v-6H9v6H3z"/></svg>Home</a><div class="dlg" id="dlg" role="dialog" aria-modal="true"></div></div>
+<script>
+(()=>{
+const $=id=>document.getElementById(id);
+const CAP=4;
+/* colours: rosewater, saffron, pomegranate, turquoise, lapis, pistachio, amethyst, henna, indigo night, sour cherry, cream, teal */
+const COLORS=[
+  {c:'#ff8fb8',s:'❀',n:'Rosewater'},{c:'#f7b52c',s:'✦',n:'Saffron'},{c:'#d4213b',s:'●',n:'Pomegranate'},
+  {c:'#27c4c0',s:'◆',n:'Turquoise'},{c:'#2e55d6',s:'★',n:'Lapis'},{c:'#86c440',s:'▲',n:'Pistachio'},
+  {c:'#9b4fd8',s:'✿',n:'Amethyst'},{c:'#ef6d1f',s:'■',n:'Henna'},{c:'#f4ead2',s:'◎',n:'Cream'},
+  {c:'#7a1838',s:'♥',n:'Cherry'},{c:'#0f7f6a',s:'♣',n:'Teal'},{c:'#8a8fa8',s:'✚',n:'Silver'}];
+
+/* ---------- state ---------- */
+let level=1,maxLevel=1,tubes=[],start=[],hist=[],moves=0,undoLeft=5,addLeft=1,sel=-1,busy=false,muted=false,sym=true,stars={};
+try{const s=JSON.parse(localStorage.getItem('afsoon-watersort')||'{}');level=s.level||1;maxLevel=s.maxLevel||level;muted=!!s.muted;sym=s.sym!==false;stars=s.stars||{};
+  if(s.cur&&s.cur.level===level){tubes=s.cur.tubes;start=s.cur.start;hist=s.cur.hist||[];moves=s.cur.moves||0;undoLeft=s.cur.undoLeft??5;addLeft=s.cur.addLeft??1}}catch(e){}
+function save(){try{localStorage.setItem('afsoon-watersort',JSON.stringify({level,maxLevel,muted,sym,stars,cur:{level,tubes,start,hist:hist.slice(-30),moves,undoLeft,addLeft}}))}catch(e){}}
+
+/* ---------- seeded random so every player gets the same level ---------- */
+function rng(seed){let a=seed>>>0;return()=>{a=(a+0x6D2B79F5)>>>0;let t=a;t=Math.imul(t^t>>>15,t|1);t^=t+Math.imul(t^t>>>7,t|61);return((t^t>>>14)>>>0)/4294967296}}
+function nColorsFor(l){return Math.min(12,l<=2?l+2:l<=5?5:l<=9?6:l<=14?7:l<=20?8:l<=28?9:l<=38?10:l<=50?11:12)}
+
+/* ---------- puzzle rules ---------- */
+const top=t=>t.length?t[t.length-1]:-1;
+function run(t){if(!t.length)return 0;const c=top(t);let n=0;for(let i=t.length-1;i>=0&&t[i]===c;i--)n++;return n}
+function canPour(a,b){const A=tubes[a],B=tubes[b];if(a===b||!A.length||B.length>=CAP)return false;return !B.length||top(B)===top(A)}
+function isDone(t){return t.length===CAP&&t.every(v=>v===t[0])}
+function solved(ts=tubes){return ts.every(t=>!t.length||isDone(t))}
+
+/* depth-first solver: used to make sure every level can be solved */
+function solvable(ts,limit=60000){const seen=new Set();let nodes=0;
+  const key=s=>s.map(t=>t.join(',')).sort().join('|');
+  function dfs(s){if(s.every(t=>!t.length||(t.length===CAP&&t.every(v=>v===t[0]))))return true;
+    if(++nodes>limit)return null;const k=key(s);if(seen.has(k))return false;seen.add(k);
+    for(let a=0;a<s.length;a++){const A=s[a];if(!A.length)continue;const c=A[A.length-1];let r=0;for(let i=A.length-1;i>=0&&A[i]===c;i--)r++;
+      if(r===CAP)continue;let emptyTried=false;
+      for(let b=0;b<s.length;b++){if(a===b)continue;const B=s[b];if(B.length>=CAP)continue;
+        if(B.length){if(B[B.length-1]!==c)continue}else{if(r===A.length||emptyTried)continue;emptyTried=true}
+        const n=Math.min(r,CAP-B.length);const ns=s.map(t=>t.slice());for(let i=0;i<n;i++)ns[b].push(ns[a].pop());
+        const res=dfs(ns);if(res)return true;if(res===null)return null}}
+    return false}
+  return dfs(ts.map(t=>t.slice()))}
+
+function makeLevel(l){const n=nColorsFor(l),R=rng(l*7919+13);
+  for(let tries=0;tries<60;tries++){
+    const pool=[];for(let c=0;c<n;c++)for(let k=0;k<CAP;k++)pool.push(c);
+    for(let i=pool.length-1;i>0;i--){const j=Math.floor(R()*(i+1));[pool[i],pool[j]]=[pool[j],pool[i]]}
+    const ts=[];for(let i=0;i<n;i++)ts.push(pool.slice(i*CAP,i*CAP+CAP));ts.push([],[]);
+    // not too easy: no bottle may start finished or with 3 of one colour on top
+    if(ts.some(t=>t.length&&run(t)>=3))continue;
+    if(solvable(ts)===true)return ts}
+  const ts=[];for(let i=0;i<n;i++)ts.push(Array.from({length:CAP},(_,k)=>(i+k)%n));ts.push([],[]);return ts}
+
+/* ---------- sound ---------- */
+let actx=null;
+function audio(){if(!actx){try{actx=new (window.AudioContext||window.webkitAudioContext)()}catch(e){}}if(actx&&actx.state==='suspended')actx.resume()}
+function tone(f,d,type='sine',v=.05,f2){if(muted||!actx)return;try{const o=actx.createOscillator(),g=actx.createGain();o.type=type;o.frequency.setValueAtTime(f,actx.currentTime);
+  if(f2)o.frequency.exponentialRampToValueAtTime(f2,actx.currentTime+d);g.gain.setValueAtTime(v,actx.currentTime);g.gain.exponentialRampToValueAtTime(.0001,actx.currentTime+d);
+  o.connect(g).connect(actx.destination);o.start();o.stop(actx.currentTime+d)}catch(e){}}
+const sfx={pick:()=>tone(660,.06,'sine',.04),no:()=>tone(160,.15,'square',.03),
+  pour:n=>{for(let i=0;i<n*3;i++)setTimeout(()=>tone(300+Math.random()*200+i*25,.07,'sine',.025),i*45)},
+  done:()=>[880,1175].forEach((f,i)=>setTimeout(()=>tone(f,.14,'triangle',.05),i*90)),
+  win:()=>[660,880,990,1320].forEach((f,i)=>setTimeout(()=>tone(f,.18,'triangle',.06),i*120))};
+
+/* ---------- drawing ---------- */
+const stage=$('stage');let els=[];
+function layout(){
+  const n=tubes.length,r=stage.getBoundingClientRect();const W=r.width,H=r.height;
+  let best=null;
+  for(let rows=1;rows<=3;rows++){const per=Math.ceil(n/rows);
+    const gap=Math.max(8,Math.min(18,W/per*.22));
+    let tw=Math.min(64,(W-gap*(per-1)-8)/per);
+    let th=tw*3.4;const rg=Math.max(30,th*.22);
+    const maxTh=(H-rg*(rows-1)-34)/rows;if(th>maxTh){th=maxTh;tw=Math.min(tw,th/2.6)}
+    if(tw<18)continue;const score=tw*th;if(!best||score>best.score*1.05)best={rows,per,gap,tw,th,rg,score}}
+  if(!best)best={rows:3,per:Math.ceil(n/3),gap:6,tw:18,th:50,rg:24};
+  stage.style.setProperty('--tw',best.tw+'px');stage.style.setProperty('--th',best.th+'px');
+  stage.style.setProperty('--tg',best.gap+'px');stage.style.setProperty('--rg',best.rg+'px');
+  return best}
+function build(){
+  [...stage.querySelectorAll('.row')].forEach(e=>e.remove());els=[];
+  const L=layout();const rows=[];
+  // spread bottles evenly over the rows
+  let i=0;for(let r=0;r<L.rows;r++){const cnt=Math.ceil((tubes.length-i)/(L.rows-r));const row=document.createElement('div');row.className='row';
+    for(let k=0;k<cnt;k++,i++){const b=document.createElement('button');b.className='tube';b.dataset.i=i;b.setAttribute('aria-label','Bottle '+(i+1));
+      b.innerHTML='<div class="glass"></div><div class="lip"></div>';b.addEventListener('click',onTube);row.appendChild(b);els[i]=b}
+    stage.appendChild(row);rows.push(row)}
+  tubes.forEach((_,i)=>paint(i))}
+function paint(i,fresh=0){const t=tubes[i],g=els[i].querySelector('.glass');g.style.setProperty('--cap',CAP);
+  g.innerHTML=t.map((c,k)=>`<div class="seg${k>=t.length-fresh?' new':''}" style="background:${COLORS[c].c}"><i>${COLORS[c].s}</i></div>`).join('');
+  els[i].classList.toggle('done',isDone(t));
+  els[i].setAttribute('aria-label','Bottle '+(i+1)+': '+(t.length?t.map(c=>COLORS[c].n).join(', '):'empty'))}
+function hud(){$('lvl').textContent=level;$('moves').textContent=moves;$('undoN').textContent=undoLeft;$('addN').textContent=addLeft;
+  $('undoBtn').disabled=!hist.length||undoLeft<=0;$('addBtn').disabled=addLeft<=0||tubes.length>=16}
+let toastT;function toast(s){const t=$('toast');t.textContent=s;t.classList.add('on');clearTimeout(toastT);toastT=setTimeout(()=>t.classList.remove('on'),1600)}
+
+/* ---------- play ---------- */
+function loadLevel(l,keep){level=l;if(!keep){tubes=makeLevel(l);start=tubes.map(t=>t.slice());hist=[];moves=0;undoLeft=5;addLeft=1}
+  sel=-1;busy=false;build();hud();save()}
+function onTube(e){audio();if(busy)return;const i=+e.currentTarget.dataset.i;
+  if(sel<0){if(!tubes[i].length||isDone(tubes[i])){if(tubes[i].length)sfx.no();return}sel=i;els[i].classList.add('sel');sfx.pick();return}
+  if(sel===i){els[i].classList.remove('sel');sel=-1;return}
+  if(!canPour(sel,i)){els[i].classList.add('shake');setTimeout(()=>els[i].classList.remove('shake'),300);sfx.no();
+    // switch selection to the newly tapped bottle if it has liquid
+    if(tubes[i].length&&!isDone(tubes[i])){els[sel].classList.remove('sel');sel=i;els[i].classList.add('sel')}return}
+  pour(sel,i)}
+function pour(a,b){busy=true;const A=tubes[a],B=tubes[b];const n=Math.min(run(A),CAP-B.length);const col=top(A);
+  hist.push(tubes.map(t=>t.slice()));
+  const ea=els[a],eb=els[b];const ra=ea.getBoundingClientRect(),rb=eb.getBoundingClientRect();
+  const left=rb.left<ra.left;const dx=(rb.left+rb.width/2)-(ra.left+ra.width/2)+(left?ra.height*.38:-ra.height*.38),dy=(rb.top-ra.top)-ra.height*.42;
+  ea.classList.remove('sel');ea.classList.add('busy');
+  const rot=left?-72:72;
+  const anim=ea.animate([{transform:'translateY(-18px)'},{transform:`translate(${dx}px,${dy}px) rotate(${rot}deg)`}],{duration:280,easing:'ease-in-out',fill:'forwards'});
+  anim.onfinish=()=>{
+    // liquid stream
+    const st=document.createElement('div');st.className='stream';st.style.background=COLORS[col].c;const sr=stage.getBoundingClientRect();
+    st.style.left=(rb.left+rb.width/2-sr.left-3)+'px';st.style.top=(rb.top-sr.top-ra.height*.12)+'px';st.style.height=(ra.height*.12+rb.height*(1-B.length/CAP)*.9)+'px';
+    stage.appendChild(st);st.animate([{transform:'scaleY(0)'},{transform:'scaleY(1)'}],{duration:120,fill:'forwards'});
+    for(let k=0;k<n;k++)B.push(A.pop());moves++;sfx.pour(n);paint(a);paint(b,n);hud();
+    setTimeout(()=>{st.remove();
+      const back=ea.animate([{transform:`translate(${dx}px,${dy}px) rotate(${rot}deg)`},{transform:'none'}],{duration:260,easing:'ease-in-out',fill:'forwards'});
+      back.onfinish=()=>{anim.cancel();back.cancel();ea.classList.remove('busy');busy=false;sel=-1;after(b)}},360)};
+}
+function after(b){if(isDone(tubes[b]))sfx.done();save();
+  if(solved()){win();return}
+  if(!anyMove())toast(undoLeft>0||addLeft>0?'No moves left – try Undo or + Bottle':'No moves left – tap Restart')}
+function anyMove(){for(let a=0;a<tubes.length;a++)for(let b=0;b<tubes.length;b++)if(canPour(a,b)){const A=tubes[a];if(!tubes[b].length&&run(A)===A.length)continue;return true}return false}
+function win(){sfx.win();const used=tubes.length-(start.length);const s=moves<=nColorsFor(level)*2.5&&used===0?3:used===0?2:1;
+  stars[level]=Math.max(stars[level]||0,s);if(level>=maxLevel)maxLevel=level+1;save();
+  setTimeout(()=>dlg(`<h2>Level ${level} done!</h2><div class="stars">${[1,2,3].map(k=>k<=s?'★':'<span class="off">★</span>').join('')}</div>
+    <p>Sorted in ${moves} moves.</p><div class="btns"><button class="btn" id="replay">Replay</button><button class="btn primary" id="next">Next level</button></div>`,()=>{
+    $('next').onclick=()=>{hideDlg();loadLevel(level+1)};$('replay').onclick=()=>{hideDlg();loadLevel(level)};$('next').focus()}),650)}
+
+$('undoBtn').onclick=()=>{if(busy||!hist.length||undoLeft<=0)return;audio();tubes=hist.pop();undoLeft--;moves=Math.max(0,moves-1);
+  if(sel>=0)sel=-1;if(els.length!==tubes.length)build();else tubes.forEach((_,i)=>{els[i].classList.remove('sel');paint(i)});hud();save();tone(440,.08,'sine',.04,330)};
+$('restartBtn').onclick=()=>{if(busy)return;audio();tubes=start.map(t=>t.slice());hist=[];moves=0;undoLeft=5;addLeft=1;sel=-1;build();hud();save();toast('Level restarted')};
+$('addBtn').onclick=()=>{if(busy||addLeft<=0)return;audio();hist.push(tubes.map(t=>t.slice()));tubes.push([]);addLeft--;sel=-1;build();hud();save();tone(523,.1,'triangle',.05,784);toast('Extra empty bottle added')};
+$('snd').onclick=()=>{audio();muted=!muted;$('wave').style.display=muted?'none':'';save()};$('wave').style.display=muted?'none':'';
+document.body.classList.toggle('nosym',!sym);
+
+/* ---------- dialogs ---------- */
+function dlg(h,cb){$('dlg').innerHTML=h;$('ov').hidden=false;if(cb)cb()}
+function hideDlg(){$('ov').hidden=true}
+function menu(first){
+  dlg(`<h2>Water Sort</h2><p>Pour the coloured liquids between the glass bottles until every bottle holds only one colour.</p>
+  <ul><li>Tap a bottle, then tap where to pour it.</li><li>You can pour onto the same colour or into an empty bottle, if there is room.</li><li>Stuck? Use Undo, add one extra bottle, or restart the level.</li></ul>
+  <label class="chk"><input type="checkbox" id="symChk" ${sym?'checked':''}> Show symbols on colours</label>
+  <p style="color:var(--muted);font-size:.9rem">Highest level reached: ${maxLevel}</p>
+  <div class="btns">${maxLevel>1?`<button class="btn" id="pick">Choose level</button>`:''}<button class="btn primary" id="go">${first?'Play level '+level:'Continue'}</button></div>`,()=>{
+    $('go').onclick=()=>{audio();hideDlg()};$('go').focus();
+    $('symChk').onchange=e=>{sym=e.target.checked;document.body.classList.toggle('nosym',!sym);save()};
+    const p=$('pick');if(p)p.onclick=levels})}
+function levels(){const from=Math.max(1,maxLevel-29);let h='';
+  for(let l=from;l<=maxLevel;l++)h+=`<button class="btn" data-l="${l}" style="padding:0;width:58px;height:52px;display:inline-flex;flex-direction:column;align-items:center;justify-content:center;line-height:1.1">${l}<small style="color:var(--gold-2);font-size:.7rem">${'★'.repeat(stars[l]||0)}</small></button>`;
+  dlg(`<h2>Choose level</h2><div class="btns">${h}</div><div class="btns"><button class="btn" id="back">Back</button></div>`,()=>{
+    $('dlg').querySelectorAll('[data-l]').forEach(b=>b.onclick=()=>{hideDlg();loadLevel(+b.dataset.l)});$('back').onclick=()=>menu()})}
+$('menuBtn').onclick=()=>{if(!busy)menu()};
+addEventListener('keydown',e=>{if(!$('ov').hidden)return;const k=e.key.toLowerCase();
+  if(k==='z'||(e.ctrlKey&&k==='z'))$('undoBtn').click();else if(k==='r')$('restartBtn').click();
+  else if(/^[0-9]$/.test(k)){const i=(+k||10)-1;if(els[i])els[i].click()}});
+
+let rt;addEventListener('resize',()=>{clearTimeout(rt);rt=setTimeout(()=>{if(!busy)build()},120)});
+if(tubes.length)loadLevel(level,true);else loadLevel(level);
+menu(true);
+window.__ws={get tubes(){return tubes},get level(){return level},get busy(){return busy},solvable,makeLevel,loadLevel,pour:(a,b)=>pour(a,b),canPour};
+})();
+</script>
+<section class="afs-info" id="how-to-play" aria-labelledby="afs-h">
+<h2 id="afs-h">How to play Afsoon Water Sort</h2>
+<p>Afsoon Water Sort is a free colour sort puzzle. Glass bottles are filled with layers of rosewater, saffron, pomegranate, turquoise and other colours. Pour them from bottle to bottle until each bottle holds a single colour.</p>
+<h3>Rules and controls</h3>
+<ol><li>Tap a bottle to pick it up, then tap another bottle to pour into it.</li><li>You can only pour onto the same colour, or into an empty bottle. A bottle holds four layers.</li><li>All layers of the same colour on top are poured together, as far as there is room.</li><li>The level is done when every bottle is full of one colour or empty.</li><li>Every level has 5 undos and one extra empty bottle you can add when you are stuck. Restart gives them back.</li><li>On a computer you can also press 1 to 9 to pick bottles, Z to undo and R to restart.</li></ol>
+<h3>Tips</h3>
+<ul><li>Keep one bottle empty as long as you can. It is your most useful tool.</li><li>Start with the colours that are already near the top of several bottles.</li><li>Finish one colour at a time, then the bottles free up for the rest.</li><li>Finish a level in few moves and without the extra bottle to earn three stars.</li></ul>
+<p style="margin-top:18px">Afsoon Water Sort is free and runs in your browser on phone, tablet and computer. No download or account needed, and your progress is saved on your device. Every level can be solved.</p>
+<h3>More free games</h3>
+<ul class="more"><li><a href="/bubble-shooter/">Afsoon Bubble Shooter</a></li><li><a href="/kashi-blocks/">Kashi Blocks</a></li><li><a href="/sudoku/">Afsoon Sudoku</a></li><li><a href="/mahjong/">Afsoon Mahjong</a></li><li><a href="/history-puzzles/">History Building Puzzles</a></li><li><a href="/alchemy/">Afsoon Alchemy</a></li><li><a href="/solitaire/">Afsoon Solitaire</a></li><li><a href="/anshan-run/">Anshan Run</a></li><li><a href="/chariot-race/">Chariot Race</a></li><li><a href="/nard/">Nard: Persian Backgammon</a></li><li><a href="/hokm/">Hokm</a></li><li><a href="/chess/">Shatranj: Persian Chess</a></li><li><a href="/poker/">Afsoon Poker: Texas Hold&#x27;em</a></li><li><a href="/river-ride/">River Ride</a></li><li><a href="/chogan/">Chogan: Paddle Ball</a></li></ul>
+<p style="margin-top:20px"><a href="/">&larr; All games on Afsoon Games</a></p>
+</section>
+<style>
+.afs-info{box-sizing:border-box;max-width:900px;margin:0 auto;padding:40px 20px 56px;color:#d9d4ea;font:16px/1.65 Nunito,system-ui,sans-serif}
+.afs-info h2{font-family:Cinzel,Georgia,serif;color:#f6d999;font-size:1.5rem;margin:0 0 12px}
+.afs-info h3{color:#f6d999;font-size:1.1rem;margin:22px 0 8px}
+.afs-info a{color:#f6d999}
+.afs-info ul.more{display:flex;flex-wrap:wrap;gap:8px;padding:0;list-style:none}.afs-info ul.more a{display:inline-block;padding:6px 12px;border:1px solid rgba(230,184,92,.35);border-radius:16px;text-decoration:none}
+</style>
+</body>
+</html>
