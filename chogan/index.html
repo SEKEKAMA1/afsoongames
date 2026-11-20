@@ -27,7 +27,7 @@ button{font:inherit;color:inherit;cursor:pointer}
 .stage{flex:1;min-height:0;width:100%;display:flex;align-items:center;justify-content:center}
 canvas{display:block;border-radius:12px;border:2px solid var(--gold);box-shadow:0 14px 40px rgba(0,0,0,.5);cursor:none}
 .hint{font-size:.75rem;color:var(--muted);text-align:center}
-.ov{position:fixed;inset:0;z-index:50;background:rgba(3,12,16,.72);display:grid;place-items:center;padding:20px;backdrop-filter:blur(3px)}
+.ov{position:fixed;inset:0;z-index:50;background:rgba(3,12,16,.72);display:grid;place-items:center;padding:20px;backdrop-filter:blur(3px)}.ov-home{position:absolute;top:max(12px,env(safe-area-inset-top));right:max(12px,env(safe-area-inset-right));z-index:2;display:inline-flex;align-items:center;gap:6px;height:40px;padding:0 14px;border-radius:12px;border:1px solid rgba(230,184,92,.6);background:rgba(12,11,23,.85);color:#e6b85c;font:700 14px/1 system-ui,sans-serif;text-decoration:none}.ov-home:hover{background:#e6b85c;color:#0c0b17}.ov-home svg{width:18px;height:18px}
 .dlg{width:min(420px,100%);max-height:100%;overflow:auto;background:linear-gradient(180deg,#14404d,#0b2630);border:1px solid rgba(212,165,44,.5);border-radius:20px;padding:22px;text-align:center;display:flex;flex-direction:column;gap:12px;box-shadow:0 30px 80px rgba(0,0,0,.6);animation:in .3s cubic-bezier(.2,.8,.3,1.2)}
 @keyframes in{from{transform:scale(.85);opacity:0}}
 .dlg h2{font-family:var(--display);margin:0;color:var(--gold-2);font-size:1.6rem}
@@ -61,7 +61,7 @@ canvas{display:block;border-radius:12px;border:2px solid var(--gold);box-shadow:
   <div class="stage" id="stage"><canvas id="cv" aria-label="Chogan game field"></canvas></div>
   <div class="hint" id="hint"></div>
 </div>
-<div class="ov" id="ov"><div class="dlg" id="dlg" role="dialog" aria-modal="true"></div></div>
+<div class="ov" id="ov"><a class="ov-home" href="/" aria-label="Home" title="Home"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"><path d="M3 11 12 4l9 7v9h-6v-6H9v6H3z"/></svg>Home</a><div class="dlg" id="dlg" role="dialog" aria-modal="true"></div></div>
 <script>
 (function(){
 'use strict';
