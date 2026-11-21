@@ -1,0 +1,506 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#0c0a07">
+<link rel="icon" type="image/png" href="/img/favicon-64.png?v=5">
+<link rel="apple-touch-icon" href="/img/apple-touch-icon.png?v=5">
+<title>Afsoon Roulette – Free European Roulette Online | Afsoon Games</title>
+<meta name="description" content="Afsoon Roulette by Afsoon Games. Play free European roulette with a single zero: a realistic spinning wheel and ball, every inside and outside bet, and play chips. No real money, free in your browser.">
+<link rel="canonical" href="https://afsoongames.com/roulette/">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="Afsoon Games">
+<meta property="og:title" content="Afsoon Roulette – Free European Roulette Online">
+<meta property="og:description" content="Place your chips, spin the wheel and watch the ball drop. Single-zero European roulette with play chips. Free in your browser.">
+<meta property="og:url" content="https://afsoongames.com/roulette/">
+<meta property="og:image" content="https://afsoongames.com/img/covers/roulette.webp">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@600;700&family=Nunito:wght@600;700;800;900&display=swap" rel="stylesheet">
+<script src="/js/site.js" defer></script>
+<style>
+/* VOICE: a high-limit private salon — rich, calm, exact.
+   IDEA: a real European roulette table: mahogany rail, green baize, gold fittings.
+   PICTURE: the turning wheel and the full betting layout, both live.
+   COLOUR and TYPE: black-lacquer ground, baize green, gold leaf; Cinzel for titles, Inter for figures.
+   LAYOUT: wheel left, table right; stacked wheel → table → controls on phones. */
+:root{color-scheme:dark;--bg:#0c0a07;--ink:#f4ead2;--gold:#d8b45a;--gold2:#f6dc8e;--wood1:#4a2412;--wood2:#22100a;--muted:#b9a57a}
+*{box-sizing:border-box;min-width:0}
+body{margin:0;background:radial-gradient(ellipse 120% 70% at 50% 0%,#2b1c0d 0%,#0c0a07 62%);color:var(--ink);font:15px/1.5 Nunito,system-ui,sans-serif;overflow-x:clip;min-height:100vh}
+.top{position:sticky;top:0;z-index:20;display:flex;align-items:center;gap:8px;max-width:1280px;margin:0 auto;padding:8px max(2vw,10px);background:linear-gradient(#0c0a07 70%,rgba(12,10,7,0))}
+.brand{margin-right:auto;font:700 1.3rem/1.05 Cinzel,Georgia,serif;color:var(--gold2)}
+.brand small{display:block;font:800 .55rem Nunito,sans-serif;letter-spacing:.24em;color:var(--gold);margin-top:3px}
+.bank{position:relative;background:rgba(255,255,255,.06);border:1px solid #6b5020;border-radius:10px;padding:2px 14px;text-align:center;transition:box-shadow .3s}
+.bank b{display:block;font:800 1.15rem Nunito,sans-serif;color:var(--gold2);font-variant-numeric:tabular-nums;line-height:1.2}
+.bank span{font:800 .6rem Nunito,sans-serif;letter-spacing:.14em;text-transform:uppercase;color:var(--muted)}
+.ib{background:rgba(255,255,255,.06);border:1px solid #6b5020;border-radius:10px;height:42px;min-width:42px;display:inline-flex;align-items:center;justify-content:center;color:var(--ink);cursor:pointer;text-decoration:none}
+.ib svg{width:22px;height:22px}
+.ib:focus-visible{outline:3px solid var(--gold2);outline-offset:2px}
+h1{margin:0;font:700 clamp(26px,4.4vw,44px)/1.05 Cinzel,Georgia,serif;color:var(--gold2);text-shadow:0 2px 0 #4d3a10,0 0 24px rgba(216,180,90,.3)}
+.sub{color:var(--muted);font-size:13px;margin-top:6px}
+main{max-width:1280px;margin:0 auto;padding:14px max(2vw,10px) 34px;display:grid;grid-template-columns:minmax(0,400px) minmax(0,1fr);gap:20px;align-items:start}
+@media(max-width:920px){main{grid-template-columns:minmax(0,1fr)}.wheelcol{max-width:440px;width:100%;margin:0 auto}}
+.rail{background:linear-gradient(180deg,#5a2c16,#2a130a 55%,#3d1d0e);border-radius:22px;padding:12px;box-shadow:0 18px 40px rgba(0,0,0,.65),inset 0 1px 0 rgba(255,200,140,.25),inset 0 -2px 0 rgba(0,0,0,.5)}
+.inner{background:#120c07;border-radius:14px;padding:12px;border:1px solid #6b5020}
+.wheel{position:relative;width:100%;aspect-ratio:1}
+.wheel canvas{position:absolute;inset:0;width:100%;height:100%}
+.res{display:flex;align-items:center;gap:12px;margin-top:10px;min-height:62px}
+.disc{width:56px;height:56px;border-radius:50%;display:grid;place-items:center;font:700 24px Cinzel,serif;border:3px solid var(--gold);box-shadow:0 0 18px rgba(216,180,90,.35);flex:none;background:#1b1b1b}
+.disc.red{background:#a3121b}.disc.black{background:#151515}.disc.green{background:#0f7a3a}
+.resTxt{font-size:14px;color:var(--muted)}.resTxt b{color:var(--ink);font-size:16px}
+.hist{display:flex;flex-wrap:wrap;gap:5px;margin-top:10px}
+.hist span{width:28px;height:28px;border-radius:50%;display:grid;place-items:center;font:600 12px Nunito,sans-serif;border:1px solid rgba(255,230,170,.35)}
+.hist .red{background:#a3121b}.hist .black{background:#191919}.hist .green{background:#0f7a3a}
+.lbl{font-size:12px;color:var(--muted);margin-top:12px}
+.stats{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;margin-bottom:12px}
+.stat{background:#120c07;border:1px solid #6b5020;border-radius:12px;padding:8px 12px}
+.stat small{display:block;color:var(--muted);font-size:12px}
+.stat b{font:700 clamp(18px,2.4vw,24px) Nunito,sans-serif;color:var(--gold2);white-space:nowrap}
+.felt{background:#0d4a2a;border-radius:14px;padding:8px;box-shadow:inset 0 0 40px rgba(0,0,0,.55)}
+#table{width:100%;height:auto;display:block;user-select:none;-webkit-user-select:none;touch-action:manipulation}
+.hs{cursor:pointer}
+.hlr{opacity:0;transition:opacity .12s;pointer-events:none}
+.hlr.on{opacity:1}
+.bar{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:12px;margin-top:12px}
+.chips{display:flex;gap:8px;flex-wrap:wrap}
+.chip{--c:#ddd;width:52px;height:52px;border-radius:50%;border:0;cursor:pointer;position:relative;color:#fff;font:700 14px Nunito,sans-serif;
+ background:repeating-conic-gradient(#fff 0 10deg,var(--c) 10deg 45deg);box-shadow:0 4px 8px rgba(0,0,0,.5);transition:transform .15s}
+.chip::before{content:"";position:absolute;inset:7px;border-radius:50%;background:var(--c);border:2px dashed rgba(255,255,255,.55)}
+.chip span{position:relative;text-shadow:0 1px 2px rgba(0,0,0,.7)}
+.chip.sel{transform:translateY(-6px);box-shadow:0 0 0 3px var(--gold2),0 10px 16px rgba(0,0,0,.6)}
+.chip:focus-visible,.btn:focus-visible{outline:3px solid var(--gold2);outline-offset:2px}
+.btns{display:flex;gap:8px;flex-wrap:wrap}
+.btn{min-height:44px;padding:0 16px;border-radius:10px;border:1px solid #7a5a22;background:linear-gradient(#2b1e10,#170f08);color:var(--ink);font:600 14px Nunito,sans-serif;cursor:pointer}
+.btn:hover{border-color:var(--gold)}
+.btn:disabled{opacity:.4;cursor:default}
+.spin{background:linear-gradient(#f3d27a,#b88a2a);color:#2a1a05;border-color:#f6dc8e;font:700 16px Cinzel,serif;padding:0 28px}
+.msg{margin-top:10px;text-align:center;min-height:24px;color:var(--gold2);font-weight:600}
+.note{margin-top:8px;text-align:center;font-size:13px;color:var(--muted)}
+@media(max-width:600px){.chip{width:44px;height:44px;font-size:13px}.btn{padding:0 10px;flex:1}.spin{flex:1 1 100%}
+ .bar{position:sticky;bottom:0;z-index:15;margin:10px -10px 0;padding:10px 10px max(10px,env(safe-area-inset-bottom,0px));background:rgba(12,10,7,.94);border-top:1px solid #6b5020}
+ .chips,.btns{width:100%;justify-content:space-between}.wheelcol{max-width:340px}.msg{min-height:0}}
+.tablewrap{position:relative}
+.flash{position:fixed;inset:0;z-index:50;display:grid;place-items:center;pointer-events:none}
+.flash.win{animation:feltflash 1.4s ease-out}
+@keyframes feltflash{0%,30%{background:rgba(255,220,120,.30)}100%{background:rgba(255,220,120,0)}}
+.fl{text-align:center;padding:12px 36px 16px;border-radius:18px;background:radial-gradient(rgba(43,27,7,.95),rgba(18,11,4,.95));border:2px solid var(--gold2);box-shadow:0 0 50px rgba(246,220,142,.6);animation:pop 1.6s cubic-bezier(.2,1.5,.4,1) forwards}
+.fl small{display:block;font:700 16px Cinzel,serif;color:var(--gold)}
+.fl b{display:block;font:700 clamp(38px,7vw,68px)/1.05 Cinzel,serif;color:var(--gold2);text-shadow:0 0 22px rgba(246,220,142,.85)}
+.fl.lose{border-color:#7d1a1f;box-shadow:0 0 30px rgba(0,0,0,.6)}.fl.lose b{color:#ff8a8a;font-size:clamp(26px,4vw,40px);text-shadow:none}
+@keyframes pop{0%{transform:scale(.4);opacity:0}14%{transform:scale(1.1);opacity:1}24%{transform:scale(1)}82%{opacity:1}100%{opacity:0}}
+.stat{position:relative;transition:box-shadow .3s}
+.bank.up,.stat.up{box-shadow:0 0 0 2px #4fd08a,0 0 26px rgba(79,208,138,.45)}.bank.down,.stat.down{box-shadow:0 0 0 2px #e05a5a,0 0 20px rgba(224,90,90,.35)}
+.delta{position:absolute;right:6px;top:100%;font:700 18px Nunito,sans-serif;animation:rise 1.4s ease-out forwards;white-space:nowrap}
+.delta.p{color:#6ee7a0}.delta.m{color:#ff7a7a}
+@keyframes rise{0%{transform:translateY(14px);opacity:0}20%{opacity:1}100%{transform:translateY(-8px);opacity:0}}
+#table g.lose{opacity:0;transition:opacity .6s}
+#table g.winchip{animation:glow .7s ease-in-out infinite alternate}
+@keyframes glow{from{filter:drop-shadow(0 0 2px #ffe28a)}to{filter:drop-shadow(0 0 9px #ffe28a)}}
+@media(prefers-reduced-motion:reduce){.chip{transition:none}.fl,.flash.win,.delta,#table g.winchip{animation-duration:.01s}}
+</style>
+</head>
+<body>
+<header class="top">
+  <div class="brand">Roulette<small>AFSOON GAMES</small></div>
+  <div class="bank" id="balStat"><b id="bal">1,000</b><span>Chips</span></div>
+  <button class="ib" id="snd" aria-label="Sound on" title="Sound"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"><path d="M4 10v4h4l5 4V6L8 10z"/><path id="wave" d="M16 9a4 4 0 0 1 0 6M18.5 6.5a8 8 0 0 1 0 11"/></svg></button>
+  <a class="ib" href="/" aria-label="Home" title="Home"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"><path d="M3 11 12 4l9 7v9h-6v-6H9v6H3z"/></svg></a>
+</header>
+<main>
+  <section class="wheelcol">
+    <div class="rail"><div class="inner">
+      <div class="wheel"><canvas id="wheel"></canvas></div>
+      <div class="res"><div class="disc" id="disc">–</div><div class="resTxt" id="resTxt"><b>Place your bets</b><br>Pick a chip, then tap the table.</div></div>
+      <div class="lbl">Last numbers</div>
+      <div class="hist" id="hist"></div>
+    </div></div>
+  </section>
+  <section>
+    <div class="stats">
+      <div class="stat"><small>Total bet</small><b id="tot">0</b></div>
+      <div class="stat"><small>Last win</small><b id="win">0</b></div>
+    </div>
+    <div class="rail tablewrap"><div class="felt"><svg id="table" viewBox="-8 -8 856 346" role="img" aria-label="Roulette betting table"></svg></div></div><div class="flash" id="flash" aria-live="polite"></div>
+    <div class="bar">
+      <div class="chips" id="chips"></div>
+      <div class="btns">
+        <button class="btn" id="undo">Undo</button>
+        <button class="btn" id="clear">Clear</button>
+        <button class="btn" id="dbl">Double</button>
+        <button class="btn" id="rebet">Re-bet</button>
+        <button class="btn spin" id="spin">Spin</button>
+      </div>
+    </div>
+    <div class="msg" id="msg"></div>
+    <div class="note">Tap the lines and corners between numbers for split, street, corner and six-line bets. Right-click a bet to remove it. Space bar spins. Play chips only, no real money.</div>
+  </section>
+</main>
+<script>
+{
+const ORDER=[0,32,15,19,4,21,2,25,17,34,6,27,13,36,11,30,8,23,10,5,24,16,33,1,20,14,31,9,22,18,29,7,28,12,35,3,26];
+const REDS=new Set([1,3,5,7,9,12,14,16,18,19,21,23,25,27,30,32,34,36]);
+const colorOf=n=>n===0?'green':REDS.has(n)?'red':'black';
+const SEG=Math.PI*2/37, TAU=Math.PI*2;
+const FILL={red:'#a3121b',black:'#141414',green:'#0f7a3a'};
+const DENOMS=[{v:1,c:'#8a8f98'},{v:5,c:'#b3161f'},{v:25,c:'#18803f'},{v:100,c:'#1a1a1a'},{v:500,c:'#6b2fa3'}];
+const $=id=>document.getElementById(id);
+const fmt=n=>n.toLocaleString('en-US');
+
+/* ---------- wheel drawing ---------- */
+const S=1000,R=S/2;
+function mk(){const c=document.createElement('canvas');c.width=c.height=S;const g=c.getContext('2d');g.translate(R,R);return [c,g];}
+const [bowl,bg]=mk();
+(()=>{let gr=bg.createRadialGradient(0,0,R*.9,0,0,R);gr.addColorStop(0,'#3a1a0c');gr.addColorStop(.5,'#7a3d1c');gr.addColorStop(1,'#2a1208');
+ bg.fillStyle=gr;bg.beginPath();bg.arc(0,0,R,0,TAU);bg.fill();
+ gr=bg.createLinearGradient(-R,-R,R,R);gr.addColorStop(0,'#f6dc8e');gr.addColorStop(.5,'#9c7426');gr.addColorStop(1,'#f0cf78');
+ bg.fillStyle=gr;bg.beginPath();bg.arc(0,0,R*.93,0,TAU);bg.fill();
+ gr=bg.createRadialGradient(0,0,R*.78,0,0,R*.91);gr.addColorStop(0,'#1a0d06');gr.addColorStop(.55,'#5b2d15');gr.addColorStop(1,'#2a140a');
+ bg.fillStyle=gr;bg.beginPath();bg.arc(0,0,R*.91,0,TAU);bg.fill();
+ bg.fillStyle='#d8b45a';
+ for(let k=0;k<8;k++){bg.save();bg.rotate(k*TAU/8+(k%2?0:.03));bg.beginPath();bg.moveTo(0,-R*.86);bg.lineTo(R*.018,-R*.82);bg.lineTo(0,-R*.79);bg.lineTo(-R*.018,-R*.82);bg.closePath();bg.fill();bg.restore();}
+})();
+const [head,hg]=mk();
+(()=>{const r0=R*.78,r1=R*.645,r2=R*.53;
+ const shade={red:'#6e0b12',black:'#0a0a0a',green:'#095229'};
+ for(let i=0;i<37;i++){const n=ORDER[i],a=i*SEG-Math.PI/2,a0=a-SEG/2,a1=a+SEG/2,c=colorOf(n);
+  hg.beginPath();hg.arc(0,0,r0,a0,a1);hg.arc(0,0,r1,a1,a0,true);hg.closePath();hg.fillStyle=FILL[c];hg.fill();
+  hg.beginPath();hg.arc(0,0,r1,a0,a1);hg.arc(0,0,r2,a1,a0,true);hg.closePath();hg.fillStyle=shade[c];hg.fill();
+  hg.save();hg.rotate(a+Math.PI/2);hg.fillStyle='#fff';hg.font='bold 40px Georgia';hg.textAlign='center';hg.textBaseline='middle';hg.fillText(n,0,-(r0+r1)/2);hg.restore();
+  hg.save();hg.rotate(a0);hg.strokeStyle='#e8c66e';hg.lineWidth=4;hg.beginPath();hg.moveTo(r2,0);hg.lineTo(r0,0);hg.stroke();hg.restore();}
+ let gr=hg.createRadialGradient(0,0,r2,0,0,r1);gr.addColorStop(0,'rgba(0,0,0,.55)');gr.addColorStop(1,'rgba(0,0,0,0)');
+ hg.fillStyle=gr;hg.beginPath();hg.arc(0,0,r1,0,TAU);hg.arc(0,0,r2,0,TAU,true);hg.fill();
+ hg.strokeStyle='#e8c66e';hg.lineWidth=5;[r0,r1,r2].forEach(r=>{hg.beginPath();hg.arc(0,0,r,0,TAU);hg.stroke();});
+ gr=hg.createRadialGradient(-R*.12,-R*.12,R*.05,0,0,r2);gr.addColorStop(0,'#a8602e');gr.addColorStop(.6,'#5e2c12');gr.addColorStop(1,'#2e1509');
+ hg.fillStyle=gr;hg.beginPath();hg.arc(0,0,r2-3,0,TAU);hg.fill();
+ hg.strokeStyle='rgba(232,198,110,.8)';hg.lineWidth=6;
+ for(let k=0;k<4;k++){hg.save();hg.rotate(k*TAU/4);hg.beginPath();hg.moveTo(0,-R*.12);hg.lineTo(0,-r2+8);hg.stroke();hg.restore();}
+ gr=hg.createLinearGradient(-R*.12,-R*.12,R*.12,R*.12);gr.addColorStop(0,'#fff0b8');gr.addColorStop(.5,'#b8892c');gr.addColorStop(1,'#f3d27a');
+ hg.fillStyle=gr;
+ for(let k=0;k<4;k++){hg.save();hg.rotate(k*TAU/4+TAU/8);hg.fillRect(-R*.018,-R*.2,R*.036,R*.2);hg.beginPath();hg.arc(0,-R*.2,R*.035,0,TAU);hg.fill();hg.restore();}
+ hg.beginPath();hg.arc(0,0,R*.1,0,TAU);hg.fill();
+ hg.strokeStyle='#6b4a12';hg.lineWidth=3;hg.stroke();
+})();
+
+const cv=$('wheel'),cx=cv.getContext('2d');
+function fit(){const b=cv.getBoundingClientRect(),d=window.devicePixelRatio||1;cv.width=Math.round(b.width*d);cv.height=Math.round(b.height*d);}
+const ro=new ResizeObserver(fit);ro.observe(cv);
+
+const IDLE=.25;
+let wheelA=0, wheelV=IDLE, ballRel=-Math.PI/2, ballR=.5875, spinning=false, anim=null;
+
+/* ---------- sound (Web Audio, made in code) ---------- */
+let AC=null,roll=null,muted=false;
+function audioInit(){
+ if(AC)return;
+ try{AC=new (window.AudioContext||window.webkitAudioContext)();
+  const len=AC.sampleRate*2,buf=AC.createBuffer(1,len,AC.sampleRate),d=buf.getChannelData(0);
+  for(let i=0;i<len;i++)d[i]=Math.random()*2-1;
+  AC.noise=buf;
+  const src=AC.createBufferSource();src.buffer=buf;src.loop=true;
+  const bp=AC.createBiquadFilter();bp.type='bandpass';bp.frequency.value=700;bp.Q.value=.9;
+  const g=AC.createGain();g.gain.value=0;
+  src.connect(bp).connect(g).connect(AC.destination);src.start();roll={g,bp};
+ }catch(e){AC=null;}
+}
+function rollLevel(v,f){if(!roll||!isFinite(v)||!isFinite(f))return;const t=AC.currentTime;roll.g.gain.setTargetAtTime(muted?0:v,t,.06);roll.bp.frequency.setTargetAtTime(f,t,.06);}
+function click(vol,hp=2200){
+ if(!AC||muted)return;const t=AC.currentTime;
+ const s=AC.createBufferSource();s.buffer=AC.noise;
+ const f=AC.createBiquadFilter();f.type='highpass';f.frequency.value=hp;
+ const g=AC.createGain();g.gain.setValueAtTime(vol,t);g.gain.exponentialRampToValueAtTime(.001,t+.07);
+ s.connect(f).connect(g).connect(AC.destination);s.start(t,Math.random(),.08);
+}
+function chime(){
+ if(!AC||muted)return;const t=AC.currentTime;
+ [523.25,659.25,783.99,1046.5].forEach((fq,i)=>{const o=AC.createOscillator(),g=AC.createGain();o.type='triangle';o.frequency.value=fq;
+  g.gain.setValueAtTime(0,t+i*.09);g.gain.linearRampToValueAtTime(.18,t+i*.09+.02);g.gain.exponentialRampToValueAtTime(.001,t+i*.09+.9);
+  o.connect(g).connect(AC.destination);o.start(t+i*.09);o.stop(t+i*.09+1);});
+}
+function sndUI(){$('snd').setAttribute('aria-label',muted?'Sound off':'Sound on');$('wave').style.display=muted?'none':'';}
+$('snd').onclick=()=>{muted=!muted;sndUI();if(muted)rollLevel(0,700);save();};
+function draw(){
+ const W=cv.width;if(!W)return;const k=W/S;
+ cx.setTransform(1,0,0,1,0,0);cx.clearRect(0,0,W,W);
+ cx.drawImage(bowl,0,0,W,W);
+ cx.save();cx.translate(W/2,W/2);cx.rotate(wheelA);cx.drawImage(head,-W/2,-W/2,W,W);cx.restore();
+ const ba=wheelA+ballRel, bx=W/2+Math.cos(ba)*ballR*R*k, by=W/2+Math.sin(ba)*ballR*R*k, br=R*.028*k;
+ cx.fillStyle='rgba(0,0,0,.45)';cx.beginPath();cx.arc(bx+br*.35,by+br*.45,br,0,TAU);cx.fill();
+ const g=cx.createRadialGradient(bx-br*.4,by-br*.4,br*.1,bx,by,br);g.addColorStop(0,'#fff');g.addColorStop(.6,'#e6e6e6');g.addColorStop(1,'#8d8d8d');
+ cx.fillStyle=g;cx.beginPath();cx.arc(bx,by,br,0,TAU);cx.fill();
+}
+const easeOut=t=>1-(1-t)**3, easeIO=t=>t<.5?2*t*t:1-(-2*t+2)**2/2;
+const smooth=t=>t*t*(3-2*t);
+const wrapA=x=>x-TAU*Math.round(x/TAU);
+/* Ball path: pickup → fast roll on the track, slowing → drops off the track and hits a deflector →
+   falls into the pocket ring and bounces over the frets a few times → settles and rides the wheel.
+   The path is simulated first, then nudged very slightly so the ball ends in the drawn pocket. */
+function makeSpin(i){
+ /* Final landing, in pocket units from the winning pocket (o=0; frets sit at ±0.5, ±1.5).
+    Each key: [time, offset, radius, hop height on the way there, click volume on arrival].
+    Ball rolls off the cone, strikes a fret, hops, rattles against the edge of a neighbouring
+    pocket or the winning one, then drops in and rocks against the pocket wall. */
+ const VARIANTS=[
+  [[0,2.7,.68,0,0],[.22,1.5,.645,0,.5],[.50,.55,.645,.055,.42],[.68,.85,.64,.025,.28],[.88,.05,.596,.032,.2],[1.02,-.24,.588,0,.09],[1.2,.07,.5875,0,0],[1.4,0,.5875,0,0]],
+  [[0,2.7,.68,0,0],[.20,1.5,.645,0,.5],[.44,-.62,.62,.06,.4],[.60,-.47,.642,.02,.3],[.82,.12,.597,.035,.2],[.96,.24,.588,0,.08],[1.14,-.05,.5875,0,0],[1.32,0,.5875,0,0]],
+  [[0,2.7,.68,0,0],[.24,1.5,.645,0,.5],[.46,.5,.645,.045,.45],[.62,.72,.648,.018,.25],[.84,-.12,.6,.04,.2],[1.0,.2,.588,0,.1],[1.18,-.04,.5875,0,0],[1.36,0,.5875,0,0]]
+ ];
+ const KEYS=VARIANTS[Math.floor(Math.random()*VARIANTS.length)];
+ const H=1/240,T1=4.6,T2=5.9,TCa=1.25,PEAK=2.7,TW=9,PICK=.4;
+ const T3=T2+TCa+KEYS[KEYS.length-1][0];
+ const vW=t=>IDLE+(PEAK-IDLE)*Math.min(1,t/.7)*Math.exp(-Math.max(0,t-.7)/TW);
+ const n=Math.ceil(T3/H)+3,Wa=new Float64Array(n),Ba=new Float64Array(n),Ra=new Float64Array(n),Va=new Float64Array(n);
+ let w=wheelA,b=wheelA+ballRel;const r0=ballR,b0=12.5+Math.random()*2;
+ for(let k=0;k<n;k++){
+  const t=k*H;let r,wb;
+  if(t<PICK){r=r0+(.86-r0)*easeIO(t/PICK);wb=vW(t)+(-b0-vW(t))*smooth(t/PICK);}
+  else if(t<T1){r=.86-.004*Math.sin(t*9);wb=-b0+(b0-4.6)*(1-(1-(t-PICK)/(T1-PICK))**1.6);}
+  else if(t<T2){const u=(t-T1)/(T2-T1);r=.86+(.68-.86)*easeIO(u);
+   if(u>.42&&u<.78)r+=.04*Math.sin(Math.PI*(u-.42)/.36);
+   wb=-4.6+1.4*u;if(u>.42)wb*=.72;}
+  else{r=.68;wb=-3;}
+  Wa[k]=w;Ba[k]=b;Ra[k]=r;Va[k]=wb;w+=vW(t)*H;b+=wb*H;
+ }
+ const k2=Math.round(T2/H),relT2=Ba[k2]-Wa[k2],relV=Va[k2]-vW(T2);
+ const v1=(KEYS[1][1]-KEYS[0][1])*SEG/KEYS[1][0];          // speed when it reaches the first fret
+ const D1=TCa*(relV+v1)/2,target=i*SEG-Math.PI/2;
+ const corr=wrapA(target+KEYS[0][1]*SEG-relT2-D1),relS=relT2+corr,base=relS+D1-KEYS[0][1]*SEG;
+ return {t0:performance.now(),T3,seg:0,defl:false,
+  step(t){
+   const kk=Math.min(n-2,t/H),k0=Math.floor(kk),f=kk-k0;
+   wheelA=Wa[k0]+(Wa[k0+1]-Wa[k0])*f;wheelV=vW(t);
+   if(t<T2){
+    ballRel=Ba[k0]+(Ba[k0+1]-Ba[k0])*f+corr*smooth(Math.min(1,t/T1))-wheelA;ballR=Ra[k0];
+    const sp=Math.abs(Va[k0]);rollLevel(t<PICK?.02:.012+.07*sp/14,380+sp*55);
+    if(!this.defl&&t>T1+(T2-T1)*.44){this.defl=true;click(.55,1500);}
+   }else if(t<T2+TCa){
+    // rolls down the cone edge toward the pockets, slowing smoothly
+    const u=(t-T2)/TCa,u2=u*u,u3=u2*u;
+    ballRel=relS+(u3-2*u2+u)*TCa*relV+(-2*u3+3*u2)*D1+(u3-u2)*TCa*v1;
+    ballR=.68+.006*Math.sin(Math.PI*u);
+    rollLevel(.03*(1-u)+.012,320);
+   }else{
+    // strike the frets, hop, rattle against the pocket edges, drop in
+    const tk=t-T2-TCa;let j=1;while(j<KEYS.length-1&&tk>KEYS[j][0])j++;
+    const a=KEYS[j-1],b=KEYS[j],u=Math.min(1,Math.max(0,(tk-a[0])/(b[0]-a[0])));
+    const fly=b[3]>0||b[4]>0, uo=fly?u:smooth(u);
+    ballRel=base+(a[1]+(b[1]-a[1])*uo)*SEG;
+    ballR=a[2]+(b[2]-a[2])*u+b[3]*Math.sin(Math.PI*u);
+    for(let m=this.seg+1;m<j;m++)if(KEYS[m][4])click(KEYS[m][4]);
+    if(j-1>this.seg)this.seg=j-1;
+    rollLevel(0,300);
+   }
+  },
+  finish(){this.step(T3);ballRel=wrapA(base);ballR=.5875;rollLevel(0,300);}
+ };
+}
+let last=performance.now();
+function loop(now){
+ const dt=Math.min(.05,(now-last)/1000);last=now;
+ if(anim){
+  const t=Math.max(0,(now-anim.t0)/1000);
+  if(t>=anim.T3){anim.finish();const d=anim.done;anim=null;d();}
+  else anim.step(t);
+ }else{wheelV+=(IDLE-wheelV)*(1-Math.exp(-dt/7));wheelA+=wheelV*dt;}
+ draw();requestAnimationFrame(loop);
+}
+requestAnimationFrame(loop);
+
+/* ---------- betting table ---------- */
+const NS='http://www.w3.org/2000/svg',T=$('table');
+const el=(tag,a,p)=>{const e=document.createElementNS(NS,tag);for(const k in a)e.setAttribute(k,a[k]);p&&p.appendChild(e);return e;};
+const defs=el('defs',{},T);
+const fg=el('radialGradient',{id:'felt',cx:'50%',cy:'40%',r:'75%'},defs);
+el('stop',{offset:'0',['stop-color']:'#1b7a47'},fg);el('stop',{offset:'1',['stop-color']:'#0b4527'},fg);
+const ROOT=el('g',{},T);
+const gBase=el('g',{},ROOT),gHL=el('g',{},ROOT),gMark=el('g',{},ROOT),gChips=el('g',{'pointer-events':'none'},ROOT),gHS=el('g',{},ROOT);
+const UP=[];let vertical=false;
+const upright=(e,x,y)=>{UP.push([e,x,y]);if(vertical)e.setAttribute('transform',`rotate(-90 ${x} ${y})`);return e;};
+const LINE='rgba(246,228,180,.9)',CW=60,CH=70;
+const numAt=(c,r)=>3*c+3-r;
+el('rect',{x:-8,y:-8,width:856,height:346,rx:12,fill:'url(#felt)'},gBase);
+const HL={},HS=[];
+function hlRect(key,attrs){HL[key]=el(attrs.d?'path':'rect',Object.assign({class:'hlr',fill:'rgba(255,226,140,.38)'},attrs),gHL);}
+const CELL={};
+// zero
+const zp='M60,0 L22,0 L0,105 L22,210 L60,210 Z';
+el('path',{d:zp,fill:FILL.green,stroke:LINE,'stroke-width':2},gBase);
+upright(el('text',{x:34,y:113,fill:'#fff','font-family':'Cinzel,Georgia,serif','font-size':28,'font-weight':700,'text-anchor':'middle'},gBase),34,104).textContent='0';
+hlRect('n0',{d:zp});CELL[0]={x:30,y:105};
+for(let c=0;c<12;c++)for(let r=0;r<3;r++){
+ const n=numAt(c,r),x=60+c*CW,y=r*CH;CELL[n]={x:x+CW/2,y:y+CH/2};
+ el('rect',{x,y,width:CW,height:CH,fill:'none',stroke:LINE,'stroke-width':2},gBase);
+ el('rect',{x:x+6,y:y+8,width:CW-12,height:CH-16,rx:8,fill:FILL[colorOf(n)],stroke:'rgba(0,0,0,.35)'},gBase);
+ upright(el('text',{x:x+CW/2,y:y+CH/2+9,fill:'#fff','font-family':'Cinzel,Georgia,serif','font-size':24,'font-weight':700,'text-anchor':'middle'},gBase),x+CW/2,y+CH/2).textContent=n;
+ hlRect('n'+n,{x,y,width:CW,height:CH});
+}
+const range=(a,b)=>Array.from({length:b-a+1},(_,i)=>a+i);
+const ALL=range(1,36);
+const outside=[];
+for(let r=0;r<3;r++)outside.push({key:'col'+r,nums:ALL.filter(n=>n%3===(3-r)%3),x:780,y:r*CH,w:60,h:CH,label:'2 to 1',name:'column'});
+for(let d=0;d<3;d++)outside.push({key:'doz'+d,nums:range(12*d+1,12*d+12),x:60+d*240,y:210,w:240,h:60,label:['1st 12','2nd 12','3rd 12'][d],name:['1st','2nd','3rd'][d]+' dozen'});
+const em=[['1 to 18',n=>n<=18,'low'],['EVEN',n=>n%2===0,'even'],['red',n=>REDS.has(n),'red'],['black',n=>!REDS.has(n),'black'],['ODD',n=>n%2===1,'odd'],['19 to 36',n=>n>=19,'high']];
+em.forEach(([l,f,name],k)=>outside.push({key:'em'+k,nums:ALL.filter(f),x:60+k*120,y:270,w:120,h:60,label:l,name}));
+outside.forEach(o=>{
+ el('rect',{x:o.x,y:o.y,width:o.w,height:o.h,fill:'none',stroke:LINE,'stroke-width':2},gBase);
+ if(o.label==='red'||o.label==='black'){const mx=o.x+o.w/2,my=o.y+o.h/2;
+  el('path',{d:`M${mx-34},${my} L${mx},${my-18} L${mx+34},${my} L${mx},${my+18} Z`,fill:FILL[o.label],stroke:'#f6dc8e','stroke-width':2},gBase);}
+ else el('text',{x:o.x+o.w/2,y:o.y+o.h/2+7,fill:'#fff','font-family':'Cinzel,Georgia,serif','font-size':o.w>100?20:17,'font-weight':700,'text-anchor':'middle'},gBase).textContent=o.label;
+ hlRect(o.key,{x:o.x,y:o.y,width:o.w,height:o.h});
+ HS.push({key:o.key,nums:o.nums,x:o.x,y:o.y,w:o.w,h:o.h,cx:o.x+o.w/2,cy:o.y+o.h/2,name:o.name});
+});
+// inside bets
+const t=16;
+HS.push({key:'s0',nums:[0],x:0,y:0,w:60,h:210,cx:34,cy:150,name:'straight 0',zero:1});
+for(let c=0;c<12;c++)for(let r=0;r<3;r++){const n=numAt(c,r),x=60+c*CW,y=r*CH;HS.push({key:'s'+n,nums:[n],x,y,w:CW,h:CH,cx:x+CW/2,cy:y+CH/2,name:'straight '+n});}
+const pt=(key,nums,cx,cy,w,h,name)=>HS.push({key,nums:nums.sort((a,b)=>a-b),x:cx-w/2,y:cy-h/2,w,h,cx,cy,name});
+for(let c=0;c<11;c++)for(let r=0;r<3;r++){const a=numAt(c,r);pt('v'+a,[a,a+3],60+(c+1)*CW,r*CH+CH/2,t,CH-2*t,'split');}
+for(let c=0;c<12;c++)for(let r=0;r<2;r++){const a=numAt(c,r);pt('h'+a,[a,a-1],60+c*CW+CW/2,(r+1)*CH,CW-2*t,t,'split');}
+for(let c=0;c<11;c++)for(let r=0;r<2;r++){const a=numAt(c,r);pt('c'+a,[a,a-1,a+3,a+2],60+(c+1)*CW,(r+1)*CH,t+4,t+4,'corner');}
+for(let c=0;c<12;c++)pt('st'+c,[3*c+1,3*c+2,3*c+3],60+c*CW+CW/2,210,CW-2*t,t,'street');
+for(let c=0;c<11;c++)pt('sl'+c,range(3*c+1,3*c+6),60+(c+1)*CW,210,t+4,t+4,'six line');
+for(let r=0;r<3;r++)pt('z'+r,[0,numAt(0,r)],60,r*CH+CH/2,t,CH-2*t,'split');
+pt('tr0',[0,3,2],60,70,t+4,t+4,'trio');pt('tr1',[0,2,1],60,140,t+4,t+4,'trio');
+pt('ff',[0,1,2,3],60,210,t+4,t+4,'first four');
+
+function setHL(nums,key,on){const ks=key&&HL[key]&&!key.startsWith('s')?[key]:[];ks.forEach(k=>HL[k].classList.toggle('on',on));nums.forEach(n=>HL['n'+n].classList.toggle('on',on));}
+HS.forEach((h,i)=>{
+ const r=el('rect',{x:h.x,y:h.y,width:h.w,height:h.h,fill:'rgba(0,0,0,0)','pointer-events':'all',class:'hs'},gHS);
+ if(h.zero)r.setAttribute('x',4);
+ r.addEventListener('mouseenter',()=>setHL(h.nums,h.key,true));
+ r.addEventListener('mouseleave',()=>setHL(h.nums,h.key,false));
+ r.addEventListener('click',()=>place(h));
+ r.addEventListener('contextmenu',e=>{e.preventDefault();removeBet(h.key);});
+});
+
+let READY=false;
+function layout(){
+ const v=window.innerWidth<600;if(v===vertical&&ROOT.hasAttribute('data-l'))return;vertical=v;ROOT.setAttribute('data-l',1);
+ T.setAttribute('viewBox',v?'-8 -8 346 856':'-8 -8 856 346');
+ ROOT.setAttribute('transform',v?'translate(330,0) rotate(90)':'');
+ const bg=gBase.firstChild;bg.setAttribute('width',856);bg.setAttribute('height',346);
+ UP.forEach(([e,x,y])=>v?e.setAttribute('transform',`rotate(-90 ${x} ${y})`):e.removeAttribute('transform'));
+ if(READY)render();
+}
+addEventListener('resize',layout);layout();
+
+/* ---------- game state ---------- */
+let balance=1000,bets={},stack=[],lastBets=null,chip=5,history=[];
+try{const sv=JSON.parse(localStorage.getItem('afsoon-roulette')||'{}');if(typeof sv.bal==='number'&&sv.bal>=1)balance=sv.bal;if(Array.isArray(sv.hist))history=sv.hist.slice(0,16);muted=!!sv.muted;}catch(e){}
+function save(){try{localStorage.setItem('afsoon-roulette',JSON.stringify({bal:balance,hist:history,muted}))}catch(e){}}
+sndUI();
+if(history.length)$('hist').innerHTML=history.map(h=>`<span class="${colorOf(h)}">${h}</span>`).join('');
+const chipBox=$('chips');
+chipBox.innerHTML=DENOMS.map(d=>`<button class="chip${d.v===chip?' sel':''}" style="--c:${d.c}" data-v="${d.v}" aria-label="Chip ${d.v}"><span>${d.v}</span></button>`).join('');
+chipBox.addEventListener('click',e=>{const b=e.target.closest('.chip');if(!b)return;chip=+b.dataset.v;chipBox.querySelectorAll('.chip').forEach(x=>x.classList.toggle('sel',x===b));});
+const total=()=>Object.values(bets).reduce((s,b)=>s+b.amt,0);
+const msg=s=>$('msg').textContent=s;
+function chipColor(a){let c=DENOMS[0].c;DENOMS.forEach(d=>{if(a>=d.v)c=d.c;});return c;}
+const short=a=>a>=1000?(a/1000).toFixed(a%1000?1:0)+'k':a;
+function render(){
+ gChips.innerHTML='';
+ Object.values(bets).forEach(b=>{const g=el('g',{transform:`translate(${b.cx},${b.cy})`,'data-k':b.key},gChips);const col=chipColor(b.amt);
+  el('circle',{cx:1.5,cy:2.5,r:15,fill:'rgba(0,0,0,.45)'},g);
+  el('circle',{r:15,fill:col,stroke:'#fff','stroke-width':3.5,'stroke-dasharray':'5 4.4'},g);
+  el('circle',{r:10.5,fill:col,stroke:'rgba(255,255,255,.7)','stroke-width':1},g);
+  el('text',{y:4,transform:vertical?'rotate(-90)':'','text-anchor':'middle',fill:'#fff','font-family':'Nunito,sans-serif','font-size':12,'font-weight':700},g).textContent=short(b.amt);});
+ $('bal').textContent=fmt(balance);$('tot').textContent=fmt(total());
+ ['undo','clear','dbl'].forEach(id=>$(id).disabled=spinning||!stack.length);
+ $('rebet').disabled=spinning||!lastBets||!!stack.length;$('spin').disabled=spinning;
+}
+function add(h,amt){bets[h.key]=bets[h.key]||{key:h.key,nums:h.nums,cx:h.cx,cy:h.cy,amt:0,name:h.name};bets[h.key].amt+=amt;balance-=amt;stack.push({key:h.key,amt});}
+function place(h){
+ if(spinning)return;gMark.innerHTML='';
+ if(chip>balance){msg('Not enough balance for that chip.');return;}
+ audioInit();click(.25,3500);
+ add(h,chip);msg('');render();
+}
+function removeBet(key){if(spinning||!bets[key])return;balance+=bets[key].amt;delete bets[key];stack=stack.filter(s=>s.key!==key);render();}
+$('undo').onclick=()=>{const s=stack.pop();if(!s)return;const b=bets[s.key];b.amt-=s.amt;balance+=s.amt;if(b.amt<=0)delete bets[s.key];render();};
+$('clear').onclick=()=>{balance+=total();bets={};stack=[];render();};
+$('dbl').onclick=()=>{const tt=total();if(tt>balance){msg('Not enough balance to double.');return;}Object.values(bets).forEach(b=>add(HS.find(h=>h.key===b.key),b.amt));render();};
+$('rebet').onclick=()=>{const need=lastBets.reduce((s,b)=>s+b.amt,0);if(need>balance){msg('Not enough balance to repeat the last bets.');return;}gMark.innerHTML='';lastBets.forEach(b=>add(HS.find(h=>h.key===b.key),b.amt));render();};
+
+function rand37(){try{const a=new Uint32Array(1);let v;do{crypto.getRandomValues(a);v=a[0];}while(v>=4294967296-4294967296%37);return v%37;}catch(e){return Math.floor(Math.random()*37);}}
+function doSpin(){
+ if(spinning)return;
+ if(!total()){msg('Place your bets first.');return;}
+ audioInit();if(AC&&AC.state==='suspended')AC.resume();
+ spinning=true;msg('No more bets…');render();
+ const wr=$('wheel').getBoundingClientRect();if(wr.top<0||wr.bottom>innerHeight)$('wheel').scrollIntoView({behavior:'smooth',block:'center'});
+ const i=rand37(),n=ORDER[i];
+ anim=makeSpin(i);anim.done=()=>settle(n);
+}
+function countBalance(to,ms){
+ const from=balance,t0=performance.now(),b=$('bal');
+ (function tick(now){const u=Math.min(1,(now-t0)/ms),v=Math.round(from+(to-from)*easeOut(u));b.textContent=fmt(v);
+  if(u<1)requestAnimationFrame(tick);else balance=to;})(t0);
+}
+function floatDelta(v){
+ const s=document.createElement('span');s.className='delta '+(v>0?'p':'m');s.textContent=(v>0?'+':'−')+fmt(Math.abs(v));
+ $('balStat').appendChild(s);setTimeout(()=>s.remove(),1500);
+}
+function settle(n){
+ let won=0;const winKeys=[];
+ Object.values(bets).forEach(b=>{if(b.nums.includes(n)){won+=b.amt*36/b.nums.length;winKeys.push(b.key);}});
+ const staked=total(),net=won-staked;
+ lastBets=Object.values(bets).map(b=>({key:b.key,amt:b.amt}));
+ history.unshift(n);history=history.slice(0,16);
+ const c=colorOf(n);
+ // 1. dealer marks the number, losing chips are swept away
+ $('disc').className='disc '+c;$('disc').textContent=n;
+ $('resTxt').innerHTML=`<b>${n} ${c==='green'?'Green':c==='red'?'Red':'Black'}</b><br>${n===0?'Zero':(n%2?'Odd':'Even')+' · '+(n<=18?'1 to 18':'19 to 36')}`;
+ $('hist').innerHTML=history.map(h=>`<span class="${colorOf(h)}">${h}</span>`).join('');
+ gMark.innerHTML='';const p=CELL[n],g=el('g',{transform:`translate(${p.x},${p.y})`},gMark);
+ el('circle',{r:22,fill:'none',stroke:'#f6dc8e','stroke-width':4},g);
+ el('circle',{r:9,fill:'#f6dc8e',stroke:'#6b4a12','stroke-width':2},g);
+ msg(`${n} ${c}`);
+ setTimeout(()=>gChips.querySelectorAll('g[data-k]').forEach(x=>x.classList.add(winKeys.includes(x.dataset.k)?'winchip':'lose')),400);
+ // 2. flash with the amount won
+ setTimeout(()=>{
+  const f=$('flash');f.className='flash'+(won?' win':'');void f.offsetWidth;
+  f.innerHTML=won?`<div class="fl"><small>You win</small><b>${fmt(won)}</b></div>`:`<div class="fl lose"><small>No win</small><b>−${fmt(staked)}</b></div>`;
+  if(won)chime();$('win').textContent=fmt(won);
+ },1000);
+ // 3. balance goes up (win) or down (loss)
+ setTimeout(()=>{
+  $('flash').innerHTML='';
+  const st=$('balStat');st.classList.add(won?'up':'down');setTimeout(()=>st.classList.remove('up','down'),1600);
+  if(won){floatDelta(won);countBalance(balance+won,1100);}else floatDelta(-staked);
+  msg(won?(net>=0?`You won ${fmt(won)} · net +${fmt(net)}`:`You won ${fmt(won)} · net −${fmt(-net)}`):`No win this time: ${fmt(staked)} lost`);
+ },2700);
+ // 4. table cleared for the next round
+ setTimeout(()=>{
+  bets={};stack=[];spinning=false;
+  if(balance<1){balance=1000;msg('Out of chips: the house gives you 1,000 new ones.');}
+  save();render();
+ },4000);
+}
+$('spin').onclick=doSpin;READY=true;
+addEventListener('keydown',e=>{if(e.code==='Space'&&!/INPUT|TEXTAREA/.test(e.target.tagName)){e.preventDefault();doSpin();}});
+render();
+}
+</script>
+<section class="afs-info" id="how-to-play" aria-labelledby="afs-h">
+<h2 id="afs-h">How to play Afsoon Roulette</h2>
+<p>Afsoon Roulette is a free European roulette game with a single zero. Put your chips on the table, spin the wheel and watch the ball roll, drop and bounce into a pocket. You play with free play chips – no money, no download and no account needed.</p>
+<h3>Rules</h3>
+<ol><li>Pick a chip (1, 5, 25, 100 or 500) and tap the table to place it. Tap again to add more.</li><li>Tap Spin. The ball lands in one of 37 pockets: 0 to 36. Zero is green; the other numbers are red or black.</li><li>Every bet that covers the winning number is paid; all other chips are taken by the house.</li><li>Undo takes back your last chip, Clear takes all chips back, Double doubles every bet and Re-bet places the bets of the last round again.</li></ol>
+<h3>Bets and payouts</h3>
+<ul><li>Straight up – one number: pays 35 to 1</li><li>Split – two numbers next to each other (tap the line between them): 17 to 1</li><li>Street – a row of three numbers (tap the bottom edge of the row): 11 to 1</li><li>Corner – four numbers (tap the point where they meet): 8 to 1</li><li>First four – 0, 1, 2 and 3: 8 to 1</li><li>Six line – two rows, six numbers: 5 to 1</li><li>Column (2 to 1) or dozen (1st, 2nd, 3rd 12): 2 to 1</li><li>Red or black, even or odd, 1 to 18 or 19 to 36: 1 to 1</li></ul>
+<p>European roulette has only one zero, so the house edge is 2.7% – lower than American roulette with its extra double zero. If you run out of chips, the house gives you 1,000 new ones.</p>
+<h3>Tips</h3>
+<ul><li>Even-money bets (red, black, odd, even, low, high) win almost half the time; a straight-up number wins rarely but pays 35 times your chip.</li><li>Every spin is random: past numbers do not change the next one.</li><li>On a computer: Space = spin, right-click a bet to remove it.</li></ul>
+<h3>More free games</h3>
+<ul class="more"><li><a href="/blackjack/">Afsoon Blackjack</a></li><li><a href="/poker/">Afsoon Poker: Texas Hold&#x27;em</a></li><li><a href="/solitaire/">Afsoon Solitaire</a></li><li><a href="/hokm/">Hokm</a></li><li><a href="/nard/">Nard: Persian Backgammon</a></li><li><a href="/chess/">Shatranj: Persian Chess</a></li><li><a href="/water-sort/">Afsoon Water Sort</a></li><li><a href="/bubble-shooter/">Afsoon Bubble Shooter</a></li><li><a href="/kashi-blocks/">Kashi Blocks</a></li><li><a href="/sudoku/">Afsoon Sudoku</a></li><li><a href="/mahjong/">Afsoon Mahjong</a></li><li><a href="/history-puzzles/">History Building Puzzles</a></li><li><a href="/alchemy/">Afsoon Alchemy</a></li><li><a href="/anshan-run/">Anshan Run</a></li><li><a href="/chariot-race/">Chariot Race</a></li><li><a href="/river-ride/">River Ride</a></li><li><a href="/chogan/">Chogan: Paddle Ball</a></li></ul>
+<p style="margin-top:20px"><a href="/">&larr; All games on Afsoon Games</a></p>
+</section>
+<style>
+.afs-info{box-sizing:border-box;max-width:900px;margin:0 auto;padding:40px 20px 56px;color:#e8dcc0;font:16px/1.65 Nunito,system-ui,sans-serif}
+.afs-info h2{font-family:Cinzel,Georgia,serif;color:#f6dc8e;font-size:1.5rem;margin:0 0 12px}
+.afs-info h3{color:#f6dc8e;font-size:1.1rem;margin:22px 0 8px}
+.afs-info a{color:#f6dc8e}
+.afs-info ul.more{display:flex;flex-wrap:wrap;gap:8px;padding:0;list-style:none}.afs-info ul.more a{display:inline-block;padding:6px 12px;border:1px solid rgba(230,184,92,.35);border-radius:16px;text-decoration:none}
+</style>
+</body>
+</html>
