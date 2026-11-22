@@ -77,9 +77,40 @@ main{max-width:1280px;margin:0 auto;padding:14px max(2vw,10px) 34px;display:grid
 .spin{background:linear-gradient(#f3d27a,#b88a2a);color:#2a1a05;border-color:#f6dc8e;font:700 16px Cinzel,serif;padding:0 28px}
 .msg{margin-top:10px;text-align:center;min-height:24px;color:var(--gold2);font-weight:600}
 .note{margin-top:8px;text-align:center;font-size:13px;color:var(--muted)}
-@media(max-width:600px){.chip{width:44px;height:44px;font-size:13px}.btn{padding:0 10px;flex:1}.spin{flex:1 1 100%}
- .bar{position:sticky;bottom:0;z-index:15;margin:10px -10px 0;padding:10px 10px max(10px,env(safe-area-inset-bottom,0px));background:rgba(12,10,7,.94);border-top:1px solid #6b5020}
- .chips,.btns{width:100%;justify-content:space-between}.wheelcol{max-width:340px}.msg{min-height:0}}
+
+
+/* ---- phone "app" layout: whole game on one screen (set by script) ---- */
+body.app .top{position:relative;padding:6px 10px}
+body.app .brand{font-size:1.05rem}body.app .ib{height:38px;min-width:38px}body.app .bank{padding:1px 12px}body.app .bank b{font-size:1rem}
+body.app main{display:grid;height:var(--mh);max-width:none;padding:4px 8px 0;gap:8px;grid-template-columns:minmax(0,1fr) auto;grid-template-rows:auto auto minmax(0,1fr) auto;grid-template-areas:"wheel table" "stats table" "msg table" "bar bar";align-items:start}
+body.app .wheelcol{grid-area:wheel;max-width:none;width:100%;margin:0}
+body.app .play{display:contents}
+body.app .stats{grid-area:stats;grid-template-columns:1fr;gap:6px;margin:0}
+body.app .stat{padding:4px 9px;border-radius:10px}body.app .stat small{font-size:11px}body.app .stat b{font-size:16px}
+body.app .tablewrap{grid-area:table;padding:5px;border-radius:14px}
+body.app .felt{padding:3px;border-radius:10px}
+body.app .rail{padding:6px;border-radius:14px}body.app .inner{padding:6px;border-radius:10px}
+body.app .res{min-height:0;margin-top:6px;gap:7px}body.app .disc{width:36px;height:36px;font-size:16px;border-width:2px}
+body.app .resTxt{font-size:11px;line-height:1.3}body.app .resTxt b{font-size:13px}
+body.app .lbl{margin-top:6px;font-size:11px}body.app .hist{gap:3px;margin-top:4px}body.app .hist span{width:21px;height:21px;font-size:10px}
+body.app .msg{grid-area:msg;margin:0;font-size:12.5px;line-height:1.35;text-align:left;min-height:0}
+body.app .note{display:none}
+body.app .bar{grid-area:bar;margin:0 -8px;padding:8px 8px max(8px,env(safe-area-inset-bottom,0px));background:rgba(12,10,7,.96);border-top:1px solid #6b5020;gap:7px}
+body.app .chip.sel{transform:translateY(-3px)}
+body.vert .bar{display:grid;grid-template-columns:repeat(4,minmax(0,1fr))}
+body.vert .chips{grid-column:1/4;grid-row:1;gap:4px;flex-wrap:nowrap;justify-content:space-between}
+body.vert .chip{width:42px;height:42px;font-size:12px}body.vert .chip::before{inset:6px}
+body.vert .btns{display:contents}
+body.vert .btn{padding:0 4px;min-height:40px;font-size:13px}
+body.vert .spin{grid-column:4;grid-row:1;min-height:46px;padding:0;font-size:15px}
+body.land main{grid-template-areas:"wheel table" "msg table" "stats table" "bar bar"}
+body.land .stats,body.land .lbl,body.land .hist,body.land .resTxt{display:none}body.land .res{justify-content:center}
+body.land .wheelcol{width:var(--ww)}
+body.land .bar{flex-wrap:nowrap}body.land .chips{flex-wrap:nowrap;gap:6px}body.land .chip{width:38px;height:38px;font-size:11px}body.land .chip::before{inset:5px}
+body.land .btns{flex-wrap:nowrap;gap:6px}body.land .btn{min-height:38px;padding:0 10px;font-size:13px}body.land .spin{padding:0 22px}
+.scrim{position:fixed;inset:0;z-index:39;background:rgba(0,0,0,.62);opacity:0;pointer-events:none;transition:opacity .3s}.scrim.on{opacity:1}
+body.app .wheel.zoom{position:fixed;left:50%;top:50%;width:min(92vw,80dvh);z-index:40;transform:translate(-50%,-50%);animation:zin .35s ease-out}
+@keyframes zin{from{opacity:0;transform:translate(-50%,-50%) scale(.55)}}
 .tablewrap{position:relative}
 .flash{position:fixed;inset:0;z-index:50;display:grid;place-items:center;pointer-events:none}
 .flash.win{animation:feltflash 1.4s ease-out}
@@ -101,7 +132,7 @@ main{max-width:1280px;margin:0 auto;padding:14px max(2vw,10px) 34px;display:grid
 </style>
 </head>
 <body>
-<header class="top">
+<header class="top" id="topbar">
   <div class="brand">Roulette<small>AFSOON GAMES</small></div>
   <div class="bank" id="balStat"><b id="bal">1,000</b><span>Chips</span></div>
   <button class="ib" id="snd" aria-label="Sound on" title="Sound"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"><path d="M4 10v4h4l5 4V6L8 10z"/><path id="wave" d="M16 9a4 4 0 0 1 0 6M18.5 6.5a8 8 0 0 1 0 11"/></svg></button>
@@ -116,12 +147,12 @@ main{max-width:1280px;margin:0 auto;padding:14px max(2vw,10px) 34px;display:grid
       <div class="hist" id="hist"></div>
     </div></div>
   </section>
-  <section>
+  <section class="play">
     <div class="stats">
       <div class="stat"><small>Total bet</small><b id="tot">0</b></div>
       <div class="stat"><small>Last win</small><b id="win">0</b></div>
     </div>
-    <div class="rail tablewrap"><div class="felt"><svg id="table" viewBox="-8 -8 856 346" role="img" aria-label="Roulette betting table"></svg></div></div><div class="flash" id="flash" aria-live="polite"></div>
+    <div class="rail tablewrap"><div class="felt"><svg id="table" viewBox="-8 -8 856 346" role="img" aria-label="Roulette betting table"></svg></div></div><div class="flash" id="flash" aria-live="polite"></div><div class="scrim" id="scrim"></div>
     <div class="bar">
       <div class="chips" id="chips"></div>
       <div class="btns">
@@ -319,7 +350,7 @@ const upright=(e,x,y)=>{UP.push([e,x,y]);if(vertical)e.setAttribute('transform',
 const LINE='rgba(246,228,180,.9)',CW=60,CH=70;
 const numAt=(c,r)=>3*c+3-r;
 el('rect',{x:-8,y:-8,width:856,height:346,rx:12,fill:'url(#felt)'},gBase);
-const HL={},HS=[];
+const HL={},HS=[],HOVER=matchMedia('(hover:hover) and (pointer:fine)').matches;
 function hlRect(key,attrs){HL[key]=el(attrs.d?'path':'rect',Object.assign({class:'hlr',fill:'rgba(255,226,140,.38)'},attrs),gHL);}
 const CELL={};
 // zero
@@ -350,7 +381,7 @@ outside.forEach(o=>{
  HS.push({key:o.key,nums:o.nums,x:o.x,y:o.y,w:o.w,h:o.h,cx:o.x+o.w/2,cy:o.y+o.h/2,name:o.name});
 });
 // inside bets
-const t=16;
+const t=22;
 HS.push({key:'s0',nums:[0],x:0,y:0,w:60,h:210,cx:34,cy:150,name:'straight 0',zero:1});
 for(let c=0;c<12;c++)for(let r=0;r<3;r++){const n=numAt(c,r),x=60+c*CW,y=r*CH;HS.push({key:'s'+n,nums:[n],x,y,w:CW,h:CH,cx:x+CW/2,cy:y+CH/2,name:'straight '+n});}
 const pt=(key,nums,cx,cy,w,h,name)=>HS.push({key,nums:nums.sort((a,b)=>a-b),x:cx-w/2,y:cy-h/2,w,h,cx,cy,name});
@@ -367,22 +398,36 @@ function setHL(nums,key,on){const ks=key&&HL[key]&&!key.startsWith('s')?[key]:[]
 HS.forEach((h,i)=>{
  const r=el('rect',{x:h.x,y:h.y,width:h.w,height:h.h,fill:'rgba(0,0,0,0)','pointer-events':'all',class:'hs'},gHS);
  if(h.zero)r.setAttribute('x',4);
- r.addEventListener('mouseenter',()=>setHL(h.nums,h.key,true));
- r.addEventListener('mouseleave',()=>setHL(h.nums,h.key,false));
+ r.addEventListener('pointerenter',e=>{if(HOVER&&e.pointerType==='mouse')setHL(h.nums,h.key,true);});
+ r.addEventListener('pointerleave',e=>{if(HOVER&&e.pointerType==='mouse')setHL(h.nums,h.key,false);});
+ r.addEventListener('pointerup',e=>{if(!HOVER||e.pointerType!=='mouse'){setHL(h.nums,h.key,true);setTimeout(()=>setHL(h.nums,h.key,false),350);}});
  r.addEventListener('click',()=>place(h));
  r.addEventListener('contextmenu',e=>{e.preventDefault();removeBet(h.key);});
 });
 
 let READY=false;
 function layout(){
- const v=window.innerWidth<600;if(v===vertical&&ROOT.hasAttribute('data-l'))return;vertical=v;ROOT.setAttribute('data-l',1);
- T.setAttribute('viewBox',v?'-8 -8 346 856':'-8 -8 856 346');
- ROOT.setAttribute('transform',v?'translate(330,0) rotate(90)':'');
- const bg=gBase.firstChild;bg.setAttribute('width',856);bg.setAttribute('height',346);
- UP.forEach(([e,x,y])=>v?e.setAttribute('transform',`rotate(-90 ${x} ${y})`):e.removeAttribute('transform'));
+ const iw=innerWidth,ih=innerHeight,land=ih<500&&iw>ih,app=iw<600||land,v=app&&!land;
+ const B=document.body.classList;B.toggle('app',app);B.toggle('vert',v);B.toggle('land',app&&land);
+ if(v!==vertical||!ROOT.hasAttribute('data-l')){
+  vertical=v;ROOT.setAttribute('data-l',1);
+  T.setAttribute('viewBox',v?'-8 -8 346 856':'-8 -8 856 346');
+  ROOT.setAttribute('transform',v?'translate(330,0) rotate(90)':'');
+  UP.forEach(([e,x,y])=>v?e.setAttribute('transform',`rotate(-90 ${x} ${y})`):e.removeAttribute('transform'));
+ }
+ const M=document.querySelector('main'),wc=document.querySelector('.wheelcol');
+ if(app){
+  const mh=ih-$('topbar').offsetHeight;M.style.setProperty('--mh',mh+'px');
+  const bar=document.querySelector('.bar').offsetHeight,avail=mh-bar-4-8-16-2;
+  let th,tw;
+  if(v){th=avail;tw=th*346/856;const mx=iw*.58;if(tw>mx){tw=mx;th=tw*856/346;}}
+  else{th=avail;tw=th*856/346;const mx=iw-16-8-16-140;if(tw>mx){tw=mx;th=tw*346/856;}
+   const col=iw-16-8-tw-16;M.style.setProperty('--ww',Math.max(96,Math.min(col,avail-58))+'px');}
+  T.style.width=tw+'px';T.style.height=th+'px';
+ }else{M.style.removeProperty('--mh');T.style.width='';T.style.height='';}
  if(READY)render();
 }
-addEventListener('resize',layout);layout();
+addEventListener('resize',layout);addEventListener('orientationchange',()=>setTimeout(layout,250));layout();
 
 /* ---------- game state ---------- */
 let balance=1000,bets={},stack=[],lastBets=null,chip=5,history=[];
@@ -427,7 +472,8 @@ function doSpin(){
  if(!total()){msg('Place your bets first.');return;}
  audioInit();if(AC&&AC.state==='suspended')AC.resume();
  spinning=true;msg('No more bets…');render();
- const wr=$('wheel').getBoundingClientRect();if(wr.top<0||wr.bottom>innerHeight)$('wheel').scrollIntoView({behavior:'smooth',block:'center'});
+ if(document.body.classList.contains('app')){document.querySelector('.wheel').classList.add('zoom');$('scrim').classList.add('on');}
+ else{const wr=$('wheel').getBoundingClientRect();if(wr.top<0||wr.bottom>innerHeight)$('wheel').scrollIntoView({behavior:'smooth',block:'center'});}
  const i=rand37(),n=ORDER[i];
  anim=makeSpin(i);anim.done=()=>settle(n);
 }
@@ -464,7 +510,7 @@ function settle(n){
  },1000);
  // 3. balance goes up (win) or down (loss)
  setTimeout(()=>{
-  $('flash').innerHTML='';
+  $('flash').innerHTML='';document.querySelector('.wheel').classList.remove('zoom');$('scrim').classList.remove('on');
   const st=$('balStat');st.classList.add(won?'up':'down');setTimeout(()=>st.classList.remove('up','down'),1600);
   if(won){floatDelta(won);countBalance(balance+won,1100);}else floatDelta(-staked);
   msg(won?(net>=0?`You won ${fmt(won)} · net +${fmt(net)}`:`You won ${fmt(won)} · net −${fmt(-net)}`):`No win this time: ${fmt(staked)} lost`);
@@ -476,7 +522,7 @@ function settle(n){
   save();render();
  },4000);
 }
-$('spin').onclick=doSpin;READY=true;
+$('spin').onclick=doSpin;READY=true;layout();
 addEventListener('keydown',e=>{if(e.code==='Space'&&!/INPUT|TEXTAREA/.test(e.target.tagName)){e.preventDefault();doSpin();}});
 render();
 }
