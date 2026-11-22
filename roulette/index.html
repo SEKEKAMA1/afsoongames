@@ -36,6 +36,7 @@ body{margin:0;background:radial-gradient(ellipse 120% 70% at 50% 0%,#2b1c0d 0%,#
 .bank span{font:800 .6rem Nunito,sans-serif;letter-spacing:.14em;text-transform:uppercase;color:var(--muted)}
 .ib{background:rgba(255,255,255,.06);border:1px solid #6b5020;border-radius:10px;height:42px;min-width:42px;display:inline-flex;align-items:center;justify-content:center;color:var(--ink);cursor:pointer;text-decoration:none}
 .ib svg{width:22px;height:22px}
+.ib[aria-pressed="true"]{border-color:var(--gold2);color:var(--gold2);background:rgba(246,220,142,.14)}
 .ib:focus-visible{outline:3px solid var(--gold2);outline-offset:2px}
 h1{margin:0;font:700 clamp(26px,4.4vw,44px)/1.05 Cinzel,Georgia,serif;color:var(--gold2);text-shadow:0 2px 0 #4d3a10,0 0 24px rgba(216,180,90,.3)}
 .sub{color:var(--muted);font-size:13px;margin-top:6px}
@@ -53,9 +54,10 @@ main{max-width:1280px;margin:0 auto;padding:14px max(2vw,10px) 34px;display:grid
 .hist span{width:28px;height:28px;border-radius:50%;display:grid;place-items:center;font:600 12px Nunito,sans-serif;border:1px solid rgba(255,230,170,.35)}
 .hist .red{background:#a3121b}.hist .black{background:#191919}.hist .green{background:#0f7a3a}
 .lbl{font-size:12px;color:var(--muted);margin-top:12px}
-.stats{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;margin-bottom:12px}
+.stats{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px;margin-bottom:12px}
 .stat{background:#120c07;border:1px solid #6b5020;border-radius:12px;padding:8px 12px}
 .stat small{display:block;color:var(--muted);font-size:12px}
+.stat b.pos{color:#6ee7a0}.stat b.neg{color:#ff8a8a}
 .stat b{font:700 clamp(18px,2.4vw,24px) Nunito,sans-serif;color:var(--gold2);white-space:nowrap}
 .felt{background:#0d4a2a;border-radius:14px;padding:8px;box-shadow:inset 0 0 40px rgba(0,0,0,.55)}
 #table{width:100%;height:auto;display:block;user-select:none;-webkit-user-select:none;touch-action:manipulation}
@@ -104,7 +106,7 @@ body.vert .btns{display:contents}
 body.vert .btn{padding:0 4px;min-height:40px;font-size:13px}
 body.vert .spin{grid-column:4;grid-row:1;min-height:46px;padding:0;font-size:15px}
 body.land main{grid-template-areas:"wheel table" "msg table" "stats table" "bar bar"}
-body.land .stats,body.land .lbl,body.land .hist,body.land .resTxt{display:none}body.land .res{justify-content:center}
+body.land .stats{display:grid;grid-template-columns:1fr 1fr;gap:6px}body.land .stats .stat:first-child{display:none}body.land .lbl,body.land .hist,body.land .resTxt{display:none}body.land .res{justify-content:center}
 body.land .wheelcol{width:var(--ww)}
 body.land .bar{flex-wrap:nowrap}body.land .chips{flex-wrap:nowrap;gap:6px}body.land .chip{width:38px;height:38px;font-size:11px}body.land .chip::before{inset:5px}
 body.land .btns{flex-wrap:nowrap;gap:6px}body.land .btn{min-height:38px;padding:0 10px;font-size:13px}body.land .spin{padding:0 22px}
@@ -118,6 +120,7 @@ body.app .wheel.zoom{position:fixed;left:50%;top:50%;width:min(92vw,80dvh);z-ind
 .fl{text-align:center;padding:12px 36px 16px;border-radius:18px;background:radial-gradient(rgba(43,27,7,.95),rgba(18,11,4,.95));border:2px solid var(--gold2);box-shadow:0 0 50px rgba(246,220,142,.6);animation:pop 1.6s cubic-bezier(.2,1.5,.4,1) forwards}
 .fl small{display:block;font:700 16px Cinzel,serif;color:var(--gold)}
 .fl b{display:block;font:700 clamp(38px,7vw,68px)/1.05 Cinzel,serif;color:var(--gold2);text-shadow:0 0 22px rgba(246,220,142,.85)}
+.fl.even b{color:var(--ink);font-size:clamp(26px,4vw,40px);text-shadow:none}
 .fl.lose{border-color:#7d1a1f;box-shadow:0 0 30px rgba(0,0,0,.6)}.fl.lose b{color:#ff8a8a;font-size:clamp(26px,4vw,40px);text-shadow:none}
 @keyframes pop{0%{transform:scale(.4);opacity:0}14%{transform:scale(1.1);opacity:1}24%{transform:scale(1)}82%{opacity:1}100%{opacity:0}}
 .stat{position:relative;transition:box-shadow .3s}
@@ -125,6 +128,8 @@ body.app .wheel.zoom{position:fixed;left:50%;top:50%;width:min(92vw,80dvh);z-ind
 .delta{position:absolute;right:6px;top:100%;font:700 18px Nunito,sans-serif;animation:rise 1.4s ease-out forwards;white-space:nowrap}
 .delta.p{color:#6ee7a0}.delta.m{color:#ff7a7a}
 @keyframes rise{0%{transform:translateY(14px);opacity:0}20%{opacity:1}100%{transform:translateY(-8px);opacity:0}}
+#table .profit{font:800 15px Nunito,sans-serif;fill:#6ee7a0;stroke:#06210f;stroke-width:4px;paint-order:stroke;animation:rise2 1.8s ease-out forwards}
+@keyframes rise2{0%{opacity:0}15%{opacity:1}85%{opacity:1}100%{opacity:0}}
 #table g.lose{opacity:0;transition:opacity .6s}
 #table g.winchip{animation:glow .7s ease-in-out infinite alternate}
 @keyframes glow{from{filter:drop-shadow(0 0 2px #ffe28a)}to{filter:drop-shadow(0 0 9px #ffe28a)}}
@@ -135,6 +140,7 @@ body.app .wheel.zoom{position:fixed;left:50%;top:50%;width:min(92vw,80dvh);z-ind
 <header class="top" id="topbar">
   <div class="brand">Roulette<small>AFSOON GAMES</small></div>
   <div class="bank" id="balStat"><b id="bal">1,000</b><span>Chips</span></div>
+  <button class="ib" id="voice" aria-label="Dealer voice off" aria-pressed="false" title="Dealer voice"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="8" r="4"/><path d="M2 21c0-4 3-6 7-6s7 2 7 6"/><path id="vwave" d="M18 6a4 4 0 0 1 0 5M20.5 3.5a8 8 0 0 1 0 10"/><path id="vx" d="M17 7l5 5M22 7l-5 5"/></svg></button>
   <button class="ib" id="snd" aria-label="Sound on" title="Sound"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"><path d="M4 10v4h4l5 4V6L8 10z"/><path id="wave" d="M16 9a4 4 0 0 1 0 6M18.5 6.5a8 8 0 0 1 0 11"/></svg></button>
   <a class="ib" href="/" aria-label="Home" title="Home"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"><path d="M3 11 12 4l9 7v9h-6v-6H9v6H3z"/></svg></a>
 </header>
@@ -150,7 +156,8 @@ body.app .wheel.zoom{position:fixed;left:50%;top:50%;width:min(92vw,80dvh);z-ind
   <section class="play">
     <div class="stats">
       <div class="stat"><small>Total bet</small><b id="tot">0</b></div>
-      <div class="stat"><small>Last win</small><b id="win">0</b></div>
+      <div class="stat"><small>Last round</small><b id="win">0</b></div>
+      <div class="stat" id="sesStat"><small>This session</small><b id="ses">0</b></div>
     </div>
     <div class="rail tablewrap"><div class="felt"><svg id="table" viewBox="-8 -8 856 346" role="img" aria-label="Roulette betting table"></svg></div></div><div class="flash" id="flash" aria-live="polite"></div><div class="scrim" id="scrim"></div>
     <div class="bar">
@@ -430,10 +437,35 @@ function layout(){
 addEventListener('resize',layout);addEventListener('orientationchange',()=>setTimeout(layout,250));layout();
 
 /* ---------- game state ---------- */
+/* ---------- dealer voice (woman, optional) ---------- */
+let voiceOn=false,dealerV=null;
+const canSpeak='speechSynthesis' in window;
+function pickVoice(){
+ if(!canSpeak)return null;const vs=speechSynthesis.getVoices();if(!vs.length)return null;
+ const en=vs.filter(v=>/^en/i.test(v.lang));
+ const want=[/female/i,/samantha|victoria|karen|moira|tessa|serena|fiona|zira|aria|jenny|susan|hazel|libby|sonia|emma|ava|allison|kate|amy|joanna|salli|kimberly/i,/en-gb-x-(gba|gbc|gbg)|en-us-x-(sfg|tpc|iol)/i,/google uk english/i];
+ for(const r of want){const v=en.find(x=>r.test(x.name)||r.test(x.voiceURI||''));if(v)return v;}
+ return en.find(v=>/GB/i.test(v.lang))||en[0]||null;
+}
+if(canSpeak){dealerV=pickVoice();speechSynthesis.onvoiceschanged=()=>{dealerV=pickVoice();};}
+function say(t,flush){
+ if(!voiceOn||!canSpeak)return;
+ try{if(flush)speechSynthesis.cancel();const u=new SpeechSynthesisUtterance(t);dealerV=dealerV||pickVoice();
+  if(dealerV){u.voice=dealerV;u.lang=dealerV.lang;}else u.lang='en-GB';
+  u.pitch=1.2;u.rate=.95;u.volume=1;speechSynthesis.speak(u);}catch(e){}
+}
+function voiceUI(){const b=$('voice');b.setAttribute('aria-pressed',String(voiceOn));b.setAttribute('aria-label','Dealer voice '+(voiceOn?'on':'off'));$('vwave').style.display=voiceOn?'':'none';$('vx').style.display=voiceOn?'none':'';}
+$('voice').onclick=()=>{
+ if(!canSpeak){$('msg').textContent='Your browser has no voice support.';return;}
+ voiceOn=!voiceOn;voiceUI();save();
+ if(voiceOn){say('Welcome to Afsoon Roulette. Place your bets, please.',true);$('msg').textContent='Dealer voice on';}else{speechSynthesis.cancel();$('msg').textContent='Dealer voice off';}
+};
+const chipsWord=v=>fmt(v)+(v===1?' chip':' chips');
 let balance=1000,bets={},stack=[],lastBets=null,chip=5,history=[];
-try{const sv=JSON.parse(localStorage.getItem('afsoon-roulette')||'{}');if(typeof sv.bal==='number'&&sv.bal>=1)balance=sv.bal;if(Array.isArray(sv.hist))history=sv.hist.slice(0,16);muted=!!sv.muted;}catch(e){}
-function save(){try{localStorage.setItem('afsoon-roulette',JSON.stringify({bal:balance,hist:history,muted}))}catch(e){}}
-sndUI();
+try{const sv=JSON.parse(localStorage.getItem('afsoon-roulette')||'{}');if(typeof sv.bal==='number'&&sv.bal>=1)balance=sv.bal;if(Array.isArray(sv.hist))history=sv.hist.slice(0,16);muted=!!sv.muted;voiceOn=!!sv.voice&&canSpeak;}catch(e){}
+let session=0;try{session=+sessionStorage.getItem('afsoon-roulette-session')||0;}catch(e){}
+function save(){try{localStorage.setItem('afsoon-roulette',JSON.stringify({bal:balance,hist:history,muted,voice:voiceOn}))}catch(e){}}
+sndUI();voiceUI();
 if(history.length)$('hist').innerHTML=history.map(h=>`<span class="${colorOf(h)}">${h}</span>`).join('');
 const chipBox=$('chips');
 chipBox.innerHTML=DENOMS.map(d=>`<button class="chip${d.v===chip?' sel':''}" style="--c:${d.c}" data-v="${d.v}" aria-label="Chip ${d.v}"><span>${d.v}</span></button>`).join('');
@@ -442,6 +474,8 @@ const total=()=>Object.values(bets).reduce((s,b)=>s+b.amt,0);
 const msg=s=>$('msg').textContent=s;
 function chipColor(a){let c=DENOMS[0].c;DENOMS.forEach(d=>{if(a>=d.v)c=d.c;});return c;}
 const short=a=>a>=1000?(a/1000).toFixed(a%1000?1:0)+'k':a;
+const signed=v=>(v>0?'+':v<0?'−':'')+fmt(Math.abs(v));
+function showSigned(id,v){const e=$(id);e.textContent=signed(v);e.className=v>0?'pos':v<0?'neg':'';}
 function render(){
  gChips.innerHTML='';
  Object.values(bets).forEach(b=>{const g=el('g',{transform:`translate(${b.cx},${b.cy})`,'data-k':b.key},gChips);const col=chipColor(b.amt);
@@ -471,7 +505,7 @@ function doSpin(){
  if(spinning)return;
  if(!total()){msg('Place your bets first.');return;}
  audioInit();if(AC&&AC.state==='suspended')AC.resume();
- spinning=true;msg('No more bets…');render();
+ spinning=true;msg('No more bets…');render();say('No more bets.',true);
  if(document.body.classList.contains('app')){document.querySelector('.wheel').classList.add('zoom');$('scrim').classList.add('on');}
  else{const wr=$('wheel').getBoundingClientRect();if(wr.top<0||wr.bottom>innerHeight)$('wheel').scrollIntoView({behavior:'smooth',block:'center'});}
  const i=rand37(),n=ORDER[i];
@@ -501,28 +535,40 @@ function settle(n){
  el('circle',{r:22,fill:'none',stroke:'#f6dc8e','stroke-width':4},g);
  el('circle',{r:9,fill:'#f6dc8e',stroke:'#6b4a12','stroke-width':2},g);
  msg(`${n} ${c}`);
- setTimeout(()=>gChips.querySelectorAll('g[data-k]').forEach(x=>x.classList.add(winKeys.includes(x.dataset.k)?'winchip':'lose')),400);
- // 2. flash with the amount won
+ say(`${n}, ${c}.`,true);
+ session+=net;try{sessionStorage.setItem('afsoon-roulette-session',session)}catch(e){}
  setTimeout(()=>{
-  const f=$('flash');f.className='flash'+(won?' win':'');void f.offsetWidth;
-  f.innerHTML=won?`<div class="fl"><small>You win</small><b>${fmt(won)}</b></div>`:`<div class="fl lose"><small>No win</small><b>−${fmt(staked)}</b></div>`;
-  if(won)chime();$('win').textContent=fmt(won);
+  gChips.querySelectorAll('g[data-k]').forEach(x=>x.classList.add(winKeys.includes(x.dataset.k)?'winchip':'lose'));
+  // profit of each winning bet, shown above its chip
+  Object.values(bets).forEach(b=>{if(!b.nums.includes(n))return;const pr=b.amt*(36/b.nums.length-1);
+   const g=el('g',{transform:`translate(${b.cx},${b.cy})`+(vertical?' rotate(-90)':'')},gChips);
+   el('text',{class:'profit',y:-20,'text-anchor':'middle'},g).textContent='+'+fmt(pr);});
+ },400);
+ // 2. flash with the real result: what you got back minus what you bet
+ setTimeout(()=>{
+  const f=$('flash');f.className='flash'+(net>0?' win':'');void f.offsetWidth;
+  f.innerHTML=net>0?`<div class="fl"><small>You win</small><b>+${fmt(net)}</b></div>`
+   :net<0?`<div class="fl lose"><small>${won?'You lose':'No win'}</small><b>−${fmt(-net)}</b></div>`
+   :`<div class="fl even"><small>Your bets are even</small><b>±0</b></div>`;
+  if(net>0)chime();showSigned('win',net);showSigned('ses',session);
+  say((net>0?`You win ${chipsWord(net)}.`:net<0?`You lose ${chipsWord(-net)}.`:'Your bets are even.')+' '+
+      (session>0?`This session you are up ${chipsWord(session)}.`:session<0?`This session you are down ${chipsWord(-session)}.`:'This session you are even.'));
  },1000);
  // 3. balance goes up (win) or down (loss)
  setTimeout(()=>{
   $('flash').innerHTML='';document.querySelector('.wheel').classList.remove('zoom');$('scrim').classList.remove('on');
-  const st=$('balStat');st.classList.add(won?'up':'down');setTimeout(()=>st.classList.remove('up','down'),1600);
-  if(won){floatDelta(won);countBalance(balance+won,1100);}else floatDelta(-staked);
-  msg(won?(net>=0?`You won ${fmt(won)} · net +${fmt(net)}`:`You won ${fmt(won)} · net −${fmt(-net)}`):`No win this time: ${fmt(staked)} lost`);
+  const st=$('balStat');if(net)st.classList.add(net>0?'up':'down');setTimeout(()=>st.classList.remove('up','down'),1600);
+  if(net)floatDelta(net);if(won)countBalance(balance+won,1100);
+  msg((net>0?`You win +${fmt(net)}`:net<0?`You lose −${fmt(-net)}`:'Even: you get your bets back')+` · session ${signed(session)}`);
  },2700);
  // 4. table cleared for the next round
  setTimeout(()=>{
   bets={};stack=[];spinning=false;
   if(balance<1){balance=1000;msg('Out of chips: the house gives you 1,000 new ones.');}
-  save();render();
+  save();render();say('Place your bets, please.');
  },4000);
 }
-$('spin').onclick=doSpin;READY=true;layout();
+$('spin').onclick=doSpin;READY=true;layout();showSigned('ses',session);
 addEventListener('keydown',e=>{if(e.code==='Space'&&!/INPUT|TEXTAREA/.test(e.target.tagName)){e.preventDefault();doSpin();}});
 render();
 }
@@ -536,7 +582,7 @@ render();
 <ul><li>Straight up – one number: pays 35 to 1</li><li>Split – two numbers next to each other (tap the line between them): 17 to 1</li><li>Street – a row of three numbers (tap the bottom edge of the row): 11 to 1</li><li>Corner – four numbers (tap the point where they meet): 8 to 1</li><li>First four – 0, 1, 2 and 3: 8 to 1</li><li>Six line – two rows, six numbers: 5 to 1</li><li>Column (2 to 1) or dozen (1st, 2nd, 3rd 12): 2 to 1</li><li>Red or black, even or odd, 1 to 18 or 19 to 36: 1 to 1</li></ul>
 <p>European roulette has only one zero, so the house edge is 2.7% – lower than American roulette with its extra double zero. If you run out of chips, the house gives you 1,000 new ones.</p>
 <h3>Tips</h3>
-<ul><li>Even-money bets (red, black, odd, even, low, high) win almost half the time; a straight-up number wins rarely but pays 35 times your chip.</li><li>Every spin is random: past numbers do not change the next one.</li><li>On a computer: Space = spin, right-click a bet to remove it.</li></ul>
+<ul><li>Even-money bets (red, black, odd, even, low, high) win almost half the time; a straight-up number wins rarely but pays 35 times your chip.</li><li>Every spin is random: past numbers do not change the next one.</li><li>Tap the dealer button at the top to hear the dealer: she calls the winning number, how much you won or lost that round, and your total for this session.</li><li>On a computer: Space = spin, right-click a bet to remove it.</li></ul>
 <h3>More free games</h3>
 <ul class="more"><li><a href="/blackjack/">Afsoon Blackjack</a></li><li><a href="/poker/">Afsoon Poker: Texas Hold&#x27;em</a></li><li><a href="/solitaire/">Afsoon Solitaire</a></li><li><a href="/hokm/">Hokm</a></li><li><a href="/nard/">Nard: Persian Backgammon</a></li><li><a href="/chess/">Shatranj: Persian Chess</a></li><li><a href="/water-sort/">Afsoon Water Sort</a></li><li><a href="/bubble-shooter/">Afsoon Bubble Shooter</a></li><li><a href="/kashi-blocks/">Kashi Blocks</a></li><li><a href="/sudoku/">Afsoon Sudoku</a></li><li><a href="/mahjong/">Afsoon Mahjong</a></li><li><a href="/history-puzzles/">History Building Puzzles</a></li><li><a href="/alchemy/">Afsoon Alchemy</a></li><li><a href="/anshan-run/">Anshan Run</a></li><li><a href="/chariot-race/">Chariot Race</a></li><li><a href="/river-ride/">River Ride</a></li><li><a href="/chogan/">Chogan: Paddle Ball</a></li></ul>
 <p style="margin-top:20px"><a href="/">&larr; All games on Afsoon Games</a></p>
