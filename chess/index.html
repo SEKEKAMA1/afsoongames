@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<meta name="theme-color" content="#071a22">
+<meta name="theme-color" content="#1f140a">
 <link rel="icon" type="image/png" href="/img/favicon-64.png?v=5">
 <link rel="apple-touch-icon" href="/img/apple-touch-icon.png?v=5">
 <title>Shatranj: Persian Chess – Play Chess Online Free | Afsoon Games</title>
@@ -12,11 +12,11 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@600;700&family=Nunito:wght@600;700;800&display=swap" rel="stylesheet">
 <style>
-:root{--bg:#071a22;--line:rgba(212,165,44,.35);--gold:#d4a52c;--gold-2:#f6d999;--text:#f1f6f5;--muted:#9fbcc0;
+:root{--bg:#1f140a;--line:rgba(212,165,44,.35);--gold:#d4a52c;--gold-2:#f6d999;--text:#f1f6f5;--muted:#bcafa3;
   --display:Cinzel,Georgia,serif;--ui:Nunito,system-ui,sans-serif;color-scheme:dark;--sq:min(11vw,9.2vh,68px)}
 *{box-sizing:border-box}
 html,body{margin:0;min-height:100%}
-body{background:radial-gradient(90% 80% at 50% 40%,#123a4a 0%,var(--bg) 70%);background-attachment:fixed;color:var(--text);font-family:var(--ui);-webkit-tap-highlight-color:transparent;
+body{background:radial-gradient(90% 80% at 50% 40%,#432d19 0%,var(--bg) 70%);background-attachment:fixed;color:var(--text);font-family:var(--ui);-webkit-tap-highlight-color:transparent;
   padding-left:max(8px,env(safe-area-inset-left,0px));padding-right:max(8px,env(safe-area-inset-right,0px))}
 [hidden]{display:none!important}
 button{font:inherit;color:inherit;cursor:pointer}
@@ -30,17 +30,17 @@ button:focus-visible,a:focus-visible{outline:2px solid var(--gold-2);outline-off
 .cap{width:calc(var(--sq)*8 + 24px);min-height:26px;display:flex;align-items:center;gap:6px;font-weight:800;color:var(--muted);font-size:.85rem}
 .cap .pcs{font-size:1.25rem;letter-spacing:-.12em;line-height:1}
 .cap .nm{margin-right:auto}
-.frame{padding:12px;border-radius:14px;background:linear-gradient(135deg,#0f5f6a,#0a3f47);border:2px solid var(--gold);box-shadow:0 14px 40px rgba(0,0,0,.45),inset 0 0 0 4px rgba(212,165,44,.25)}
+.frame{padding:12px;border-radius:14px;background:linear-gradient(135deg,#5f3a1a,#3f2712);border:2px solid var(--gold);box-shadow:0 14px 40px rgba(0,0,0,.45),inset 0 0 0 4px rgba(212,165,44,.25)}
 .board{display:grid;grid-template-columns:repeat(8,var(--sq));grid-template-rows:repeat(8,var(--sq));border:2px solid #d4a52c;position:relative}
 .s{position:relative;display:flex;align-items:center;justify-content:center;cursor:pointer;user-select:none}
 .s.l{background:#fbf3df}
-.s.d{background:#2aa6a0}
+.s.d{background:#966539}
 .s.last.l{background:#f3dc8f}.s.last.d{background:#8fc48a}
 .s.sel{box-shadow:inset 0 0 0 4px #ffe08a}
 .s.chk{background:radial-gradient(circle,#ff5a4a 0%,#c0392b 45%,transparent 75%)!important}
 .s .co{position:absolute;font:800 calc(var(--sq)*.17) var(--ui);opacity:.75;pointer-events:none}
 .s .co.f{right:3px;bottom:1px}.s .co.r{left:3px;top:1px}
-.s.l .co{color:#1a7f7a}.s.d .co{color:#fbf3df}
+.s.l .co{color:#724a27}.s.d .co{color:#fbf3df}
 .pc{font-size:calc(var(--sq)*.8);line-height:1;pointer-events:none;font-family:"Segoe UI Symbol","DejaVu Sans","Noto Sans Symbols 2",serif;font-variant-emoji:text;transition:transform .15s}
 .pc.w{color:#fff8e6;text-shadow:0 0 1px #3a2a10,0 0 1px #3a2a10,1px 1px 0 #3a2a10,-1px -1px 0 #3a2a10,1px -1px 0 #3a2a10,-1px 1px 0 #3a2a10,0 3px 4px rgba(0,0,0,.35)}
 .pc.b{color:#8e2a2a;text-shadow:0 0 1px #f6d999,1px 1px 0 #d4a52c,-1px -1px 0 #d4a52c,1px -1px 0 #d4a52c,-1px 1px 0 #d4a52c,0 3px 4px rgba(0,0,0,.35)}
@@ -48,20 +48,20 @@ button:focus-visible,a:focus-visible{outline:2px solid var(--gold-2);outline-off
 .dot{position:absolute;width:30%;height:30%;border-radius:50%;background:rgba(30,40,40,.28);pointer-events:none}
 .dot.cap{width:86%;height:86%;background:transparent;border:5px solid rgba(30,40,40,.28)}
 .bar{display:flex;gap:8px;flex-wrap:wrap;justify-content:center}
-.btn{height:44px;padding:0 20px;border-radius:22px;border:1px solid var(--line);background:rgba(10,40,50,.8);font-weight:800;display:inline-flex;align-items:center;gap:7px}
+.btn{height:44px;padding:0 20px;border-radius:22px;border:1px solid var(--line);background:rgba(45,29,15,.8);font-weight:800;display:inline-flex;align-items:center;gap:7px}
 .btn:disabled{opacity:.4;cursor:default}
 .btn.primary{background:var(--gold);color:#2a1c06;border-color:var(--gold)}
 .btn.primary:hover:not(:disabled){background:var(--gold-2)}
 .btn.on{background:var(--gold);color:#2a1c06}
 .btn svg{width:17px;height:17px}
 .status{min-height:1.5em;font-weight:800;text-align:center;color:var(--gold-2)}
-.ov{position:fixed;inset:0;z-index:50;background:rgba(3,12,16,.72);display:grid;place-items:center;padding:20px;backdrop-filter:blur(3px)}.ov-home{position:absolute;top:max(12px,env(safe-area-inset-top));right:max(12px,env(safe-area-inset-right));z-index:2;display:inline-flex;align-items:center;gap:6px;height:40px;padding:0 14px;border-radius:12px;border:1px solid rgba(230,184,92,.6);background:rgba(12,11,23,.85);color:#e6b85c;font:700 14px/1 system-ui,sans-serif;text-decoration:none}.ov-home:hover{background:#e6b85c;color:#0c0b17}.ov-home svg{width:18px;height:18px}
-.dlg{max-height:100%;overflow:auto;width:min(440px,100%);background:linear-gradient(180deg,#14404d,#0b2630);border:1px solid rgba(212,165,44,.5);border-radius:20px;padding:22px;text-align:center;display:flex;flex-direction:column;gap:12px;box-shadow:0 30px 80px rgba(0,0,0,.6);animation:in .3s cubic-bezier(.2,.8,.3,1.2)}
+.ov{position:fixed;inset:0;z-index:50;background:rgba(14,9,5,.72);display:grid;place-items:center;padding:20px;backdrop-filter:blur(3px)}.ov-home{position:absolute;top:max(12px,env(safe-area-inset-top));right:max(12px,env(safe-area-inset-right));z-index:2;display:inline-flex;align-items:center;gap:6px;height:40px;padding:0 14px;border-radius:12px;border:1px solid rgba(230,184,92,.6);background:rgba(12,11,23,.85);color:#e6b85c;font:700 14px/1 system-ui,sans-serif;text-decoration:none}.ov-home:hover{background:#e6b85c;color:#0c0b17}.ov-home svg{width:18px;height:18px}
+.dlg{max-height:100%;overflow:auto;width:min(440px,100%);background:linear-gradient(180deg,#462f1b,#2b1d10);border:1px solid rgba(212,165,44,.5);border-radius:20px;padding:22px;text-align:center;display:flex;flex-direction:column;gap:12px;box-shadow:0 30px 80px rgba(0,0,0,.6);animation:in .3s cubic-bezier(.2,.8,.3,1.2)}
 @keyframes in{from{transform:scale(.85);opacity:0}}
 .dlg h2{font-family:var(--display);margin:0;color:var(--gold-2);font-size:1.6rem}
 .dlg h3{margin:4px 0 0;font-size:.8rem;letter-spacing:.18em;color:var(--gold);text-transform:uppercase}
-.dlg p{margin:0;color:#d9e8e8;line-height:1.55}
-.dlg ul{text-align:left;margin:0;padding-left:20px;color:#cfe0e0;line-height:1.5;font-size:.92rem}
+.dlg p{margin:0;color:#e6e0db;line-height:1.55}
+.dlg ul{text-align:left;margin:0;padding-left:20px;color:#ded7d1;line-height:1.5;font-size:.92rem}
 .btns{display:flex;gap:8px;justify-content:center;flex-wrap:wrap}
 .promo{display:flex;gap:8px;justify-content:center}
 .promo button{width:64px;height:64px;border-radius:12px;background:#fbf3df;border:2px solid var(--gold);display:flex;align-items:center;justify-content:center}

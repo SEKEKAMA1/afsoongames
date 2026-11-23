@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<meta name="theme-color" content="#071a22">
+<meta name="theme-color" content="#221a07">
 <link rel="icon" type="image/png" href="/img/favicon-64.png?v=5">
 <link rel="apple-touch-icon" href="/img/apple-touch-icon.png?v=5">
 <title>Afsoon Sudoku – Free Sudoku Puzzles Online | Afsoon Games</title>
@@ -12,11 +12,11 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@600;700&family=Nunito:wght@600;700;800&display=swap" rel="stylesheet">
 <style>
-:root{--bg:#071a22;--line:rgba(212,165,44,.35);--gold:#d4a52c;--gold-2:#f6d999;--text:#f1f6f5;--muted:#9fbcc0;
+:root{--bg:#221a07;--line:rgba(212,165,44,.35);--gold:#d4a52c;--gold-2:#f6d999;--text:#f1f6f5;--muted:#c0b69f;
   --display:Cinzel,Georgia,serif;--ui:Nunito,system-ui,sans-serif;color-scheme:dark;--cell:min(10.2vw,6.6vh,58px)}
 *{box-sizing:border-box}
 html,body{margin:0;min-height:100%}
-body{background:radial-gradient(90% 80% at 50% 40%,#123a4a 0%,var(--bg) 70%);background-attachment:fixed;color:var(--text);font-family:var(--ui);-webkit-tap-highlight-color:transparent;
+body{background:radial-gradient(90% 80% at 50% 40%,#4a3912 0%,var(--bg) 70%);background-attachment:fixed;color:var(--text);font-family:var(--ui);-webkit-tap-highlight-color:transparent;
   padding-left:max(8px,env(safe-area-inset-left,0px));padding-right:max(8px,env(safe-area-inset-right,0px))}
 [hidden]{display:none!important}
 button{font:inherit;color:inherit;cursor:pointer}
@@ -29,45 +29,45 @@ button:focus-visible,a:focus-visible{outline:2px solid var(--gold-2);outline-off
 .ib svg{width:18px;height:18px}
 .info{width:calc(var(--cell)*9 + 20px);display:flex;justify-content:space-between;font-weight:800;font-size:.85rem;color:var(--muted)}
 .info b{color:var(--gold-2);font-variant-numeric:tabular-nums}
-.frame{padding:8px;border-radius:14px;background:linear-gradient(135deg,#0f5f6a,#0a3f47);border:2px solid var(--gold);box-shadow:0 14px 40px rgba(0,0,0,.45)}
+.frame{padding:8px;border-radius:14px;background:linear-gradient(135deg,#6a4f0f,#47350a);border:2px solid var(--gold);box-shadow:0 14px 40px rgba(0,0,0,.45)}
 .grid{display:grid;grid-template-columns:repeat(9,var(--cell));grid-template-rows:repeat(9,var(--cell));background:#d4a52c;gap:1px;border:2px solid #d4a52c}
-.c{background:#fbf3df;display:flex;align-items:center;justify-content:center;font-size:calc(var(--cell)*.58);font-weight:800;color:#0f5f6a;cursor:pointer;user-select:none;position:relative}
+.c{background:#fbf3df;display:flex;align-items:center;justify-content:center;font-size:calc(var(--cell)*.58);font-weight:800;color:#6a4f0f;cursor:pointer;user-select:none;position:relative}
 .c.given{color:#1d2a36}
 .c.bx{background:#f2e6c6}
-.c.rel{background:#d8efe9}
-.c.same{background:#a7dcd3}
-.c.sel{background:#2aa6a0;color:#fff}
+.c.rel{background:#efe8d8}
+.c.same{background:#dccca7}
+.c.sel{background:#a6812a;color:#fff}
 .c.sel.given{color:#fff}
 .c.err{color:#c0392b}
 .c.sel.err{color:#ffd0c8}
 .c.hint{animation:glow .8s ease}
 @keyframes glow{50%{background:#ffe08a}}
 .c.vr{border-right:2px solid #d4a52c}.c.hr{border-bottom:2px solid #d4a52c}
-.notes{position:absolute;inset:2px;display:grid;grid-template-columns:repeat(3,1fr);grid-template-rows:repeat(3,1fr);font-size:calc(var(--cell)*.22);font-weight:800;color:#5a7a80;line-height:1}
+.notes{position:absolute;inset:2px;display:grid;grid-template-columns:repeat(3,1fr);grid-template-rows:repeat(3,1fr);font-size:calc(var(--cell)*.22);font-weight:800;color:#80755a;line-height:1}
 .notes span{display:flex;align-items:center;justify-content:center}
-.c.sel .notes{color:#e6fffb}
+.c.sel .notes{color:#fff8e6}
 .tools{display:flex;gap:6px;flex-wrap:wrap;justify-content:center}
-.tool{width:66px;height:54px;border-radius:12px;border:1px solid var(--line);background:rgba(10,40,50,.8);font-weight:800;font-size:.72rem;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;position:relative}
+.tool{width:66px;height:54px;border-radius:12px;border:1px solid var(--line);background:rgba(50,38,10,.8);font-weight:800;font-size:.72rem;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;position:relative}
 .tool svg{width:20px;height:20px}
 .tool.on{background:var(--gold);color:#2a1c06}
 .tool .badge{position:absolute;top:-6px;right:-6px;background:#c0504a;color:#fff;border-radius:10px;font-size:.66rem;padding:1px 6px}
 .pad{display:grid;grid-template-columns:repeat(9,1fr);gap:5px;width:calc(var(--cell)*9 + 20px)}
-.pad button{height:min(13vw,56px);border-radius:12px;border:1px solid var(--line);background:#fbf3df;color:#0f5f6a;font-size:min(7vw,1.6rem);font-weight:800;display:flex;flex-direction:column;align-items:center;justify-content:center;line-height:1}
+.pad button{height:min(13vw,56px);border-radius:12px;border:1px solid var(--line);background:#fbf3df;color:#6a4f0f;font-size:min(7vw,1.6rem);font-weight:800;display:flex;flex-direction:column;align-items:center;justify-content:center;line-height:1}
 .pad button small{font-size:.55rem;color:#7a8f92;margin-top:2px}
 .pad button.done{opacity:.3}
 .pad button:active{transform:scale(.94)}
 .status{min-height:1.4em;font-weight:800;text-align:center;color:var(--gold-2)}
-.btn{height:44px;padding:0 20px;border-radius:22px;border:1px solid var(--line);background:rgba(10,40,50,.8);font-weight:800;display:inline-flex;align-items:center;gap:7px}
+.btn{height:44px;padding:0 20px;border-radius:22px;border:1px solid var(--line);background:rgba(50,38,10,.8);font-weight:800;display:inline-flex;align-items:center;gap:7px}
 .btn.primary{background:var(--gold);color:#2a1c06;border-color:var(--gold)}
 .btn.primary:hover{background:var(--gold-2)}
 .btn.on{background:var(--gold);color:#2a1c06}
-.ov{position:fixed;inset:0;z-index:50;background:rgba(3,12,16,.72);display:grid;place-items:center;padding:20px;backdrop-filter:blur(3px)}.ov-home{position:absolute;top:max(12px,env(safe-area-inset-top));right:max(12px,env(safe-area-inset-right));z-index:2;display:inline-flex;align-items:center;gap:6px;height:40px;padding:0 14px;border-radius:12px;border:1px solid rgba(230,184,92,.6);background:rgba(12,11,23,.85);color:#e6b85c;font:700 14px/1 system-ui,sans-serif;text-decoration:none}.ov-home:hover{background:#e6b85c;color:#0c0b17}.ov-home svg{width:18px;height:18px}
-.dlg{max-height:100%;overflow:auto;width:min(440px,100%);background:linear-gradient(180deg,#14404d,#0b2630);border:1px solid rgba(212,165,44,.5);border-radius:20px;padding:22px;text-align:center;display:flex;flex-direction:column;gap:12px;box-shadow:0 30px 80px rgba(0,0,0,.6);animation:in .3s cubic-bezier(.2,.8,.3,1.2)}
+.ov{position:fixed;inset:0;z-index:50;background:rgba(16,12,3,.72);display:grid;place-items:center;padding:20px;backdrop-filter:blur(3px)}.ov-home{position:absolute;top:max(12px,env(safe-area-inset-top));right:max(12px,env(safe-area-inset-right));z-index:2;display:inline-flex;align-items:center;gap:6px;height:40px;padding:0 14px;border-radius:12px;border:1px solid rgba(230,184,92,.6);background:rgba(12,11,23,.85);color:#e6b85c;font:700 14px/1 system-ui,sans-serif;text-decoration:none}.ov-home:hover{background:#e6b85c;color:#0c0b17}.ov-home svg{width:18px;height:18px}
+.dlg{max-height:100%;overflow:auto;width:min(440px,100%);background:linear-gradient(180deg,#4d3c14,#30250b);border:1px solid rgba(212,165,44,.5);border-radius:20px;padding:22px;text-align:center;display:flex;flex-direction:column;gap:12px;box-shadow:0 30px 80px rgba(0,0,0,.6);animation:in .3s cubic-bezier(.2,.8,.3,1.2)}
 @keyframes in{from{transform:scale(.85);opacity:0}}
 .dlg h2{font-family:var(--display);margin:0;color:var(--gold-2);font-size:1.6rem}
 .dlg h3{margin:4px 0 0;font-size:.8rem;letter-spacing:.18em;color:var(--gold);text-transform:uppercase}
-.dlg p{margin:0;color:#d9e8e8;line-height:1.55}
-.dlg ul{text-align:left;margin:0;padding-left:20px;color:#cfe0e0;line-height:1.5;font-size:.9rem}
+.dlg p{margin:0;color:#e8e3d9;line-height:1.55}
+.dlg ul{text-align:left;margin:0;padding-left:20px;color:#e0dbcf;line-height:1.5;font-size:.9rem}
 .btns{display:flex;gap:8px;justify-content:center;flex-wrap:wrap}
 .credit{font-size:.74rem;color:var(--muted);text-align:center;margin:0}.credit a{color:var(--gold)}
 @media (max-width:560px){.brand{font-size:1rem}.tool{width:58px;height:50px}.frame{padding:5px}}

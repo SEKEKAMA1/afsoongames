@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, user-scalable=no">
-<meta name="theme-color" content="#0b0716">
+<meta name="theme-color" content="#160907">
 <link rel="icon" type="image/png" href="/img/favicon-64.png?v=5">
 <link rel="apple-touch-icon" href="/img/apple-touch-icon.png?v=5">
 <title>Chariot Race – Free Online Racing Game | Afsoon Games</title>
@@ -13,7 +13,7 @@
 <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@600;700&family=Nunito:wght@600;700;800&display=swap" rel="stylesheet">
 <style>
 /* Layout: track picker, then a full-window race canvas with a light HUD on top. */
-:root{--night:#0b0716;--panel:#1b1533;--line:rgba(230,184,92,.28);--gold:#e6b85c;--gold-2:#f6d999;--text:#f3eefc;--muted:#a69cc2;
+:root{--night:#160907;--panel:#1b1533;--line:rgba(230,184,92,.28);--gold:#e6b85c;--gold-2:#f6d999;--text:#f3eefc;--muted:#a69cc2;
   --display:Cinzel,Georgia,serif;--ui:Nunito,system-ui,sans-serif;color-scheme:dark}
 *{box-sizing:border-box}
 html,body{margin:0;height:100%;background:var(--night);color:var(--text);font-family:var(--ui);-webkit-tap-highlight-color:transparent;overscroll-behavior:none}
@@ -21,7 +21,7 @@ html,body{margin:0;height:100%;background:var(--night);color:var(--text);font-fa
 button{font:inherit;color:inherit;cursor:pointer}
 button:focus-visible,a:focus-visible{outline:2px solid var(--gold-2);outline-offset:2px}
 #pick{min-height:100%;padding:12px max(14px,env(safe-area-inset-right,0px)) 24px max(14px,env(safe-area-inset-left,0px));padding-top:max(12px,env(safe-area-inset-top,0px));
-  background:radial-gradient(100% 70% at 50% 0%,#3a2346 0%,var(--night) 60%)}
+  background:radial-gradient(100% 70% at 50% 0%,#462823 0%,var(--night) 60%)}
 .wrap{max-width:1100px;margin:0 auto;display:flex;flex-direction:column;gap:14px}
 .top{display:flex;align-items:center;gap:10px}
 .brand{font-family:var(--display);font-weight:700;letter-spacing:.08em;font-size:1.15rem;margin-right:auto;color:var(--gold-2)}
@@ -66,7 +66,7 @@ body.racing .afs-info{display:none}
 .hintTouch{position:absolute;left:50%;top:34%;transform:translateX(-50%);background:rgba(0,0,0,.5);border-radius:12px;padding:6px 12px;font-weight:800;font-size:13px;pointer-events:none;transition:opacity .6s}
 .count{position:absolute;inset:0;display:grid;place-items:center;font-family:var(--display);font-size:clamp(70px,18vw,160px);color:#fff4d0;text-shadow:0 6px 30px rgba(0,0,0,.6);pointer-events:none}
 .count.go{color:#ffd36b}
-.ov{position:fixed;inset:0;z-index:50;background:rgba(6,4,14,.72);display:grid;place-items:center;padding:20px}
+.ov{position:fixed;inset:0;z-index:50;background:rgba(14,5,4,.72);display:grid;place-items:center;padding:20px}
 .dlg{max-height:100%;overflow:auto;width:min(420px,100%);background:linear-gradient(180deg,#2a1d44,#17112d);border:1px solid rgba(230,184,92,.45);border-radius:20px;padding:22px;text-align:center;display:flex;flex-direction:column;gap:12px;box-shadow:0 30px 80px rgba(0,0,0,.6);animation:in .3s cubic-bezier(.2,.8,.3,1.2)}
 @keyframes in{from{transform:scale(.85);opacity:0}}
 .dlg h2{font-family:var(--display);margin:0;color:var(--gold-2);font-size:1.6rem}
@@ -337,7 +337,7 @@ function render(){
     if(s.index===Math.floor(finishZ/SEG)||s.index===Math.floor(finishZ/SEG)+1){poly(a.x-a.w,a.y,a.x+a.w,a.y,b.x+b.w,b.y,b.x-b.w,b.y,s.index%2?'#fff':'#222')}
     maxy=b.y;
   }
-  if(t.night){ctx.fillStyle='rgba(10,8,40,.25)';ctx.fillRect(0,0,W,H)}
+  if(t.night){ctx.fillStyle='rgba(40,12,8,.25)';ctx.fillRect(0,0,W,H)}
   // sprites far to near
   for(let n=DRAW-1;n>0;n--){
     const s=segs[(base.index+n)%segs.length];if(s.p1.camera.z<=camDepth)continue;

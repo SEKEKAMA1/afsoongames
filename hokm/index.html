@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<meta name="theme-color" content="#071a22">
+<meta name="theme-color" content="#072217">
 <link rel="icon" type="image/png" href="/img/favicon-64.png?v=5">
 <link rel="apple-touch-icon" href="/img/apple-touch-icon.png?v=5">
 <title>Hokm – Play the Persian Card Game Online Free | Afsoon Games</title>
@@ -12,12 +12,12 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@600;700&family=Nunito:wght@600;700;800&display=swap" rel="stylesheet">
 <style>
-:root{--bg:#071a22;--line:rgba(212,165,44,.35);--gold:#d4a52c;--gold-2:#f6d999;--text:#f1f6f5;--muted:#9fbcc0;
+:root{--bg:#072217;--line:rgba(212,165,44,.35);--gold:#d4a52c;--gold-2:#f6d999;--text:#f1f6f5;--muted:#9fc0b2;
   --display:Cinzel,Georgia,serif;--ui:Nunito,system-ui,sans-serif;color-scheme:dark;
   --cw:min(19vw,12.5vh,124px);--ch:calc(var(--cw)*1.42);--sw:calc(var(--cw)*.42);--sh:calc(var(--sw)*1.42)}
 *{box-sizing:border-box}
 html,body{margin:0;height:100%}
-body{background:radial-gradient(90% 80% at 50% 40%,#123a4a 0%,var(--bg) 70%);color:var(--text);font-family:var(--ui);-webkit-tap-highlight-color:transparent;overflow-x:hidden}
+body{background:radial-gradient(90% 80% at 50% 40%,#124a33 0%,var(--bg) 70%);color:var(--text);font-family:var(--ui);-webkit-tap-highlight-color:transparent;overflow-x:hidden}
 [hidden]{display:none!important}
 button{font:inherit;color:inherit;cursor:pointer}
 button:focus-visible,a:focus-visible{outline:2px solid var(--gold-2);outline-offset:2px}
@@ -31,13 +31,13 @@ button:focus-visible,a:focus-visible{outline:2px solid var(--gold-2);outline-off
 .pill{background:rgba(255,255,255,.06);border:1px solid var(--line);border-radius:12px;padding:4px 10px;white-space:nowrap;font-variant-numeric:tabular-nums}
 .pill b{color:var(--gold-2)}
 .pill .red{color:#ff7b6b}
-.table{flex:1;min-height:0;position:relative;border-radius:22px;background:radial-gradient(70% 70% at 50% 45%,#1b8a86 0%,#0f5f6a 60%,#0a3f47 100%);border:3px solid var(--gold);box-shadow:inset 0 0 0 6px rgba(212,165,44,.18),inset 0 0 60px rgba(0,0,0,.35),0 14px 40px rgba(0,0,0,.4);overflow:hidden}
+.table{flex:1;min-height:0;position:relative;border-radius:22px;background:radial-gradient(70% 70% at 50% 45%,#1b8a5c 0%,#0f6a44 60%,#0a472e 100%);border:3px solid var(--gold);box-shadow:inset 0 0 0 6px rgba(212,165,44,.18),inset 0 0 60px rgba(0,0,0,.35),0 14px 40px rgba(0,0,0,.4);overflow:hidden}
 .table::before{content:"";position:absolute;inset:14%;border-radius:50%;border:2px dashed rgba(246,217,153,.18);pointer-events:none}
 .seat{position:absolute;display:flex;flex-direction:column;align-items:center;gap:4px}
 .seat.n{top:8px;left:50%;transform:translateX(-50%)}
 .seat.w{left:8px;top:42%;transform:translateY(-50%)}
 .seat.e{right:8px;top:42%;transform:translateY(-50%)}
-.tag{font-weight:800;font-size:.8rem;background:rgba(5,25,30,.7);border:1px solid var(--line);border-radius:10px;padding:2px 8px;white-space:nowrap}
+.tag{font-weight:800;font-size:.8rem;background:rgba(5,30,20,.7);border:1px solid var(--line);border-radius:10px;padding:2px 8px;white-space:nowrap}
 .tag.turn{background:var(--gold);color:#2a1c06}
 .tag .crown{color:var(--gold-2)}.tag.turn .crown{color:#7a4b00}
 .backs{position:relative;height:var(--sh);display:flex}
@@ -67,22 +67,22 @@ button:focus-visible,a:focus-visible{outline:2px solid var(--gold-2);outline-off
 .hand .card.ok:hover{transform:translateY(-20px)}
 .hand .card.no{filter:brightness(.62) saturate(.6);cursor:default}
 .mytag{display:flex;justify-content:center}
-.trumpbox{position:absolute;right:10px;bottom:10px;text-align:center;font-weight:800;font-size:.72rem;letter-spacing:.12em;color:var(--gold-2);background:rgba(5,25,30,.65);border:1px solid var(--line);border-radius:12px;padding:5px 9px}
+.trumpbox{position:absolute;right:10px;bottom:10px;text-align:center;font-weight:800;font-size:.72rem;letter-spacing:.12em;color:var(--gold-2);background:rgba(5,30,20,.65);border:1px solid var(--line);border-radius:12px;padding:5px 9px}
 .trumpbox .s{display:block;font-size:1.8rem;letter-spacing:0;line-height:1.1}
-.tc{position:absolute;left:10px;bottom:10px;font-weight:800;font-size:.8rem;background:rgba(5,25,30,.65);border:1px solid var(--line);border-radius:12px;padding:5px 9px;line-height:1.4}
+.tc{position:absolute;left:10px;bottom:10px;font-weight:800;font-size:.8rem;background:rgba(5,30,20,.65);border:1px solid var(--line);border-radius:12px;padding:5px 9px;line-height:1.4}
 .tc b{color:var(--gold-2)}
 .status{min-height:1.4em;font-weight:800;text-align:center;color:var(--gold-2)}
-.btn{height:44px;padding:0 20px;border-radius:22px;border:1px solid var(--line);background:rgba(10,40,50,.8);font-weight:800;display:inline-flex;align-items:center;gap:7px}
+.btn{height:44px;padding:0 20px;border-radius:22px;border:1px solid var(--line);background:rgba(10,50,33,.8);font-weight:800;display:inline-flex;align-items:center;gap:7px}
 .btn.primary{background:var(--gold);color:#2a1c06;border-color:var(--gold)}
 .btn.primary:hover{background:var(--gold-2)}
 .btn.on{background:var(--gold);color:#2a1c06}
-.ov{position:fixed;inset:0;z-index:50;background:rgba(3,12,16,.72);display:grid;place-items:center;padding:20px;backdrop-filter:blur(3px)}.ov-home{position:absolute;top:max(12px,env(safe-area-inset-top));right:max(12px,env(safe-area-inset-right));z-index:2;display:inline-flex;align-items:center;gap:6px;height:40px;padding:0 14px;border-radius:12px;border:1px solid rgba(230,184,92,.6);background:rgba(12,11,23,.85);color:#e6b85c;font:700 14px/1 system-ui,sans-serif;text-decoration:none}.ov-home:hover{background:#e6b85c;color:#0c0b17}.ov-home svg{width:18px;height:18px}
-.dlg{width:min(460px,100%);max-height:100%;overflow:auto;background:linear-gradient(180deg,#14404d,#0b2630);border:1px solid rgba(212,165,44,.5);border-radius:20px;padding:22px;text-align:center;display:flex;flex-direction:column;gap:12px;box-shadow:0 30px 80px rgba(0,0,0,.6);animation:in .3s cubic-bezier(.2,.8,.3,1.2)}
+.ov{position:fixed;inset:0;z-index:50;background:rgba(3,16,11,.72);display:grid;place-items:center;padding:20px;backdrop-filter:blur(3px)}.ov-home{position:absolute;top:max(12px,env(safe-area-inset-top));right:max(12px,env(safe-area-inset-right));z-index:2;display:inline-flex;align-items:center;gap:6px;height:40px;padding:0 14px;border-radius:12px;border:1px solid rgba(230,184,92,.6);background:rgba(12,11,23,.85);color:#e6b85c;font:700 14px/1 system-ui,sans-serif;text-decoration:none}.ov-home:hover{background:#e6b85c;color:#0c0b17}.ov-home svg{width:18px;height:18px}
+.dlg{width:min(460px,100%);max-height:100%;overflow:auto;background:linear-gradient(180deg,#144d35,#0b3021);border:1px solid rgba(212,165,44,.5);border-radius:20px;padding:22px;text-align:center;display:flex;flex-direction:column;gap:12px;box-shadow:0 30px 80px rgba(0,0,0,.6);animation:in .3s cubic-bezier(.2,.8,.3,1.2)}
 @keyframes in{from{transform:scale(.85);opacity:0}}
 .dlg h2{font-family:var(--display);margin:0;color:var(--gold-2);font-size:1.6rem}
 .dlg h3{margin:4px 0 0;font-size:.8rem;letter-spacing:.18em;color:var(--gold);text-transform:uppercase}
-.dlg p{margin:0;color:#d9e8e8;line-height:1.55}
-.dlg ul{text-align:left;margin:0;padding-left:20px;color:#cfe0e0;line-height:1.5;font-size:.9rem}
+.dlg p{margin:0;color:#d9e8e2;line-height:1.55}
+.dlg ul{text-align:left;margin:0;padding-left:20px;color:#cfe0d9;line-height:1.5;font-size:.9rem}
 .btns{display:flex;gap:8px;justify-content:center;flex-wrap:wrap}
 .suits{display:flex;gap:10px;justify-content:center}
 .suits button{width:70px;height:78px;border-radius:14px;background:#fffaf0;border:2px solid var(--gold);font-size:2.4rem;color:#1d2a36;display:flex;flex-direction:column;align-items:center;justify-content:center;line-height:1}

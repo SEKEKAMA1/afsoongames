@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<meta name="theme-color" content="#071a22">
+<meta name="theme-color" content="#22070e">
 <link rel="icon" type="image/png" href="/img/favicon-64.png?v=5">
 <link rel="apple-touch-icon" href="/img/apple-touch-icon.png?v=5">
 <title>Afsoon Blackjack – Free 21 Card Game Online | Afsoon Games</title>
@@ -20,12 +20,12 @@
 <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@600;700&family=Nunito:wght@600;700;800;900&display=swap" rel="stylesheet">
 <script src="/js/site.js" defer></script>
 <style>
-:root{--bg:#071a22;--line:rgba(212,165,44,.35);--gold:#d4a52c;--gold-2:#f6d999;--text:#f1f6f5;--muted:#9fbcc0;
+:root{--bg:#22070e;--line:rgba(212,165,44,.35);--gold:#d4a52c;--gold-2:#f6d999;--text:#f1f6f5;--muted:#c09fa7;
   --display:Cinzel,Georgia,serif;--ui:Nunito,system-ui,sans-serif;color-scheme:dark;
   --cw:min(25vw,15vh,132px)}
 *{box-sizing:border-box}
 html,body{margin:0}
-body{background:radial-gradient(90% 80% at 50% 40%,#123a4a 0%,var(--bg) 70%);background-attachment:fixed;color:var(--text);font-family:var(--ui);-webkit-tap-highlight-color:transparent;overflow-x:hidden}
+body{background:radial-gradient(90% 80% at 50% 40%,#4a1220 0%,var(--bg) 70%);background-attachment:fixed;color:var(--text);font-family:var(--ui);-webkit-tap-highlight-color:transparent;overflow-x:hidden}
 [hidden]{display:none!important}
 button{font:inherit;color:inherit;cursor:pointer}
 button:focus-visible,a:focus-visible{outline:2px solid var(--gold-2);outline-offset:2px}
@@ -41,21 +41,21 @@ button:focus-visible,a:focus-visible{outline:2px solid var(--gold-2);outline-off
 .ib svg{width:18px;height:18px}
 /* table */
 .table{flex:1;min-height:0;position:relative;border-radius:28px 28px 50% 50% / 28px 28px 16% 16%;
-  background:radial-gradient(80% 70% at 50% 40%,#1b8a86 0%,#0f5f6a 60%,#0a3f47 100%);border:10px solid #5a3a14;
+  background:radial-gradient(80% 70% at 50% 40%,#8a1b37 0%,#6a0f26 60%,#470a19 100%);border:10px solid #5a3a14;
   box-shadow:inset 0 0 0 3px var(--gold),inset 0 0 60px rgba(0,0,0,.45),0 0 0 3px var(--gold),0 18px 40px rgba(0,0,0,.5);
   display:flex;flex-direction:column;align-items:center;justify-content:space-between;padding:10px 8px 26px;overflow:hidden}
 .shoe{position:absolute;right:14px;top:12px;width:calc(var(--cw)*.62);height:calc(var(--cw)*.62*1.42);border-radius:8px;background:#3a2a10 url(/img/card-back.webp) center/cover;border:2px solid var(--gold);box-shadow:4px 4px 0 #2a1d08,8px 8px 0 #1e1506;opacity:.9}
 .shoe::after{content:"";position:absolute;inset:0;border-radius:6px;background:repeating-linear-gradient(45deg,rgba(246,217,153,.18) 0 4px,transparent 4px 10px);mix-blend-mode:screen}
 .zone{display:flex;flex-direction:column;align-items:center;gap:6px;width:100%}
 .lbl{font-weight:900;font-size:.78rem;letter-spacing:.16em;text-transform:uppercase;color:rgba(246,217,153,.75)}
-.tot{display:inline-block;min-width:44px;text-align:center;font-weight:900;font-size:1rem;background:rgba(4,22,26,.8);border:1px solid var(--line);border-radius:12px;padding:1px 10px;color:#fff;font-variant-numeric:tabular-nums}
+.tot{display:inline-block;min-width:44px;text-align:center;font-weight:900;font-size:1rem;background:rgba(26,4,9,.8);border:1px solid var(--line);border-radius:12px;padding:1px 10px;color:#fff;font-variant-numeric:tabular-nums}
 .tot.bust{background:#8f1d1d;border-color:#ff8a8a}
 .tot.bj{background:var(--gold);color:#2a1c06}
 .cards{display:flex;justify-content:center;min-height:calc(var(--cw)*1.42)}
 .cards .card+.card{margin-left:calc(var(--cw)*-.55)}
 .rules{text-align:center;font:700 clamp(.6rem,1.9vw,.85rem)/1.4 var(--display);letter-spacing:.18em;color:rgba(246,217,153,.5);padding:0 8px}
 .rules b{display:block;font-size:1.25em;color:rgba(246,217,153,.75);letter-spacing:.12em}
-.msg{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);background:rgba(4,22,26,.88);border:1px solid var(--gold);border-radius:16px;padding:8px 20px;font-weight:900;font-size:1.15rem;color:var(--gold-2);white-space:nowrap;z-index:5;animation:pop .3s ease}
+.msg{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);background:rgba(26,4,9,.88);border:1px solid var(--gold);border-radius:16px;padding:8px 20px;font-weight:900;font-size:1.15rem;color:var(--gold-2);white-space:nowrap;z-index:5;animation:pop .3s ease}
 @keyframes pop{from{transform:translate(-50%,-50%) scale(.6);opacity:0}}
 .hands{display:flex;justify-content:center;gap:calc(var(--cw)*.25);width:100%}
 .hand{display:flex;flex-direction:column;align-items:center;gap:5px;padding:6px 6px 4px;border-radius:14px;border:2px solid transparent;transition:border-color .2s,background .2s;position:relative}
@@ -82,7 +82,7 @@ button:focus-visible,a:focus-visible{outline:2px solid var(--gold-2);outline-off
 /* bet spot & chips */
 .spot{width:calc(var(--cw)*.9);height:calc(var(--cw)*.9);max-width:96px;max-height:96px;border-radius:50%;border:2px dashed rgba(246,217,153,.55);display:grid;place-items:center;position:relative}
 .spot.small{width:54px;height:54px}
-.spot .amt{position:absolute;bottom:-10px;left:50%;transform:translateX(-50%);font-weight:900;font-size:.82rem;background:rgba(4,22,26,.88);border:1px solid var(--line);border-radius:9px;padding:0 8px;color:var(--gold-2);white-space:nowrap}
+.spot .amt{position:absolute;bottom:-10px;left:50%;transform:translateX(-50%);font-weight:900;font-size:.82rem;background:rgba(26,4,9,.88);border:1px solid var(--line);border-radius:9px;padding:0 8px;color:var(--gold-2);white-space:nowrap}
 .stack{position:relative;width:46px;height:46px}
 .chip{--c:#c62828;width:46px;height:46px;border-radius:50%;background:radial-gradient(circle,var(--c) 0 52%,#fff 53% 56%,var(--c) 57%);
   border:4px dashed rgba(255,255,255,.85);box-shadow:0 2px 0 rgba(0,0,0,.45),inset 0 0 0 2px rgba(0,0,0,.25);display:grid;place-items:center;font:900 .78rem var(--ui);color:#fff;text-shadow:0 1px 1px rgba(0,0,0,.6)}
@@ -96,23 +96,23 @@ button:focus-visible,a:focus-visible{outline:2px solid var(--gold-2);outline-off
 .chips button:active{transform:scale(.9)}
 .chips button:disabled{opacity:.3;cursor:default}
 .acts{display:flex;gap:6px;justify-content:center;flex-wrap:wrap}
-.btn{height:46px;padding:0 18px;border-radius:23px;border:1px solid var(--line);background:rgba(10,40,48,.9);font-weight:900;font-size:.95rem}
+.btn{height:46px;padding:0 18px;border-radius:23px;border:1px solid var(--line);background:rgba(48,10,19,.9);font-weight:900;font-size:.95rem}
 .btn.primary{background:var(--gold);color:#2a1c06;border-color:var(--gold)}
 .btn:disabled{opacity:.35;cursor:default}
 .btn .k{opacity:.5;font-size:.7rem;margin-left:4px}
 .hint{font-size:.8rem;color:var(--muted);text-align:center;margin:0;min-height:1.2em}
 .hint b{color:var(--gold-2)}
 /* dialog */
-.ov{position:fixed;inset:0;z-index:50;background:rgba(3,12,16,.72);display:grid;place-items:center;padding:20px;backdrop-filter:blur(3px)}.ov-home{position:absolute;top:max(12px,env(safe-area-inset-top));right:max(12px,env(safe-area-inset-right));z-index:2;display:inline-flex;align-items:center;gap:6px;height:40px;padding:0 14px;border-radius:12px;border:1px solid rgba(230,184,92,.6);background:rgba(12,11,23,.85);color:#e6b85c;font:700 14px/1 system-ui,sans-serif;text-decoration:none}.ov-home:hover{background:#e6b85c;color:#0c0b17}.ov-home svg{width:18px;height:18px}
-.dlg{max-height:100%;overflow:auto;width:min(440px,100%);background:linear-gradient(180deg,#14505a,#0a2a32);border:1px solid rgba(212,165,44,.6);border-radius:20px;padding:22px;text-align:center;display:flex;flex-direction:column;gap:12px;box-shadow:0 30px 80px rgba(0,0,0,.6);animation:in .3s cubic-bezier(.2,.8,.3,1.2)}
+.ov{position:fixed;inset:0;z-index:50;background:rgba(16,3,6,.72);display:grid;place-items:center;padding:20px;backdrop-filter:blur(3px)}.ov-home{position:absolute;top:max(12px,env(safe-area-inset-top));right:max(12px,env(safe-area-inset-right));z-index:2;display:inline-flex;align-items:center;gap:6px;height:40px;padding:0 14px;border-radius:12px;border:1px solid rgba(230,184,92,.6);background:rgba(12,11,23,.85);color:#e6b85c;font:700 14px/1 system-ui,sans-serif;text-decoration:none}.ov-home:hover{background:#e6b85c;color:#0c0b17}.ov-home svg{width:18px;height:18px}
+.dlg{max-height:100%;overflow:auto;width:min(440px,100%);background:linear-gradient(180deg,#5a1425,#320a14);border:1px solid rgba(212,165,44,.6);border-radius:20px;padding:22px;text-align:center;display:flex;flex-direction:column;gap:12px;box-shadow:0 30px 80px rgba(0,0,0,.6);animation:in .3s cubic-bezier(.2,.8,.3,1.2)}
 @keyframes in{from{transform:scale(.85);opacity:0}}
 .dlg h2{font-family:var(--display);margin:0;color:var(--gold-2);font-size:1.6rem}
-.dlg p{margin:0;color:#dfeeee;line-height:1.55}
-.dlg ul{text-align:left;margin:0;padding-left:20px;color:#d3e6e6;line-height:1.5;font-size:.92rem}
+.dlg p{margin:0;color:#eedfe3;line-height:1.55}
+.dlg ul{text-align:left;margin:0;padding-left:20px;color:#e6d3d8;line-height:1.5;font-size:.92rem}
 .stats{display:grid;grid-template-columns:1fr auto;gap:3px 14px;text-align:left;max-width:260px;margin:0 auto;width:100%;font-size:.92rem}
 .stats b{color:var(--gold-2);text-align:right}
 .btns{display:flex;gap:8px;justify-content:center;flex-wrap:wrap}
-.toast{position:fixed;left:50%;top:70px;transform:translateX(-50%);background:rgba(4,22,26,.92);border:1px solid var(--gold);color:var(--gold-2);padding:8px 16px;border-radius:18px;font-weight:800;opacity:0;transition:opacity .25s;pointer-events:none;z-index:40;white-space:nowrap}
+.toast{position:fixed;left:50%;top:70px;transform:translateX(-50%);background:rgba(26,4,9,.92);border:1px solid var(--gold);color:var(--gold-2);padding:8px 16px;border-radius:18px;font-weight:800;opacity:0;transition:opacity .25s;pointer-events:none;z-index:40;white-space:nowrap}
 .toast.on{opacity:1}
 @media (max-width:480px){.brand{font-size:1rem}.btn{height:44px;padding:0 13px;font-size:.88rem}.btn .k{display:none}.chips button .chip{width:46px;height:46px;font-size:.78rem}.table{border-width:7px}}
 @media (orientation:landscape) and (max-height:520px){:root{--cw:min(11vw,17vh,80px)}.hands.two{--cw:min(9vw,15vh,70px)}.hands.many{--cw:min(7vw,13vh,58px)}
@@ -337,7 +337,7 @@ window.__bj={get s(){return{phase,bank,bet,hands,dealer,act,busy,insurance}},set
 <p style="margin-top:20px"><a href="/">&larr; All games on Afsoon Games</a></p>
 </section>
 <style>
-.afs-info{box-sizing:border-box;max-width:900px;margin:0 auto;padding:40px 20px 56px;color:#d9e6e6;font:16px/1.65 Nunito,system-ui,sans-serif}
+.afs-info{box-sizing:border-box;max-width:900px;margin:0 auto;padding:40px 20px 56px;color:#e6d9dc;font:16px/1.65 Nunito,system-ui,sans-serif}
 .afs-info h2{font-family:Cinzel,Georgia,serif;color:#f6d999;font-size:1.5rem;margin:0 0 12px}
 .afs-info h3{color:#f6d999;font-size:1.1rem;margin:22px 0 8px}
 .afs-info a{color:#f6d999}

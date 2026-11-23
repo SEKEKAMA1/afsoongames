@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<meta name="theme-color" content="#0b1230">
+<meta name="theme-color" content="#300b22">
 <link rel="icon" type="image/png" href="/img/favicon-64.png?v=5">
 <link rel="apple-touch-icon" href="/img/apple-touch-icon.png?v=5">
 <title>Afsoon Bubble Shooter – Free Bubble Shooter Game Online | Afsoon Games</title>
@@ -19,11 +19,11 @@
 <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@600;700&family=Nunito:wght@600;700;800&display=swap" rel="stylesheet">
 <script src="/js/site.js" defer></script>
 <style>
-:root{--bg:#0b1230;--line:rgba(230,184,92,.35);--gold:#e6b85c;--gold-2:#f6d999;--text:#f1f2fa;--muted:#a9b0d0;
+:root{--bg:#300b22;--line:rgba(230,184,92,.35);--gold:#e6b85c;--gold-2:#f6d999;--text:#f1f2fa;--muted:#d0a9c2;
   --display:Cinzel,Georgia,serif;--ui:Nunito,system-ui,sans-serif;color-scheme:dark}
 *{box-sizing:border-box}
 html,body{margin:0}
-body{background:radial-gradient(90% 70% at 50% 35%,#1c2a63 0%,var(--bg) 72%);background-attachment:fixed;color:var(--text);font-family:var(--ui);-webkit-tap-highlight-color:transparent}
+body{background:radial-gradient(90% 70% at 50% 35%,#631c49 0%,var(--bg) 72%);background-attachment:fixed;color:var(--text);font-family:var(--ui);-webkit-tap-highlight-color:transparent}
 [hidden]{display:none!important}
 button{font:inherit;color:inherit;cursor:pointer}
 button:focus-visible,a:focus-visible{outline:2px solid var(--gold-2);outline-offset:2px}
@@ -40,15 +40,15 @@ button:focus-visible,a:focus-visible{outline:2px solid var(--gold-2);outline-off
 .stage{flex:1;min-height:0;display:flex;align-items:center;justify-content:center;touch-action:none}
 canvas{display:block;border-radius:14px;border:2px solid var(--gold);box-shadow:0 14px 40px rgba(0,0,0,.5);touch-action:none;user-select:none;-webkit-user-select:none}
 .hint{font-size:.78rem;color:var(--muted);text-align:center;margin:0}
-.ov{position:fixed;inset:0;z-index:50;background:rgba(5,8,24,.72);display:grid;place-items:center;padding:20px;backdrop-filter:blur(3px)}.ov-home{position:absolute;top:max(12px,env(safe-area-inset-top));right:max(12px,env(safe-area-inset-right));z-index:2;display:inline-flex;align-items:center;gap:6px;height:40px;padding:0 14px;border-radius:12px;border:1px solid rgba(230,184,92,.6);background:rgba(12,11,23,.85);color:#e6b85c;font:700 14px/1 system-ui,sans-serif;text-decoration:none}.ov-home:hover{background:#e6b85c;color:#0c0b17}.ov-home svg{width:18px;height:18px}
-.dlg{max-height:100%;overflow:auto;width:min(420px,100%);background:linear-gradient(180deg,#22336f,#121c44);border:1px solid rgba(230,184,92,.5);border-radius:20px;padding:22px;text-align:center;display:flex;flex-direction:column;gap:12px;box-shadow:0 30px 80px rgba(0,0,0,.6);animation:in .3s cubic-bezier(.2,.8,.3,1.2)}
+.ov{position:fixed;inset:0;z-index:50;background:rgba(24,5,17,.72);display:grid;place-items:center;padding:20px;backdrop-filter:blur(3px)}.ov-home{position:absolute;top:max(12px,env(safe-area-inset-top));right:max(12px,env(safe-area-inset-right));z-index:2;display:inline-flex;align-items:center;gap:6px;height:40px;padding:0 14px;border-radius:12px;border:1px solid rgba(230,184,92,.6);background:rgba(12,11,23,.85);color:#e6b85c;font:700 14px/1 system-ui,sans-serif;text-decoration:none}.ov-home:hover{background:#e6b85c;color:#0c0b17}.ov-home svg{width:18px;height:18px}
+.dlg{max-height:100%;overflow:auto;width:min(420px,100%);background:linear-gradient(180deg,#6f2253,#441232);border:1px solid rgba(230,184,92,.5);border-radius:20px;padding:22px;text-align:center;display:flex;flex-direction:column;gap:12px;box-shadow:0 30px 80px rgba(0,0,0,.6);animation:in .3s cubic-bezier(.2,.8,.3,1.2)}
 @keyframes in{from{transform:scale(.85);opacity:0}}
 .dlg h2{font-family:var(--display);margin:0;color:var(--gold-2);font-size:1.6rem}
-.dlg p{margin:0;color:#dfe3f5;line-height:1.55}
-.dlg ul{text-align:left;margin:0;padding-left:20px;color:#d3d8ee;line-height:1.5;font-size:.92rem}
+.dlg p{margin:0;color:#f5dfed;line-height:1.55}
+.dlg ul{text-align:left;margin:0;padding-left:20px;color:#eed3e4;line-height:1.5;font-size:.92rem}
 .big{font-size:2.4rem;font-weight:800;color:var(--gold-2);font-variant-numeric:tabular-nums}
 .btns{display:flex;gap:8px;justify-content:center;flex-wrap:wrap}
-.btn{height:46px;padding:0 22px;border-radius:23px;border:1px solid var(--line);background:rgba(20,30,70,.8);font-weight:800}
+.btn{height:46px;padding:0 22px;border-radius:23px;border:1px solid var(--line);background:rgba(70,20,52,.8);font-weight:800}
 .btn.primary{background:var(--gold);color:#2a1c06;border-color:var(--gold)}
 @media (orientation:landscape) and (max-height:520px){.hint{display:none}.app{max-width:none}.brand small{display:none}}
 @media (pointer:coarse){.hint .pc{display:none}}
@@ -236,7 +236,7 @@ function draw(){
   if(state==='play'||state==='clear')bubble(SX,SY,cur,1+swapT*.2);
   // next bubble
   const NX=SX-92,NY=SY+14;ctx.strokeStyle='rgba(230,184,92,.5)';ctx.lineWidth=2;ctx.beginPath();ctx.arc(NX,NY,R*.85,0,7);ctx.stroke();
-  bubble(NX,NY,nxt,.7);ctx.fillStyle='#a9b0d0';ctx.font='800 11px Nunito,sans-serif';ctx.textAlign='center';ctx.fillText('NEXT',NX,NY+R+8);
+  bubble(NX,NY,nxt,.7);ctx.fillStyle='#d0a9c2';ctx.font='800 11px Nunito,sans-serif';ctx.textAlign='center';ctx.fillText('NEXT',NX,NY+R+8);
   // shots until a new row comes down
   const left=missMax-misses,RX=SX+92;ctx.fillText('NEW ROW',RX,NY+R+8);
   for(let i=0;i<missMax;i++){ctx.fillStyle=i<left?'#e6b85c':'rgba(255,255,255,.15)';ctx.beginPath();ctx.arc(RX-(missMax-1)*6+i*12,NY,4.2,0,7);ctx.fill()}
@@ -245,8 +245,8 @@ function draw(){
   for(const p of parts){ctx.globalAlpha=p.l;ctx.fillStyle=p.c;ctx.beginPath();ctx.arc(p.x,p.y,2.6,0,7);ctx.fill()}ctx.globalAlpha=1;
   for(const t of texts){const k=t.t/(t.big?90:50);ctx.globalAlpha=1-k*k;ctx.fillStyle='#fff3c4';ctx.font=`800 ${t.big?28:20}px Nunito,sans-serif`;ctx.textAlign='center';
     ctx.strokeStyle='rgba(0,0,0,.5)';ctx.lineWidth=4;ctx.strokeText(t.s,t.x,t.y-k*40);ctx.fillText(t.s,t.x,t.y-k*40)}ctx.globalAlpha=1;
-  if(paused&&state==='play'){ctx.fillStyle='rgba(5,8,24,.6)';ctx.fillRect(0,0,W,H);ctx.fillStyle='#f6d999';ctx.font='700 34px Cinzel,serif';ctx.textAlign='center';ctx.fillText('Paused',W/2,H/2);
-    ctx.font='700 15px Nunito,sans-serif';ctx.fillStyle='#d3d8ee';ctx.fillText('Tap to continue',W/2,H/2+30)}
+  if(paused&&state==='play'){ctx.fillStyle='rgba(24,5,17,.6)';ctx.fillRect(0,0,W,H);ctx.fillStyle='#f6d999';ctx.font='700 34px Cinzel,serif';ctx.textAlign='center';ctx.fillText('Paused',W/2,H/2);
+    ctx.font='700 15px Nunito,sans-serif';ctx.fillStyle='#eed3e4';ctx.fillText('Tap to continue',W/2,H/2+30)}
 }
 let last=0,accT=0;
 function frame(t){const dt=Math.min(60,t-(last||t));last=t;accT+=dt;

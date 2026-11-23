@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<meta name="theme-color" content="#071a22">
+<meta name="theme-color" content="#220d07">
 <link rel="icon" type="image/png" href="/img/favicon-64.png?v=5">
 <link rel="apple-touch-icon" href="/img/apple-touch-icon.png?v=5">
 <title>Nard: Persian Backgammon – Play Online Free | Afsoon Games</title>
@@ -13,11 +13,11 @@
 <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@600;700&family=Nunito:wght@600;700;800&display=swap" rel="stylesheet">
 <style>
 /* Layout: header with score, the board (scaled to fit, turned upright on phones), a control bar and a status line. */
-:root{--bg:#071a22;--panel:#0f2a35;--line:rgba(212,165,44,.35);--gold:#d4a52c;--gold-2:#f6d999;--text:#f1f6f5;--muted:#9fbcc0;
+:root{--bg:#220d07;--panel:#35180f;--line:rgba(212,165,44,.35);--gold:#d4a52c;--gold-2:#f6d999;--text:#f1f6f5;--muted:#c0a79f;
   --display:Cinzel,Georgia,serif;--ui:Nunito,system-ui,sans-serif;color-scheme:dark}
 *{box-sizing:border-box}
 html,body{margin:0;min-height:100%}
-body{background:radial-gradient(90% 80% at 50% 40%,#123a4a 0%,var(--bg) 70%);background-attachment:fixed;color:var(--text);font-family:var(--ui);-webkit-tap-highlight-color:transparent;
+body{background:radial-gradient(90% 80% at 50% 40%,#4a1f12 0%,var(--bg) 70%);background-attachment:fixed;color:var(--text);font-family:var(--ui);-webkit-tap-highlight-color:transparent;
   padding-left:max(10px,env(safe-area-inset-left,0px));padding-right:max(10px,env(safe-area-inset-right,0px))}
 [hidden]{display:none!important}
 button{font:inherit;color:inherit;cursor:pointer}
@@ -53,18 +53,18 @@ html,body{overflow-x:hidden}
 .die.roll{animation:roll .45s ease}
 @keyframes roll{0%{transform:rotate(0) scale(.6)}50%{transform:rotate(200deg) scale(1.15)}100%{transform:rotate(360deg) scale(1)}}
 .bar{display:flex;gap:8px;flex-wrap:wrap;justify-content:center}
-.btn{height:44px;padding:0 20px;border-radius:22px;border:1px solid var(--line);background:rgba(10,40,50,.8);font-weight:800;display:inline-flex;align-items:center;gap:7px}
+.btn{height:44px;padding:0 20px;border-radius:22px;border:1px solid var(--line);background:rgba(50,19,10,.8);font-weight:800;display:inline-flex;align-items:center;gap:7px}
 .btn:disabled{opacity:.4;cursor:default}
 .btn.primary{background:var(--gold);color:#2a1c06;border-color:var(--gold)}
 .btn.primary:hover:not(:disabled){background:var(--gold-2)}
 .btn svg{width:17px;height:17px}
 .status{min-height:1.5em;font-weight:800;text-align:center;color:var(--gold-2)}
-.ov{position:fixed;inset:0;z-index:50;background:rgba(3,12,16,.72);display:grid;place-items:center;padding:20px;backdrop-filter:blur(3px)}.ov-home{position:absolute;top:max(12px,env(safe-area-inset-top));right:max(12px,env(safe-area-inset-right));z-index:2;display:inline-flex;align-items:center;gap:6px;height:40px;padding:0 14px;border-radius:12px;border:1px solid rgba(230,184,92,.6);background:rgba(12,11,23,.85);color:#e6b85c;font:700 14px/1 system-ui,sans-serif;text-decoration:none}.ov-home:hover{background:#e6b85c;color:#0c0b17}.ov-home svg{width:18px;height:18px}
-.dlg{max-height:100%;overflow:auto;width:min(440px,100%);background:linear-gradient(180deg,#14404d,#0b2630);border:1px solid rgba(212,165,44,.5);border-radius:20px;padding:22px;text-align:center;display:flex;flex-direction:column;gap:12px;box-shadow:0 30px 80px rgba(0,0,0,.6);animation:in .3s cubic-bezier(.2,.8,.3,1.2)}
+.ov{position:fixed;inset:0;z-index:50;background:rgba(16,6,3,.72);display:grid;place-items:center;padding:20px;backdrop-filter:blur(3px)}.ov-home{position:absolute;top:max(12px,env(safe-area-inset-top));right:max(12px,env(safe-area-inset-right));z-index:2;display:inline-flex;align-items:center;gap:6px;height:40px;padding:0 14px;border-radius:12px;border:1px solid rgba(230,184,92,.6);background:rgba(12,11,23,.85);color:#e6b85c;font:700 14px/1 system-ui,sans-serif;text-decoration:none}.ov-home:hover{background:#e6b85c;color:#0c0b17}.ov-home svg{width:18px;height:18px}
+.dlg{max-height:100%;overflow:auto;width:min(440px,100%);background:linear-gradient(180deg,#4d2114,#30140b);border:1px solid rgba(212,165,44,.5);border-radius:20px;padding:22px;text-align:center;display:flex;flex-direction:column;gap:12px;box-shadow:0 30px 80px rgba(0,0,0,.6);animation:in .3s cubic-bezier(.2,.8,.3,1.2)}
 @keyframes in{from{transform:scale(.85);opacity:0}}
 .dlg h2{font-family:var(--display);margin:0;color:var(--gold-2);font-size:1.6rem}
-.dlg p{margin:0;color:#d9e8e8;line-height:1.55}
-.dlg ul{text-align:left;margin:0;padding-left:20px;color:#cfe0e0;line-height:1.5;font-size:.92rem}
+.dlg p{margin:0;color:#e8dcd9;line-height:1.55}
+.dlg ul{text-align:left;margin:0;padding-left:20px;color:#e0d3cf;line-height:1.5;font-size:.92rem}
 .btns{display:flex;gap:10px;justify-content:center;flex-wrap:wrap}
 .credit{font-size:.76rem;color:var(--muted)}.credit a{color:var(--gold)}
 @media (max-width:560px){.brand{font-size:1rem}.ib .lbl{display:none}.score{padding:4px 8px;font-size:.85rem}.btn{height:42px;padding:0 14px}}

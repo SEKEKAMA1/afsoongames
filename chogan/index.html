@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, user-scalable=no">
-<meta name="theme-color" content="#071a22">
+<meta name="theme-color" content="#220722">
 <link rel="icon" type="image/png" href="/img/favicon-64.png?v=5">
 <link rel="apple-touch-icon" href="/img/apple-touch-icon.png?v=5">
 <title>Chogan: Paddle Ball – Free Online 2-Player Game | Afsoon Games</title>
@@ -12,10 +12,10 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@600;700&family=Nunito:wght@600;700;800&display=swap" rel="stylesheet">
 <style>
-:root{--bg:#071a22;--line:rgba(212,165,44,.35);--gold:#d4a52c;--gold-2:#f6d999;--text:#f1f6f5;--muted:#9fbcc0;--display:Cinzel,Georgia,serif;--ui:Nunito,system-ui,sans-serif;color-scheme:dark}
+:root{--bg:#220722;--line:rgba(212,165,44,.35);--gold:#d4a52c;--gold-2:#f6d999;--text:#f1f6f5;--muted:#c09fc0;--display:Cinzel,Georgia,serif;--ui:Nunito,system-ui,sans-serif;color-scheme:dark}
 *{box-sizing:border-box}
 html,body{margin:0;height:100%;overflow:hidden}
-body{background:radial-gradient(90% 80% at 50% 40%,#123a4a 0%,var(--bg) 70%);color:var(--text);font-family:var(--ui);-webkit-tap-highlight-color:transparent;touch-action:none;user-select:none;-webkit-user-select:none}
+body{background:radial-gradient(90% 80% at 50% 40%,#4a124a 0%,var(--bg) 70%);color:var(--text);font-family:var(--ui);-webkit-tap-highlight-color:transparent;touch-action:none;user-select:none;-webkit-user-select:none}
 [hidden]{display:none!important}
 button{font:inherit;color:inherit;cursor:pointer}
 .app{height:100%;display:flex;flex-direction:column;align-items:center;gap:6px;padding:max(6px,env(safe-area-inset-top,0px)) 8px max(6px,env(safe-area-inset-bottom,0px))}
@@ -27,15 +27,15 @@ button{font:inherit;color:inherit;cursor:pointer}
 .stage{flex:1;min-height:0;width:100%;display:flex;align-items:center;justify-content:center}
 canvas{display:block;border-radius:12px;border:2px solid var(--gold);box-shadow:0 14px 40px rgba(0,0,0,.5);cursor:none}
 .hint{font-size:.75rem;color:var(--muted);text-align:center}
-.ov{position:fixed;inset:0;z-index:50;background:rgba(3,12,16,.72);display:grid;place-items:center;padding:20px;backdrop-filter:blur(3px)}.ov-home{position:absolute;top:max(12px,env(safe-area-inset-top));right:max(12px,env(safe-area-inset-right));z-index:2;display:inline-flex;align-items:center;gap:6px;height:40px;padding:0 14px;border-radius:12px;border:1px solid rgba(230,184,92,.6);background:rgba(12,11,23,.85);color:#e6b85c;font:700 14px/1 system-ui,sans-serif;text-decoration:none}.ov-home:hover{background:#e6b85c;color:#0c0b17}.ov-home svg{width:18px;height:18px}
-.dlg{width:min(420px,100%);max-height:100%;overflow:auto;background:linear-gradient(180deg,#14404d,#0b2630);border:1px solid rgba(212,165,44,.5);border-radius:20px;padding:22px;text-align:center;display:flex;flex-direction:column;gap:12px;box-shadow:0 30px 80px rgba(0,0,0,.6);animation:in .3s cubic-bezier(.2,.8,.3,1.2)}
+.ov{position:fixed;inset:0;z-index:50;background:rgba(16,3,16,.72);display:grid;place-items:center;padding:20px;backdrop-filter:blur(3px)}.ov-home{position:absolute;top:max(12px,env(safe-area-inset-top));right:max(12px,env(safe-area-inset-right));z-index:2;display:inline-flex;align-items:center;gap:6px;height:40px;padding:0 14px;border-radius:12px;border:1px solid rgba(230,184,92,.6);background:rgba(12,11,23,.85);color:#e6b85c;font:700 14px/1 system-ui,sans-serif;text-decoration:none}.ov-home:hover{background:#e6b85c;color:#0c0b17}.ov-home svg{width:18px;height:18px}
+.dlg{width:min(420px,100%);max-height:100%;overflow:auto;background:linear-gradient(180deg,#4d144d,#300b30);border:1px solid rgba(212,165,44,.5);border-radius:20px;padding:22px;text-align:center;display:flex;flex-direction:column;gap:12px;box-shadow:0 30px 80px rgba(0,0,0,.6);animation:in .3s cubic-bezier(.2,.8,.3,1.2)}
 @keyframes in{from{transform:scale(.85);opacity:0}}
 .dlg h2{font-family:var(--display);margin:0;color:var(--gold-2);font-size:1.6rem}
 .dlg h3{margin:4px 0 0;font-size:.8rem;letter-spacing:.18em;color:var(--gold);text-transform:uppercase}
-.dlg p{margin:0;color:#d9e8e8;line-height:1.55}
-.dlg ul{text-align:left;margin:0;padding-left:20px;color:#cfe0e0;line-height:1.5;font-size:.9rem}
+.dlg p{margin:0;color:#e8d9e8;line-height:1.55}
+.dlg ul{text-align:left;margin:0;padding-left:20px;color:#e0cfe0;line-height:1.5;font-size:.9rem}
 .btns{display:flex;gap:8px;justify-content:center;flex-wrap:wrap}
-.btn{height:44px;padding:0 18px;border-radius:22px;border:1px solid var(--line);background:rgba(10,40,50,.8);font-weight:800}
+.btn{height:44px;padding:0 18px;border-radius:22px;border:1px solid var(--line);background:rgba(50,10,50,.8);font-weight:800}
 .btn.primary{background:var(--gold);color:#2a1c06;border-color:var(--gold)}
 .btn.on{background:var(--gold);color:#2a1c06}
 </style>
@@ -119,7 +119,7 @@ function point(w){P[w].score++;sfx.point();flash=30;server=1-w;
   serve()}
 function draw(){ctx.save();if(portrait){ctx.translate(0,L);ctx.rotate(-Math.PI/2)}
   /* field: polo green with gold lines, like an old palace maidan */
-  const g=ctx.createLinearGradient(0,0,L,0);g.addColorStop(0,'#0f5f6a');g.addColorStop(.5,'#1b8a86');g.addColorStop(1,'#0f5f6a');ctx.fillStyle=g;ctx.fillRect(0,0,L,Wd);
+  const g=ctx.createLinearGradient(0,0,L,0);g.addColorStop(0,'#6a0f6a');g.addColorStop(.5,'#8a1b8a');g.addColorStop(1,'#6a0f6a');ctx.fillStyle=g;ctx.fillRect(0,0,L,Wd);
   ctx.strokeStyle='rgba(246,217,153,.35)';ctx.lineWidth=3;ctx.setLineDash([14,12]);ctx.beginPath();ctx.moveTo(L/2,8);ctx.lineTo(L/2,Wd-8);ctx.stroke();ctx.setLineDash([]);
   ctx.beginPath();ctx.arc(L/2,Wd/2,60,0,7);ctx.stroke();ctx.strokeRect(6,6,L-12,Wd-12);
   /* score */

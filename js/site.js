@@ -2,7 +2,8 @@
    - Google tag (Google Analytics) with Consent Mode: nothing is stored until the visitor accepts.
    - Small cookie message (required in Europe). The choice is remembered on the device.
    - Game pages: a volume slider next to the sound button, and the game name / AFSOON GAMES
-     in the top bar goes back to the home page. */
+     in the top bar goes back to the home page.
+   - Casino games (Roulette, Blackjack, Poker): relaxing lounge music with an on/off button. */
 
 /* ---------- Volume ----------
    Every game makes its sounds with Web Audio. We slip one master volume knob between each game's
@@ -170,4 +171,124 @@
     document.body.appendChild(bar);
   }
   if (document.body) show(); else document.addEventListener('DOMContentLoaded', show);
+})();
+
+/* ---------- Relaxing music for the casino games ----------
+   Soft lounge jazz played live in the browser (no music files): electric-piano chords, a warm bass,
+   brushes and a few vibraphone notes. It goes through the same volume slider as the game sounds.
+   A music-note button in the top bar turns it on or off; the choice is remembered. */
+(function () {
+  var PAGES = ['/roulette/', '/blackjack/', '/poker/'];
+  if (PAGES.indexOf(location.pathname.replace(/index\.html$/, '')) < 0) return;
+  var KEY = 'afsoon-music', on = true;
+  try { on = localStorage.getItem(KEY) !== 'off'; } catch (e) {}
+  var ctx = null, out = null, wet = null, NB = null, timer = null, nextT = 0, step = 0, started = false;
+  var E = 60 / 74 / 2;                                   // one eighth note at 74 beats a minute
+  var PROG = [                                           // [bass note, chord] as MIDI numbers
+    [38, [53, 57, 60, 64]], [43, [53, 57, 59, 64]], [36, [52, 55, 59, 62]], [45, [55, 60, 64, 67]],
+    [41, [52, 57, 60, 64]], [40, [50, 55, 59, 62]], [38, [53, 57, 60, 64]], [43, [53, 56, 59, 64]]
+  ];
+  function hz(m) { return 440 * Math.pow(2, (m - 69) / 12); }
+  function env(g, t, peak, a, d, sus, end) {
+    g.gain.setValueAtTime(0.0001, t);
+    g.gain.exponentialRampToValueAtTime(peak, t + a);
+    g.gain.exponentialRampToValueAtTime(Math.max(0.0001, peak * sus), t + a + d);
+    g.gain.exponentialRampToValueAtTime(0.0001, end);
+  }
+  function send(node, amount) { node.connect(out); var s = ctx.createGain(); s.gain.value = amount; node.connect(s); s.connect(wet); }
+  function ep(t, m, v, dur) {                            // electric piano: soft FM bell
+    var f = hz(m), c = ctx.createOscillator(), mo = ctx.createOscillator(), mg = ctx.createGain(), g = ctx.createGain();
+    c.frequency.value = f; mo.frequency.value = f; mg.gain.setValueAtTime(f * 0.9, t); mg.gain.exponentialRampToValueAtTime(f * 0.05, t + 0.5);
+    mo.connect(mg); mg.connect(c.frequency); c.connect(g); env(g, t, v, 0.012, 0.9, 0.35, t + dur + 0.6); send(g, 0.35);
+    c.start(t); mo.start(t); c.stop(t + dur + 0.7); mo.stop(t + dur + 0.7);
+  }
+  function bass(t, m, dur) {
+    var o = ctx.createOscillator(), o2 = ctx.createOscillator(), g = ctx.createGain(), g2 = ctx.createGain(), lp = ctx.createBiquadFilter();
+    o.type = 'triangle'; o.frequency.value = hz(m); o2.frequency.value = hz(m) * 2; g2.gain.value = 0.35;
+    lp.type = 'lowpass'; lp.frequency.value = 700; o.connect(lp); o2.connect(g2); g2.connect(lp); lp.connect(g);
+    env(g, t, 0.16, 0.02, 0.35, 0.5, t + dur); send(g, 0.08); o.start(t); o2.start(t); o.stop(t + dur + 0.05); o2.stop(t + dur + 0.05);
+  }
+  function vibe(t, m) {
+    var o = ctx.createOscillator(), o2 = ctx.createOscillator(), g = ctx.createGain(), g2 = ctx.createGain(), trem = ctx.createOscillator(), tg = ctx.createGain(), amp = ctx.createGain();
+    o.frequency.value = hz(m); o2.frequency.value = hz(m) * 4; g2.gain.value = 0.08; o.connect(g); o2.connect(g2); g2.connect(g);
+    trem.frequency.value = 5.2; tg.gain.value = 0.3; trem.connect(tg); amp.gain.value = 0.7; tg.connect(amp.gain); g.connect(amp);
+    env(g, t, 0.045, 0.004, 1.6, 0.2, t + 2.2); send(amp, 0.5);
+    [o, o2, trem].forEach(function (x) { x.start(t); x.stop(t + 2.3); });
+  }
+  function noise(t, type, freq, q, peak, dur) {
+    var s = ctx.createBufferSource(), f = ctx.createBiquadFilter(), g = ctx.createGain();
+    s.buffer = NB; f.type = type; f.frequency.value = freq; f.Q.value = q; s.connect(f); f.connect(g);
+    env(g, t, peak, dur * 0.25, dur * 0.75, 0.3, t + dur); send(g, 0.15); s.start(t, Math.random() * 1.5); s.stop(t + dur + 0.05);
+  }
+  function tick(t, i) {
+    var bar = Math.floor(step / 8) % PROG.length, ch = PROG[bar];
+    if (i === 0) ch[1].forEach(function (m, k) { ep(t + k * 0.014, m, 0.05, E * 7); });
+    if (i === 5 && Math.random() < 0.5) ch[1].forEach(function (m, k) { ep(t + k * 0.01, m, 0.03, E * 1.5); });
+    if (i === 0) bass(t, ch[0], E * 3.6);
+    if (i === 4) bass(t, ch[0] + 7, E * 1.8);
+    if (i === 6) bass(t, PROG[(bar + 1) % PROG.length][0] + (Math.random() < 0.5 ? -1 : 2), E * 1.6);
+    if (i === 2 || i === 6) noise(t, 'bandpass', 3200, 0.6, 0.05, 0.22);
+    noise(t, 'highpass', 7500, 0.7, i % 2 ? 0.012 : 0.02, 0.05);
+    if (Math.random() < (i % 2 ? 0.14 : 0.24)) { var n = ch[1][Math.random() * 4 | 0] + 12; vibe(t, n); }
+  }
+  function schedule() {
+    while (nextT < ctx.currentTime + 0.3) {
+      var i = step % 8; tick(nextT + (i % 2 ? E * 0.3 : 0), i);   // a gentle swing on the off-beats
+      nextT += E; step++;
+    }
+  }
+  function build() {
+    ctx = new (window.AudioContext || window.webkitAudioContext)();
+    out = ctx.createGain(); out.gain.value = 0.0001; out.connect(ctx.destination);
+    var len = ctx.sampleRate * 2.4, ir = ctx.createBuffer(2, len, ctx.sampleRate);
+    for (var c = 0; c < 2; c++) { var d = ir.getChannelData(c); for (var k = 0; k < len; k++) d[k] = (Math.random() * 2 - 1) * Math.pow(1 - k / len, 3); }
+    var cv = ctx.createConvolver(); cv.buffer = ir; wet = ctx.createGain(); wet.gain.value = 1; wet.connect(cv); cv.connect(out);
+    var n = ctx.sampleRate * 2; NB = ctx.createBuffer(1, n, ctx.sampleRate); var nd = NB.getChannelData(0); for (var j = 0; j < n; j++) nd[j] = Math.random() * 2 - 1;
+  }
+  function start() {
+    try {
+      if (!ctx) build();
+      if (ctx.state === 'suspended') ctx.resume();
+      started = true; nextT = Math.max(nextT, ctx.currentTime + 0.1);
+      out.gain.cancelScheduledValues(ctx.currentTime); out.gain.setTargetAtTime(0.85, ctx.currentTime, 0.6);
+      if (!timer) timer = setInterval(schedule, 60);
+    } catch (e) {}
+  }
+  function stop() {
+    if (!ctx) return;
+    out.gain.cancelScheduledValues(ctx.currentTime); out.gain.setTargetAtTime(0.0001, ctx.currentTime, 0.2);
+    clearInterval(timer); timer = null;
+  }
+  window.afsoonMusic = { get on() { return on; }, get playing() { return !!timer; }, get ctx() { return ctx; } };
+
+  function ready(fn) { if (document.readyState !== 'loading') fn(); else document.addEventListener('DOMContentLoaded', fn); }
+  ready(function () {
+    var snd = document.querySelector('#snd, #mute');
+    var btn = document.createElement('button');
+    btn.type = 'button'; btn.id = 'afs-music'; btn.className = snd ? snd.className : 'ib';
+    var NOTE = '<path d="M9 18V5l11-2v13"/><circle cx="6.5" cy="18" r="2.5"/><circle cx="17.5" cy="16" r="2.5"/>';
+    function paint() {
+      btn.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">' + NOTE +
+        (on ? '' : '<path d="M3 3l18 18" stroke-width="2.2"/>') + '</svg>';
+      btn.setAttribute('aria-pressed', on ? 'true' : 'false');
+      btn.setAttribute('aria-label', on ? 'Music on' : 'Music off');
+      btn.title = on ? 'Relaxing music is on: tap to turn off' : 'Relaxing music is off: tap to turn on';
+      btn.style.opacity = on ? '' : '.6';
+    }
+    paint();
+    if (snd && snd.parentNode) snd.parentNode.insertBefore(btn, snd);
+    else { var h = document.querySelector('header'); if (h) h.appendChild(btn); }
+    btn.addEventListener('click', function () {
+      on = !on; try { localStorage.setItem(KEY, on ? 'on' : 'off'); } catch (e) {}
+      paint(); if (on) start(); else stop();
+    });
+    // browsers only allow sound after a tap, so the music starts with the first tap or key
+    function first() { if (on && !started) start(); }
+    document.addEventListener('pointerdown', first, true);
+    document.addEventListener('keydown', first, true);
+    document.addEventListener('visibilitychange', function () {
+      if (!ctx) return;
+      if (document.hidden) ctx.suspend(); else if (on && timer) { ctx.resume(); nextT = Math.max(nextT, ctx.currentTime + 0.1); }
+    });
+  });
 })();
