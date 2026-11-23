@@ -44,7 +44,7 @@ button:focus-visible,a:focus-visible{outline:2px solid var(--gold-2);outline-off
   background:radial-gradient(80% 70% at 50% 40%,#8a1b37 0%,#6a0f26 60%,#470a19 100%);border:10px solid #5a3a14;
   box-shadow:inset 0 0 0 3px var(--gold),inset 0 0 60px rgba(0,0,0,.45),0 0 0 3px var(--gold),0 18px 40px rgba(0,0,0,.5);
   display:flex;flex-direction:column;align-items:center;justify-content:space-between;padding:10px 8px 26px;overflow:hidden}
-.shoe{position:absolute;right:14px;top:12px;width:calc(var(--cw)*.62);height:calc(var(--cw)*.62*1.42);border-radius:8px;background:#3a2a10 url(/img/card-back.webp) center/cover;border:2px solid var(--gold);box-shadow:4px 4px 0 #2a1d08,8px 8px 0 #1e1506;opacity:.9}
+.shoe{position:absolute;right:14px;top:12px;width:calc(var(--cw)*.62);height:calc(var(--cw)*.62*1.42);border-radius:8px;background:#3a2a10 url(/img/card-back-line.webp) center/cover;border:2px solid var(--gold);box-shadow:4px 4px 0 #2a1d08,8px 8px 0 #1e1506;opacity:.9}
 .shoe::after{content:"";position:absolute;inset:0;border-radius:6px;background:repeating-linear-gradient(45deg,rgba(246,217,153,.18) 0 4px,transparent 4px 10px);mix-blend-mode:screen}
 .zone{display:flex;flex-direction:column;align-items:center;gap:6px;width:100%}
 .lbl{font-weight:900;font-size:.78rem;letter-spacing:.16em;text-transform:uppercase;color:rgba(246,217,153,.75)}
@@ -70,7 +70,7 @@ button:focus-visible,a:focus-visible{outline:2px solid var(--gold-2);outline-off
 .card.new{animation:deal .42s cubic-bezier(.2,.8,.3,1) both}
 @keyframes deal{from{opacity:0;transform:translate(38vw,-30vh) rotate(-25deg) scale(.6)}}
 .card.red{color:#b3261e}
-.card.back{background:#3a2a10 url(/img/card-back.webp) center/cover;border-color:var(--gold)}
+.card.back{background:#3a2a10 url(/img/card-back-line.webp) center/cover;border-color:var(--gold)}
 .card.back::after{content:"";position:absolute;inset:6%;border-radius:4px;border:1px solid rgba(246,217,153,.45);background:repeating-linear-gradient(45deg,rgba(246,217,153,.12) 0 4px,transparent 4px 10px)}
 .card.flip{animation:flip .4s ease both}
 @keyframes flip{from{transform:rotateY(90deg)}}
