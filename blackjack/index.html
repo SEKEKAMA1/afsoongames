@@ -70,6 +70,7 @@ button:focus-visible,a:focus-visible{outline:2px solid var(--gold-2);outline-off
 .card.new{animation:deal .42s cubic-bezier(.2,.8,.3,1) both}
 @keyframes deal{from{opacity:0;transform:translate(38vw,-30vh) rotate(-25deg) scale(.6)}}
 .card.red{color:#b3261e}
+.card.fr{background:none;border:none;border-radius:calc(var(--cw)*.06)}.card.fr>svg{display:block;width:100%;height:100%}
 .card.back{background:#3a2a10 url(/img/card-back-line.webp) center/cover;border-color:var(--gold)}
 .card.back::after{content:"";position:absolute;inset:6%;border-radius:4px;border:1px solid rgba(246,217,153,.45);background:repeating-linear-gradient(45deg,rgba(246,217,153,.12) 0 4px,transparent 4px 10px)}
 .card.flip{animation:flip .4s ease both}
@@ -141,6 +142,7 @@ button:focus-visible,a:focus-visible{outline:2px solid var(--gold-2);outline-off
 </div>
 <div class="toast" id="toast"></div>
 <div class="ov" id="ov" hidden><a class="ov-home" href="/" aria-label="Home" title="Home"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"><path d="M3 11 12 4l9 7v9h-6v-6H9v6H3z"/></svg>Home</a><div class="dlg" id="dlg" role="dialog" aria-modal="true"></div></div>
+<script src="/js/cards-fr.js"></script>
 <script>
 (()=>{
 const $=id=>document.getElementById(id);
@@ -183,9 +185,8 @@ const sfx={card:()=>noise(.07,.35,2400),chip:()=>{tone(2200,.05,'square',.02);se
 /* ---------- drawing ---------- */
 function cardHTML(c,down){const cls=newIds.has(c.id)?' new':(flipId===c.id?' flip':'');
   if(down)return `<div class="card back${cls}" aria-label="hidden card"></div>`;
-  const red=c.s==='h'||c.s==='d',sy=SYM[c.s]+'︎',r=RT(c.r);
-  const mid=c.r>10?`<div class="face">${r}</div>`:`<div class="mid">${sy}</div>`;
-  return `<div class="card${red?' red':''}${cls}" aria-label="${RNAME(c.r)} of ${SNAME[c.s]}"><div class="ix">${r}<i>${sy}</i></div>${mid}<div class="ix b">${r}<i>${sy}</i></div></div>`}
+  const k=c.s.toUpperCase()+({1:'a',11:'j',12:'q',13:'k'}[c.r]||c.r);
+  return `<div class="card fr${cls}" aria-label="${RNAME(c.r)} of ${SNAME[c.s]}">${window.CARDS_FR[k]}</div>`}
 function chipStack(amount){const out=[];let a=amount;for(const v of [...CHIPS].reverse()){while(a>=v&&out.length<8){out.push(v);a-=v}}if(a>0&&out.length<8)out.push(5);
   return `<div class="stack">${out.reverse().map((v,i)=>`<div class="chip c${v}" style="top:${-i*4}px">${i===out.length-1?(v>=1000?'1K':v):''}</div>`).join('')}</div>`}
 function totText(cards,hideHole){if(hideHole)return String(score([cards[0]]).t===11?'A':score([cards[0]]).t);const s=score(cards);return s.soft&&s.t<21&&cards.length>=2?`${s.t-10} / ${s.t}`:String(s.t)}

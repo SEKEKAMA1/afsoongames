@@ -7,7 +7,7 @@
 <link rel="icon" type="image/png" href="/img/favicon-64.png?v=5">
 <link rel="apple-touch-icon" href="/img/apple-touch-icon.png?v=5">
 <title>Afsoon Stack – Free Stockpile Card Game Online | Afsoon Games</title>
-<meta name="description" content="Afsoon Stack by Afsoon Games: a free stockpile card game. Build piles from 1 to 12, use the gold wild cards and be the first to empty your stockpile. Play 1 to 3 computer players on phone or computer.">
+<meta name="description" content="Afsoon Stack by Afsoon Games: a free stockpile card game. Build piles from 1 to 12, use the gold wild cards and be the first to empty your stockpile. Play 1 to 5 computer players on phone or computer.">
 <link rel="canonical" href="https://afsoongames.com/stack/">
 <meta property="og:type" content="website">
 <meta property="og:site_name" content="Afsoon Games">
@@ -113,6 +113,15 @@ button{font:inherit;color:inherit;cursor:pointer}
   .mine{grid-column:2;grid-row:2;align-self:start}.hand{grid-column:2;grid-row:2;align-self:end}
   .bar{grid-column:1/3;grid-row:3}
 }
+/* 4 or 5 computer players sideways: two narrow columns of opponents */
+@media (max-height:520px) and (orientation:landscape){
+  .opps.many{display:grid;grid-template-columns:1fr 1fr;gap:4px;align-content:start;align-items:start;align-self:start}
+  .opps.many .opp{padding:3px 5px;gap:4px;--mw:calc(var(--cw)*.4)}
+  .opps.many .opp .slot.mini{width:var(--mw);height:calc(var(--mw)*1.4)}
+  .opps.many .who{width:50px}.opps.many .who b{font-size:11.5px}.opps.many .who small{font-size:10px}
+  .opps.many .ds{gap:2px}
+  .opps.many .card i{display:none}
+}
 </style>
 </head>
 <body>
@@ -136,11 +145,11 @@ button{font:inherit;color:inherit;cursor:pointer}
 <script>
 {
 const $=id=>document.getElementById(id);
-const NAMES=['Dariush','Roxana','Kourosh'];
+const NAMES=['Dariush','Roxana','Kourosh','Shirin','Arash'];
 const colorOf=v=>v===0?'#8a6516':v<=4?'#16807f':v<=8?'#b37508':'#b3283b';
 /* ---------- settings ---------- */
 let muted=false,nOpp=1,stockSize=20;
-try{const s=JSON.parse(localStorage.getItem('afsoon-stack')||'{}');muted=!!s.muted;if([1,2,3].includes(s.nOpp))nOpp=s.nOpp;if([15,20,30].includes(s.stock))stockSize=s.stock}catch(e){}
+try{const s=JSON.parse(localStorage.getItem('afsoon-stack')||'{}');muted=!!s.muted;if([1,2,3,4,5].includes(s.nOpp))nOpp=s.nOpp;if([15,20,30].includes(s.stock))stockSize=s.stock}catch(e){}
 const save=()=>{try{localStorage.setItem('afsoon-stack',JSON.stringify({muted,nOpp,stock:stockSize}))}catch(e){}};
 /* ---------- sound ---------- */
 let AC=null;
@@ -164,10 +173,10 @@ const later=ms=>new Promise(r=>setTimeout(r,ms*SPD));
 const need=i=>builds[i].length+1;            // the number a build pile needs next
 const fits=(c,i)=>builds[i].length<12&&(c===0||c===need(i));
 function shuffle(a){for(let i=a.length-1;i>0;i--){const j=Math.random()*(i+1)|0;[a[i],a[j]]=[a[j],a[i]]}return a}
-function newDeck(){const d=[];for(let n=1;n<=12;n++)for(let k=0;k<12;k++)d.push(n);for(let k=0;k<18;k++)d.push(0);return shuffle(d)}
+function newDeck(x){const d=[];for(let c=0;c<x;c++){for(let n=1;n<=12;n++)for(let k=0;k<12;k++)d.push(n);for(let k=0;k<18;k++)d.push(0)}return shuffle(d)}
 function take(){if(!draw.length){draw=shuffle(spent);spent=[]}return draw.pop()}
 function newGame(){
-  over=false;sel=null;busy=false;draw=newDeck();spent=[];builds=[[],[],[],[]];
+  over=false;sel=null;busy=false;draw=newDeck((nOpp+1)*(stockSize+5)+40>162?2:1);spent=[];builds=[[],[],[],[]];
   P=[{name:'You',ai:false}].concat(NAMES.slice(0,nOpp).map(n=>({name:n,ai:true})));
   P.forEach(p=>{p.stock=[];p.hand=[];p.disc=[[],[],[],[]]});
   for(let k=0;k<stockSize;k++)P.forEach(p=>p.stock.push(draw.pop()));
@@ -186,6 +195,7 @@ const top=a=>a.length?a[a.length-1]:null;
 function render(){
   const me=P[0],myTurn=cur===0&&!busy&&!over;
   // opponents
+  $('opps').classList.toggle('many',P.length>3);
   $('opps').innerHTML=P.slice(1).map((p,k)=>{const q=k+1;
     return `<div class="opp${cur===q&&!over?' on':''}"><div class="who"><b>${p.name}</b><small>${p.hand.length} in hand</small></div>
       <div class="slot mini sp" id="os${q}">${face(top(p.stock))}<span class="cnt">${p.stock.length}</span></div>
@@ -337,7 +347,7 @@ function aiDiscard(p){
 function dialog(html,bind){$('dlg').innerHTML=html;$('ov').hidden=false;if(bind)bind()}
 function menu(){
   dialog(`<h2>Afsoon Stack</h2><p>Be the first to empty your stockpile by building the middle piles from 1 up to 12.</p>
-    <h3>Computer players</h3><div class="seg" id="opN">${[1,2,3].map(n=>`<button data-n="${n}">${n}</button>`).join('')}</div>
+    <h3>Computer players</h3><div class="seg" id="opN">${[1,2,3,4,5].map(n=>`<button data-n="${n}">${n}</button>`).join('')}</div>
     <h3>Stockpile size</h3><div class="seg" id="stN">${[[15,'Quick'],[20,'Normal'],[30,'Long']].map(([n,t])=>`<button data-n="${n}">${t} · ${n}</button>`).join('')}</div>
     <button class="big" id="go">Start the game</button>
     <ul><li>Each middle pile starts with a 1 and goes up to 12. A full pile goes back into the deck.</li>
@@ -361,7 +371,7 @@ window.__stack={get P(){return P},get cur(){return cur},get over(){return over},
 
 <section class="afs-info" aria-labelledby="afs-h">
 <h2 id="afs-h">How to play Afsoon Stack</h2>
-<p>Afsoon Stack is a free stockpile card game in the family of Spite &amp; Malice. Build the shared piles in the middle from 1 up to 12 and be the first player to get rid of every card in your stockpile. Play against one, two or three computer players on your phone or computer.</p>
+<p>Afsoon Stack is a free stockpile card game in the family of Spite &amp; Malice. Build the shared piles in the middle from 1 up to 12 and be the first player to get rid of every card in your stockpile. Play against one to five computer players on your phone or computer.</p>
 <h3>Rules</h3>
 <ol><li>Every player gets a stockpile (15, 20 or 30 cards) with only the top card face up, and five cards in hand.</li><li>Up to four piles are built in the middle. Each starts with a 1 and goes up in order to 12. A full pile is cleared and its cards go back into the deck.</li><li>On your turn you can play the top card of your stockpile, cards from your hand and the top cards of your discard piles.</li><li>The gold Afsoon card is wild and counts as any number.</li><li>If you play every card in your hand, draw five more and keep going.</li><li>End your turn by putting one card from your hand on one of your four discard piles.</li><li>The first player with an empty stockpile wins.</li></ol>
 <h3>Tips</h3>
