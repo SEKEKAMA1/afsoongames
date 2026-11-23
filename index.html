@@ -117,12 +117,6 @@ body::before{content:"";position:fixed;inset:0;z-index:-1;pointer-events:none;op
 .cat h2 small{font-size:13px;color:var(--muted);font-weight:700;padding:3px 10px;border-radius:12px;background:rgba(255,255,255,.06)}
 .cats{display:flex;flex-direction:column;gap:22px}
 
-/* recently played: small chips, not full cards, so games do not repeat on screen */
-.recent{display:flex;gap:10px;overflow-x:auto;scrollbar-width:none;padding:2px}
-.recent::-webkit-scrollbar{display:none}
-.rc{flex:none;display:flex;align-items:center;gap:10px;padding:5px 14px 5px 5px;border-radius:12px;background:var(--panel);border:1px solid var(--line);font-weight:800;font-size:13px;white-space:nowrap}
-.rc img{width:64px;height:36px;object-fit:cover;border-radius:8px}
-.rc:hover{border-color:rgba(230,184,92,.6);background:var(--panel-2)}
 .row h2{display:flex;align-items:baseline;gap:12px;margin:0 0 12px;font-size:18px;font-weight:800}
 .row h2 small{font-size:13px;color:var(--muted);font-weight:700}
 
@@ -220,7 +214,6 @@ body.mini footer{margin-left:72px}
 
 <nav class="rail" id="rail" aria-label="Main">
   <a href="/" class="on" data-nav="home"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"><path d="M3 11 12 4l9 7v9h-6v-6H9v6H3z"/></svg><span>Home</span></a>
-  <a href="#recent" data-nav="recent"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg><span>Recently played</span></a>
   <a href="#new" data-nav="new"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"><path d="m12 3 2.6 5.6 6.1.7-4.5 4.2 1.2 6L12 16.6 6.6 19.5l1.2-6L3.3 9.3l6.1-.7z"/></svg><span>New games</span></a>
   <a href="#all" data-nav="all"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7" rx="2"/><rect x="14" y="3" width="7" height="7" rx="2"/><rect x="3" y="14" width="7" height="7" rx="2"/><rect x="14" y="14" width="7" height="7" rx="2"/></svg><span>All games</span><b class="n" id="nAll"></b></a>
   <hr>
@@ -252,11 +245,6 @@ body.mini footer{margin-left:72px}
 
       <section class="row" style="margin-top:26px">
         <div class="moods" id="moods"></div>
-      </section>
-
-      <section class="row" id="recent" style="margin-top:26px" hidden>
-        <h2>Continue playing</h2>
-        <div class="recent" id="recentTiles"></div>
       </section>
 
       <section id="all" style="margin-top:28px">
@@ -377,16 +365,10 @@ document.addEventListener('click',e=>{
   if(nav){const k=nav.dataset.nav;
     if(k=='new'){e.preventDefault();showList('New games',GAMES.filter(g=>NEWEST.includes(g.id)))}
     else if(k=='all'){e.preventDefault();showHome();$('all').scrollIntoView({behavior:'smooth',block:'start'})}
-    else if(k=='recent'){e.preventDefault();showHome();if(!$('recent').hidden)$('recent').scrollIntoView({behavior:'smooth',block:'center'})}
     else if(k=='home'&&!$('home').hidden){}
   }
-  const t=e.target.closest('.tile,.rc');
-  if(t){try{let r=JSON.parse(localStorage.getItem('afsoon-recent')||'[]');r=[t.dataset.id,...r.filter(x=>x!=t.dataset.id)].slice(0,8);localStorage.setItem('afsoon-recent',JSON.stringify(r))}catch(_){}}
   if(e.target.closest('.rail a:not([data-cat])'))closeRail();
 });
-let recent=[];try{recent=JSON.parse(localStorage.getItem('afsoon-recent')||'[]')}catch(_){}
-const rec=recent.map(id=>GAMES.find(g=>g.id==id)).filter(Boolean).slice(0,6);
-if(rec.length){$('recent').hidden=false;$('recentTiles').innerHTML=rec.map(g=>'<a class="rc" href="'+g.url+'" data-id="'+g.id+'"><img src="'+cover(g)+'" alt="" width="64" height="36">'+g.name+'</a>').join('')}
 $('q').addEventListener('input',e=>{
   const v=e.target.value.trim().toLowerCase();
   if(!v){$('results').hidden=true;$('home').hidden=false;return}
