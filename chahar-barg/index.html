@@ -37,26 +37,42 @@ button{font:inherit;color:inherit;cursor:pointer}
 .ib:hover{background:rgba(255,255,255,.12)}
 .ib svg{width:18px;height:18px}
 /* other players */
-.others{display:flex;gap:6px;flex:none}
-.op{flex:1;min-width:0;display:flex;align-items:center;gap:6px;padding:5px 8px;border-radius:12px;background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.08);transition:.2s}
-.op.on{border-color:var(--gold);background:rgba(212,165,44,.13);box-shadow:0 0 14px rgba(212,165,44,.25)}
-.op .who{min-width:0;flex:1}
-.op b{display:block;font-size:12.5px;font-weight:900;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.op small{display:block;font-size:10.5px;color:var(--muted);font-weight:800;white-space:nowrap}
-.op .tm{display:inline-block;padding:0 5px;border-radius:6px;font-size:9.5px;margin-left:3px;vertical-align:1px}
-.backs{display:flex;flex:none}
-.backs{padding-left:10px}.backs i{width:21px;height:30px;border-radius:3px;margin-left:-10px;background:#14204a var(--back) center/cover;border:1.5px solid #d4a52c;box-shadow:0 1px 3px rgba(0,0,0,.5)}
+/* players sit around the table: rivals left and right, partner opposite */
+.seat{display:flex;flex-direction:column;align-items:center;gap:3px;padding:6px 5px;border-radius:14px;transition:.2s;position:relative;z-index:1;min-width:0}
+.seat.on{background:rgba(212,165,44,.16);box-shadow:0 0 0 2px var(--gold),0 0 16px rgba(212,165,44,.35)}
+.seat.top{flex-direction:row;gap:8px;padding:5px 10px;justify-self:center;max-width:52%}
+.seat .nm{display:flex;flex-direction:column;align-items:center;min-width:0}
+.seat.top .nm{align-items:flex-start}
+.seat b{font-size:12px;font-weight:900;max-width:76px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.seat small{font-size:10px;color:#c9d3f2;font-weight:800;white-space:nowrap}
+.seat .tm{font-size:9px;font-weight:900;letter-spacing:.06em;text-transform:uppercase;padding:1px 6px;border-radius:6px;color:#fff}
+.av{width:46px;height:46px;border-radius:50%;flex:none;display:grid;place-items:center;font-family:var(--display);font-weight:700;font-size:20px;color:#fff6dc;
+  background:radial-gradient(circle at 35% 30%,#5b74c8,#24346e);border:3px solid var(--ring,#d4a52c);box-shadow:0 4px 10px rgba(0,0,0,.45);overflow:hidden}
+.av{position:relative}.av img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:50% 25%;background:#24346e}
+.av.me{width:26px;height:26px;font-size:12px;border-width:2px;display:inline-grid;vertical-align:middle;margin:-4px 6px -4px -6px;box-shadow:none}
+.mine .chip{display:inline-flex;align-items:center;gap:4px;white-space:pre}
+.avgrid{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:8px 4px}
+.avgrid button{background:none;border:0;padding:2px;display:flex;flex-direction:column;align-items:center;gap:3px;font-size:10.5px;font-weight:800;color:#dfe5fa;min-width:0}
+.avgrid button .av{width:50px;height:50px;font-size:20px}
+.avgrid button span{max-width:100%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.avgrid button.on .av{--ring:#f6d999;box-shadow:0 0 0 3px #f6d999,0 0 16px rgba(246,217,153,.6)}
+.avgrid button.on span{color:#f6d999}
+.backs{display:flex;flex:none;padding-left:9px}
+.backs i{width:16px;height:23px;border-radius:3px;margin-left:-9px;background:#14204a var(--back) center/cover;border:1.5px solid #d4a52c;box-shadow:0 1px 3px rgba(0,0,0,.5)}
 /* felt table */
 .felt{flex:1;min-height:0;position:relative;border-radius:22px;padding:10px;background:radial-gradient(120% 90% at 50% 40%,#2a3f86 0%,#17245a 68%,#0e1640 100%);
-  border:3px solid #b8862a;box-shadow:inset 0 0 0 2px rgba(246,217,153,.35),inset 0 0 40px rgba(0,0,0,.35),0 10px 26px rgba(0,0,0,.45);display:flex;flex-direction:column}
+  border:3px solid #b8862a;box-shadow:inset 0 0 0 2px rgba(246,217,153,.35),inset 0 0 40px rgba(0,0,0,.35),0 10px 26px rgba(0,0,0,.45);
+  display:grid;grid-template-columns:auto minmax(0,1fr) auto;grid-template-rows:auto minmax(0,1fr);column-gap:4px}
+#seatT{grid-column:1/4;grid-row:1}#seatL{grid-column:1;grid-row:2;align-self:center}#seatR{grid-column:3;grid-row:2;align-self:center}
+.tarea{grid-column:2;grid-row:2;display:flex;flex-direction:column;min-height:0;min-width:0}
 .felt::before{content:"";position:absolute;inset:0;border-radius:20px;pointer-events:none;opacity:.12;
   background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='60' height='60' viewBox='0 0 60 60'%3E%3Cpath d='M30 6l6 16 16 6-16 6-6 16-6-16-16-6 16-6z' fill='none' stroke='%23f6d999' stroke-width='1.2'/%3E%3C/svg%3E")}
-.tinfo{display:flex;align-items:center;gap:8px;font-size:11.5px;font-weight:800;color:#dfe5fa;position:relative}
+.tinfo{display:flex;align-items:center;gap:8px;font-size:11.5px;font-weight:800;color:#dfe5fa;position:absolute;left:10px;right:12px;top:9px;pointer-events:none;z-index:0}
 .tinfo .deck{display:flex;align-items:center;gap:6px}
-.tinfo .deck i{width:32px;height:45px;border-radius:4px;background:#14204a var(--back) center/cover;border:1.5px solid #d4a52c;box-shadow:2px 2px 0 #0b1236,3px 3px 0 #d4a52c,0 4px 8px rgba(0,0,0,.4)}
+.tinfo .deck{flex-direction:column;align-items:flex-start;gap:3px}.tinfo .deck i{width:30px;height:42px;border-radius:4px;background:#14204a var(--back) center/cover;border:1.5px solid #d4a52c;box-shadow:2px 2px 0 #0b1236,3px 3px 0 #d4a52c,0 4px 8px rgba(0,0,0,.4)}
 .c.back{background:#14204a var(--back) center/cover;border:2px solid #d4a52c}.c.back>*{display:none}
 .tinfo .sp{margin-left:auto}
-.tcards{flex:1;display:flex;flex-wrap:wrap;align-content:center;justify-content:center;gap:clamp(4px,1.4vw,8px);padding:6px 0;position:relative}
+.tcards{flex:1;display:flex;flex-wrap:wrap;align-content:center;justify-content:center;gap:clamp(4px,1.4vw,8px);padding:6px 0;position:relative;min-height:0}
 .tcards .empty{color:rgba(255,255,255,.45);font-weight:800;font-size:13px}
 /* cards */
 .c{position:relative;width:var(--cw);height:var(--ch);border-radius:calc(var(--cw)*.07);background:#fff;border:0;
@@ -94,6 +110,7 @@ button{font:inherit;color:inherit;cursor:pointer}
 .ov-home svg{width:18px;height:18px}
 .dlg{max-height:100%;overflow:auto;width:min(440px,100%);background:linear-gradient(180deg,#26387a,#0f1636);border:1px solid rgba(212,165,44,.6);border-radius:20px;padding:20px;text-align:center;display:flex;flex-direction:column;gap:12px;box-shadow:0 30px 80px rgba(0,0,0,.6);animation:in .3s cubic-bezier(.2,.8,.3,1.2)}
 @keyframes in{from{transform:scale(.92);opacity:0}}
+.dlg>*{flex:none}
 .dlg h2{font-family:var(--display);margin:0;color:var(--gold-2);font-size:1.5rem}
 .dlg p{margin:0;color:#e4efed;line-height:1.5}
 .dlg ul{text-align:left;margin:0;padding-left:20px;color:#d8e8e5;line-height:1.5;font-size:.9rem}
@@ -108,13 +125,14 @@ table.sc{width:100%;border-collapse:collapse;font-size:.92rem}
 table.sc th,table.sc td{padding:5px 6px;border-bottom:1px solid rgba(255,255,255,.1);text-align:right}
 table.sc th:first-child,table.sc td:first-child{text-align:left;color:#cfe2df}
 table.sc tr.tot td{font-weight:900;color:var(--gold-2);border-bottom:0}
-@media (max-width:440px){.op .tm{font-size:0;width:9px;height:9px;padding:0;border-radius:50%;margin-left:4px;vertical-align:0}.backs{padding-left:12px}.backs i{width:17px;height:24px;margin-left:-12px}.op{padding:5px 6px;gap:4px}}
-@media (max-width:380px){.op b{font-size:11.5px}.mine{font-size:11px}.mine .chip{padding:3px 7px}}
+@media (max-width:440px){.av{width:40px;height:40px;font-size:17px}.seat b{max-width:62px;font-size:11px}.seat{padding:5px 3px}.backs i{width:13px;height:19px;margin-left:-8px}.backs{padding-left:8px}}
+@media (max-width:380px){.seat b{font-size:10.5px}.mine{font-size:11px}.mine .chip{padding:3px 7px}}
 @media (max-height:520px) and (orientation:landscape){
   :root{--cw:clamp(40px,min(9vw,17vh),80px)}
   .app{max-width:none;display:grid;grid-template-columns:minmax(0,1.25fr) minmax(0,1fr);grid-template-rows:auto auto 1fr auto auto;column-gap:14px;row-gap:5px}
-  .top{grid-column:1/3}.others{grid-column:2;grid-row:2}.felt{grid-column:1;grid-row:2/6}
-  .mine{grid-column:2;grid-row:3;align-self:end}.hand{grid-column:2;grid-row:4}.bar{grid-column:2;grid-row:5}
+  .top{grid-column:1/3}.felt{grid-column:1;grid-row:2/6}
+  .mine{grid-column:2;grid-row:2/4;align-self:end}.hand{grid-column:2;grid-row:4}.bar{grid-column:2;grid-row:5}
+  .av{width:36px;height:36px;font-size:15px}
 }
 </style>
 </head>
@@ -127,10 +145,12 @@ table.sc tr.tot td{font-weight:900;color:var(--gold-2);border-bottom:0}
     <button class="ib" id="snd" aria-label="Sound on"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"><path d="M4 10v4h4l5 4V6L8 10z"/><path id="wave" d="M16 9a4 4 0 0 1 0 6M18.5 6.5a8 8 0 0 1 0 11"/></svg></button>
     <a class="ib" href="/" aria-label="Home" title="Home"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"><path d="M3 11 12 4l9 7v9h-6v-6H9v6H3z"/></svg></a>
   </header>
-  <div class="others" id="others"></div>
   <div class="felt">
     <div class="tinfo"><span class="deck"><i id="deckPile"></i><span id="deckN"></span></span><span class="sp" id="dealN"></span></div>
-    <div class="tcards" id="table"></div>
+    <div class="seat top" id="seatT" hidden></div>
+    <div class="seat side" id="seatL" hidden></div>
+    <div class="tarea"><div class="tcards" id="table"></div></div>
+    <div class="seat side" id="seatR" hidden></div>
   </div>
   <div class="mine" id="mine"></div>
   <div class="hand" id="hand"></div>
@@ -149,9 +169,9 @@ const val=c=>c.r==='A'?1:+c.r;
 const isClub=c=>c.s==='♣';
 const pts=c=>(c.r==='A'?1:0)+(c.r==='J'?1:0)+(c.r==='2'&&c.s==='♣'?2:0)+(c.r==='10'&&c.s==='♦'?3:0);
 /* ---------- settings ---------- */
-let muted=false,nPl=2;const target=61;
-try{const s=JSON.parse(localStorage.getItem('afsoon-chaharbarg')||'{}');muted=!!s.muted;if([2,3,4].includes(s.n))nPl=s.n;}catch(e){}
-const save=()=>{try{localStorage.setItem('afsoon-chaharbarg',JSON.stringify({muted,n:nPl,t:target}))}catch(e){}};
+let muted=false,nPl=2,myAv='hafez';const target=61;
+try{const s=JSON.parse(localStorage.getItem('afsoon-chaharbarg')||'{}');muted=!!s.muted;if([2,3,4].includes(s.n))nPl=s.n;if(s.av)myAv=s.av;}catch(e){}
+const save=()=>{try{localStorage.setItem('afsoon-chaharbarg',JSON.stringify({muted,n:nPl,t:target,av:myAv}))}catch(e){}};
 /* ---------- sound ---------- */
 let AC=null;
 function audio(){if(!AC){try{AC=new (window.AudioContext||window.webkitAudioContext)()}catch(e){}}if(AC&&AC.state==='suspended')AC.resume();return AC}
@@ -179,10 +199,31 @@ function cardHTML(c,cls,id){
 let gid=0,P=[],sides=[],deck=[],table=[],round=null,cur=0,dealer=0,busy=false,over=false,sel=null,opts=[],optI=0,SPD=1;
 const later=ms=>new Promise(r=>setTimeout(r,ms*SPD));
 const sideOf=p=>nPl===4?p%2:p;
+/* ---------- avatars: famous Iranians. Pictures are free files on Wikimedia Commons ---------- */
+const AV=[
+  {id:'hafez',n:'Hafez',f:'Mohammad_Shams_al-Din_Hafez.jpg',c:'Public domain'},
+  {id:'ferdowsi',n:'Ferdowsi'},
+  {id:'khayyam',n:'Khayyam',f:'Omar_Khayyam,_Sayr_mulhimah_min_al-Sharq_wa-al-Gharb.png',c:'Public domain (1961 drawing)'},
+  {id:'molavi',n:'Molavi',f:'Mevlana-celaleddin-i-rumi-1.jpg',c:'Historical image, author unknown'},
+  {id:'ibnsina',n:'Ibn Sina',f:'Avicenna-miniatur.jpg',c:'Public domain'},
+  {id:'razi',n:'Razi',f:'Portrait_of_Rhazes_(al-Razi)_(AD_865_-_925)_Wellcome_L0005053_(cropped).jpg',c:'Wellcome Collection'},
+  {id:'mirzakhani',n:'Mirzakhani',f:'Maryam_Mirzakhani_in_Seoul_2014.jpg',c:'Gert-Martin Greuel, free licence'},
+  {id:'naderi',n:'Naderi',f:'Naderi_2012_JPL.jpg',c:'NASA/JPL-Caltech'},
+  {id:'parvin',n:'Parvin',f:"Parvin_E'tesami.jpg",c:'Public domain'},
+  {id:'naghshineh',n:'Naghshineh'},
+  {id:'kamalolmolk',n:'Kamal-ol-molk',f:'Kamal-ol-molk-1.jpg',c:'Self-portrait 1921, public domain'},
+  {id:'mosaddegh',n:'Mosaddegh',f:'Mohammad_Mosaddegh_portrait.jpg',c:'Public domain (Iran)'},
+  {id:'etemadzadeh',n:'Etemadzadeh'},
+  {id:'fanizadeh',n:'Fanizadeh'},
+  {id:'fomani',n:'Fomani'}];
+const avOf=id=>AV.find(a=>a.id===id)||AV[0];
+const avSrc=a=>a.f?'https://commons.wikimedia.org/wiki/Special:FilePath/'+encodeURIComponent(a.f)+'?width=160':'';
+function avImg(a){return (a.n.replace(/[^A-Za-z]/g,'').charAt(0))+(a.f?`<img src="${avSrc(a)}" alt="" loading="lazy" referrerpolicy="no-referrer" onerror="this.remove()">`:'')}
 const NAMES={2:['You','Dariush'],3:['You','Dariush','Roxana'],4:['You','Dariush','Roxana','Kourosh']};
 function newGame(){
-  P=NAMES[nPl].map((n,i)=>({name:n,ai:i>0,hand:[]}));
-  sides=nPl===4?[{name:'Your team',short:'Us',score:0},{name:'Dariush & Kourosh',short:'Them',score:0}]:P.map(p=>({name:p.name,short:p.name,score:0}));
+  const pool=AV.filter(a=>a.id!==myAv).sort(()=>Math.random()-.5);
+  P=[{name:'You',av:myAv,ai:false,hand:[]}].concat(pool.slice(0,nPl-1).map(a=>({name:a.n,av:a.id,ai:true,hand:[]})));
+  sides=nPl===4?[{name:'Your team',short:'Us',score:0},{name:P[1].name+' & '+P[3].name,short:'Them',score:0}]:P.map(p=>({name:p.name,short:p.name,score:0}));
   gid++;busy=false;over=false;dealer=Math.random()*nPl|0;$('ov').hidden=true;newRound();
 }
 function newRound(){
@@ -205,7 +246,7 @@ function newRound(){
 async function dealHands(){
   const g=gid;busy=true;
   if(SPD>=.1){render();const from=$('deckPile');
-    for(let k=0;k<4;k++)for(let i=0;i<nPl;i++){const to=i===0?$('hand'):$('op'+i);flyBack(from,to);await later(70)}
+    for(let k=0;k<4;k++)for(let i=0;i<nPl;i++){const to=i===0?$('hand'):seatEl(i);flyBack(from,to);await later(70)}
     await later(300);if(g!==gid)return}
   P.forEach(p=>{p.hand=deck.splice(0,4)});round.deal++;
   render();say('New deal',round.deal===round.deals?'Last deal of this round – no Sur now.':'');
@@ -233,24 +274,30 @@ function sortOpts(c,list,p){return list.map(o=>({o,v:worth(c,o,p)})).sort((a,b)=
 /* ---------- drawing ---------- */
 function render(){
   const me=P[0],myTurn=cur===0&&!busy&&!over;
-  $('others').innerHTML=P.slice(1).map((p,k)=>{const i=k+1,sd=sideOf(i);
-    const tag=nPl===4?`<span class="tm" style="background:${sd===0?'#2a9d5c':'#b3283b'}">${sd===0?'Partner':'Rival'}</span>`:'';
-    return `<div class="op${cur===i&&!over?' on':''}" id="op${i}"><div class="who"><b>${p.name}${tag}</b><small>${nPl===4?'':round?round.caps[sd].length+' taken · '+round.caps[sd].filter(isClub).length+'♣':''}</small></div>
-      <div class="backs">${p.hand.map(()=>'<i></i>').join('')}</div></div>`}).join('');
-  $('deckN').textContent=deck.length+' cards left';
-  $('dealN').textContent=round?'Deal '+round.deal+' of '+round.deals:'';
+  const SEAT={2:{1:'T'},3:{1:'R',2:'L'},4:{1:'R',2:'T',3:'L'}}[nPl];
+  ['T','L','R'].forEach(k=>{const e=$('seat'+k);e.hidden=true;e.removeAttribute('data-p');e.id='seat'+k});
+  P.slice(1).forEach((p,k)=>{const i=k+1,sd=sideOf(i),e=$('seat'+SEAT[i]);e.hidden=false;e.dataset.p=i;
+    const ring=nPl===4?(sd===0?'#2a9d5c':'#d9443b'):'#d4a52c';
+    const tag=nPl===4?`<span class="tm" style="background:${ring}">${sd===0?'Partner':'Rival'}</span>`:'';
+    e.className='seat '+(SEAT[i]==='T'?'top':'side')+(cur===i&&!over?' on':'');
+    e.innerHTML=`<div class="av" style="--ring:${ring}">${avatarHTML(p)}</div><div class="nm"><b>${p.name}</b>${tag}${nPl===4||!round?'':`<small>${round.caps[sd].length} taken</small>`}</div>
+      <div class="backs">${p.hand.map(()=>'<i></i>').join('')}</div>`;});
+  $('deckN').textContent=deck.length+' left';
+  $('dealN').textContent=round?'Deal '+round.deal+'/'+round.deals:'';
   const take=sel!=null&&opts[optI]?opts[optI].map(c=>c.id):[];
   $('table').innerHTML=table.length?table.map(c=>cardHTML(c,'t'+(take.includes(c.id)?' take':''),'t'+c.id)).join(''):'<div class="empty">The table is empty</div>';
   // scores, captured cards and Sur
   const sur=round&&round.sur.n?round.sur:null;
   $('mine').innerHTML=sides.map((s,i)=>{const caps=round?round.caps[i]:[];
-    return `<span class="chip${(nPl===4?sideOf(cur)===i:cur===i)&&!over?' on':''}" id="pile${i}">${s.short}: <b>${s.score}</b>${round?` · ${caps.length} taken · ${caps.filter(isClub).length}♣`:''}</span>`}).join('')+
+    return `<span class="chip${(nPl===4?sideOf(cur)===i:cur===i)&&!over?' on':''}" id="pile${i}">${i===0&&P[0]&&P[0].av?`<span class="av me">${avImg(avOf(P[0].av))}</span>`:''}${s.short}: <b>${s.score}</b>${round?` · ${caps.length} taken · ${caps.filter(isClub).length}♣`:''}</span>`}).join('')+
     (sur?`<span class="chip sur">Sur ×${sur.n} ${sides[sur.side].short}</span>`:'');
   if(nPl!==2){/* keep the strip short when many players */$('mine').querySelectorAll('.chip').forEach((e,i)=>{if(i>0&&i<sides.length&&nPl===3)e.style.display='none'})}
   $('hand').innerHTML=me.hand.map((c,k)=>cardHTML(c,sel===k?'sel':'','h'+k)).join('');
   $('hand').classList.toggle('off',!myTurn);
   $('playBtn').hidden=!(myTurn&&sel!=null);$('otherBtn').hidden=!(myTurn&&sel!=null&&opts.length>1);
 }
+const seatEl=i=>document.querySelector(`.seat[data-p="${i}"]`);
+function avatarHTML(p){return avImg(avOf(p.av))}
 function say(t,s){$('say').innerHTML=t+(s?'<small>'+s+'</small>':'')}
 function fly(fromEl,c,toEl,small){return new Promise(res=>{
   if(!fromEl||!toEl||SPD<.1){res();return}
@@ -283,7 +330,7 @@ async function turn(){
 }
 async function playCard(p,k,cap){
   const g=gid;busy=true;const pl=P[p],c=pl.hand[k];if(!c){busy=false;return}
-  const fromEl=p===0?$('h'+k):$('op'+p);
+  const fromEl=p===0?$('h'+k):seatEl(p);
   pl.hand.splice(k,1);sel=null;opts=[];
   const sur=!!(cap&&cap.length)&&isSur(c,cap);   // decided before the card lands on the table
   // the played card lands on the table first
@@ -294,7 +341,7 @@ async function playCard(p,k,cap){
     const sd=sideOf(p),all=cap.concat([c]);
     all.forEach(x=>{const e=$('t'+x.id);if(e)e.classList.add('take')});
     await later(420);if(g!==gid)return;
-    const pile=p===0||nPl===4&&sd===0?$('pile'+sd):$('op'+p)||$('pile'+sd);
+    const pile=p===0||nPl===4&&sd===0?$('pile'+sd):seatEl(p)||$('pile'+sd);
     await Promise.all(all.map(x=>fly($('t'+x.id),x,pile,true)));
     table=table.filter(x=>!all.includes(x));round.caps[sd].push(...all);round.last=sd;sTake(all.length);
     let msg=(p===0?'You take ':pl.name+' takes ')+all.length+' cards';
@@ -377,9 +424,12 @@ function menu(){
   dialog(`<h2>Chahar Barg</h2><p>Pasur – the favourite card game of Iran. Take cards that make 11 and reach 61 points first.</p>
     <h3>Players</h3><div class="seg" id="nS">${[[2,'2 players'],[3,'3 players'],[4,'4 · teams']].map(([n,t])=>`<button data-n="${n}">${t}</button>`).join('')}</div>
     <p class="small" id="nInfo"></p>
+    <h3>Your avatar</h3><div class="avgrid" id="avG">${AV.map(a=>`<button data-a="${a.id}" aria-label="${a.n}"><span class="av">${avImg(a)}</span><span>${a.n}</span></button>`).join('')}</div>
     <button class="big" id="go">Start the game</button>${RULES}`,()=>{
     const paint=()=>{[...$('nS').children].forEach(b=>b.classList.toggle('on',+b.dataset.n===nPl));
-      $('nInfo').textContent=nPl===4?'You and Roxana (partner) against Dariush and Kourosh.':nPl===3?'You against Dariush and Roxana.':'You against Dariush.'};paint();
+      [...$('avG').children].forEach(b=>b.classList.toggle('on',b.dataset.a===myAv));
+      $('nInfo').textContent=nPl===4?'You and a partner against two rivals. Your partner sits opposite you.':nPl===3?'You against two players, on your left and right.':'You against one player, opposite you.'};paint();
+    $('avG').onclick=e=>{const b=e.target.closest('button');if(b){myAv=b.dataset.a;save();paint()}};
     $('nS').onclick=e=>{const b=e.target.closest('button');if(b){nPl=+b.dataset.n;save();paint()}};
     $('go').onclick=()=>{audio();newGame()};
   });
@@ -387,7 +437,7 @@ function menu(){
 $('newBtn').onclick=menu;
 $('rulesBtn').onclick=()=>{const was=!$('ov').hidden;if(was)return;dialog('<h2>How to play</h2>'+RULES+'<button class="big" id="ok">Back to the game</button>',()=>{$('ok').onclick=()=>{$('ov').hidden=true}})};
 // first look behind the menu
-P=NAMES[nPl].map((n,i)=>({name:n,ai:i>0,hand:[]}));sides=P.map(p=>({short:p.name,score:0}));render();say('Chahar Barg');menu();
+P=NAMES[nPl].map((n,i)=>({name:n,av:i?AV[i].id:myAv,ai:i>0,hand:[]}));sides=P.map(p=>({short:p.name,score:0}));render();say('Chahar Barg');menu();
 window.__cb={get P(){return P},get table(){return table},get deck(){return deck},get round(){return round},get sides(){return sides},get cur(){return cur},get busy(){return busy},get over(){return over},
   set speed(v){SPD=v},setN:n=>{nPl=n},newGame,aiChoice,playCard,options};
 }
@@ -406,6 +456,8 @@ window.__cb={get P(){return P},get table(){return table},get deck(){return deck}
 <li>Scoring each round: 7 or more clubs 7 points, each Ace 1, each Jack 1, the 2 of clubs 2, the 10 of diamonds 3, and 5 for each Sur.</li></ol>
 <h3>Tips</h3>
 <ul><li>Tap a card to see which table cards it would take – they light up. Tap again to play.</li><li>Watch the 10 of diamonds and the 2 of clubs: together they are worth 5 points.</li><li>Do not leave cards on the table that add up to less than 11 – that gives your rival an easy Sur.</li><li>Keep a Jack for a full table.</li></ul>
+<h3>Avatar pictures</h3>
+<p style="font-size:14px">Portraits from Wikimedia Commons: <a href="https://commons.wikimedia.org/wiki/File:Mohammad_Shams_al-Din_Hafez.jpg">Hafez</a> (public domain), <a href="https://commons.wikimedia.org/wiki/File:Omar_Khayyam,_Sayr_mulhimah_min_al-Sharq_wa-al-Gharb.png">Khayyam</a> (public domain), <a href="https://commons.wikimedia.org/wiki/File:Mevlana-celaleddin-i-rumi-1.jpg">Molavi</a>, <a href="https://commons.wikimedia.org/wiki/File:Avicenna-miniatur.jpg">Ibn Sina</a> (public domain), <a href="https://commons.wikimedia.org/wiki/File:Portrait_of_Rhazes_(al-Razi)_(AD_865_-_925)_Wellcome_L0005053_(cropped).jpg">Razi</a> (Wellcome Collection), <a href="https://commons.wikimedia.org/wiki/File:Maryam_Mirzakhani_in_Seoul_2014.jpg">Maryam Mirzakhani</a> (photo: Gert-Martin Greuel), <a href="https://commons.wikimedia.org/wiki/File:Naderi_2012_JPL.jpg">Firouz Naderi</a> (NASA/JPL-Caltech), <a href="https://commons.wikimedia.org/wiki/File:Parvin_E%27tesami.jpg">Parvin E'tesami</a> (public domain), <a href="https://commons.wikimedia.org/wiki/File:Kamal-ol-molk-1.jpg">Kamal-ol-molk</a> (self-portrait, public domain), <a href="https://commons.wikimedia.org/wiki/File:Mohammad_Mosaddegh_portrait.jpg">Mohammad Mosaddegh</a> (public domain).</p>
 <h3>More free games</h3>
 <ul class="more"><li><a href="/hokm/">Hokm</a></li><li><a href="/stack/">Afsoon Stack</a></li><li><a href="/ludo/">Afsoon Ludo (Mench)</a></li><li><a href="/nard/">Nard: Persian Backgammon</a></li><li><a href="/chess/">Shatranj: Persian Chess</a></li><li><a href="/poker/">Afsoon Poker: Texas Hold&#x27;em</a></li><li><a href="/solitaire/">Afsoon Solitaire</a></li><li><a href="/pool/">Afsoon 8-Ball Pool</a></li></ul>
 <p style="margin-top:20px"><a href="/">&larr; All games on Afsoon Games</a></p>
