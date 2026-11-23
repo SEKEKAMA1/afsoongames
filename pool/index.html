@@ -1,0 +1,580 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#0b0d14">
+<link rel="icon" type="image/png" href="/img/favicon-64.png?v=5">
+<link rel="apple-touch-icon" href="/img/apple-touch-icon.png?v=5">
+<title>Afsoon 8-Ball Pool – Free Billiards Game Online | Afsoon Games</title>
+<meta name="description" content="Afsoon 8-Ball Pool by Afsoon Games. Play free 8-ball pool on a Persian table with realistic ball physics. Play the computer on three levels or a friend on the same screen. Free in your browser, on phone and computer.">
+<link rel="canonical" href="https://afsoongames.com/pool/">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="Afsoon Games">
+<meta property="og:title" content="Afsoon 8-Ball Pool – Free Billiards Game Online">
+<meta property="og:description" content="Free 8-ball pool with realistic physics. Play the computer or a friend. No download.">
+<meta property="og:url" content="https://afsoongames.com/pool/">
+<meta property="og:image" content="https://afsoongames.com/img/covers/pool.webp">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@600;700&family=Nunito:wght@600;700;800;900&display=swap" rel="stylesheet">
+<script src="/js/site.js" defer></script>
+<style>
+:root{--bg:#0b0d14;--line:rgba(212,165,44,.38);--gold:#d4a52c;--gold-2:#f6d999;--text:#f1f4ef;--muted:#a9adbc;
+  --display:Cinzel,Georgia,serif;--ui:Nunito,system-ui,sans-serif;color-scheme:dark}
+*{box-sizing:border-box}
+html,body{margin:0}
+body{background:radial-gradient(90% 70% at 50% 35%,#1c2134 0%,var(--bg) 70%);background-attachment:fixed;color:var(--text);font-family:var(--ui);-webkit-tap-highlight-color:transparent;overflow-x:hidden}
+[hidden]{display:none!important}
+button{font:inherit;color:inherit;cursor:pointer}
+.app{height:100vh;height:100dvh;display:flex;flex-direction:column;max-width:1400px;margin:0 auto;
+  padding:max(8px,env(safe-area-inset-top)) max(10px,env(safe-area-inset-right)) max(8px,env(safe-area-inset-bottom)) max(10px,env(safe-area-inset-left))}
+.top{display:flex;align-items:center;gap:8px;flex:none}
+.brand{font-family:var(--display);font-weight:700;font-size:1.2rem;letter-spacing:.06em;color:var(--gold-2);margin-right:auto;line-height:1.05}
+.brand small{display:block;font:800 .55rem var(--ui);letter-spacing:.24em;color:var(--gold);margin-top:3px}
+.ib{background:rgba(255,255,255,.06);border:1px solid var(--line);border-radius:10px;height:38px;min-width:38px;padding:0 9px;display:inline-flex;align-items:center;justify-content:center;text-decoration:none;color:var(--text)}
+.ib:hover{background:rgba(255,255,255,.12)}
+.ib svg{width:18px;height:18px}
+.players{display:flex;gap:8px;margin:8px 0 6px;flex:none}
+.pl{flex:1;display:flex;align-items:center;gap:10px;padding:6px 12px;border-radius:14px;background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.09);min-width:0;transition:.2s}
+.pl.on{border-color:var(--gold);background:rgba(212,165,44,.13);box-shadow:0 0 18px rgba(212,165,44,.22)}
+.pl .who{min-width:0}
+.pl .nm{font-weight:900;font-size:14px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.pl .gp{font-size:10.5px;color:var(--muted);font-weight:800;letter-spacing:.08em;text-transform:uppercase}
+.pl.on .gp{color:var(--gold-2)}
+.pl .bs{display:flex;gap:3px;margin-left:auto;flex-wrap:wrap;justify-content:flex-end;max-width:60%}
+.pl.r{flex-direction:row-reverse;text-align:right}.pl.r .bs{margin-left:0;margin-right:auto;justify-content:flex-start}
+.mb{width:15px;height:15px;border-radius:50%;position:relative;box-shadow:inset -2px -2px 3px rgba(0,0,0,.35)}
+.mb.st{background:#f4f1e8!important;overflow:hidden}.mb.st::after{content:"";position:absolute;left:0;right:0;top:4px;bottom:4px;background:var(--c)}
+.mb.gone{opacity:.16}
+.stage{flex:1;min-height:0;position:relative}
+canvas{position:absolute;inset:0;width:100%;height:100%;touch-action:none;display:block}
+.msg{position:absolute;left:50%;top:12px;transform:translateX(-50%);pointer-events:none;background:rgba(8,14,14,.88);border:1px solid var(--line);
+  padding:8px 16px;border-radius:14px;font-weight:900;font-size:14px;opacity:0;transition:opacity .25s;max-width:92%;text-align:center;z-index:3}
+.msg.show{opacity:1}
+.ctl{flex:none;display:flex;align-items:center;gap:8px;margin-top:6px}
+.fine{width:46px;height:50px;flex:none;border-radius:14px;border:1px solid var(--line);background:rgba(255,255,255,.06);display:grid;place-items:center;touch-action:none;user-select:none;-webkit-user-select:none}
+.fine svg{width:22px;height:22px}
+.pow{flex:1;height:50px;border-radius:25px;background:rgba(0,0,0,.35);position:relative;touch-action:none;cursor:pointer;border:1px solid var(--line);overflow:hidden;user-select:none;-webkit-user-select:none}
+.pow i{position:absolute;inset:0 auto 0 0;width:0;background:linear-gradient(90deg,#3fbf7f,#f0c040 60%,#e8553f)}
+.pow span{position:absolute;inset:0;display:grid;place-items:center;font-weight:900;font-size:14px;letter-spacing:.03em;pointer-events:none;text-shadow:0 1px 3px #000}
+.pow.off{opacity:.45;cursor:default}
+.spin{width:50px;height:50px;border-radius:50%;background:radial-gradient(circle at 35% 30%,#fff,#dcd7ca 68%,#a6a092);border:2px solid var(--gold);position:relative;flex:none;touch-action:none;cursor:pointer}
+.spin b{position:absolute;width:12px;height:12px;border-radius:50%;background:#d62a2a;left:50%;top:50%;transform:translate(-50%,-50%);box-shadow:0 0 0 2px rgba(255,255,255,.6)}
+.hint{text-align:center;color:var(--muted);font-size:12px;margin-top:5px;flex:none}
+/* dialogs */
+.ov{position:fixed;inset:0;z-index:50;background:rgba(3,4,10,.72);display:grid;place-items:center;padding:20px;backdrop-filter:blur(3px)}
+.ov-home{position:absolute;top:max(12px,env(safe-area-inset-top));right:max(12px,env(safe-area-inset-right));display:inline-flex;align-items:center;gap:6px;height:40px;padding:0 14px;border-radius:12px;border:1px solid rgba(230,184,92,.6);background:rgba(0,0,0,.4);color:var(--gold-2);text-decoration:none;font-weight:800}
+.ov-home svg{width:18px;height:18px}
+.dlg{max-height:100%;overflow:auto;width:min(440px,100%);background:linear-gradient(180deg,#14225a,#0a102a);border:1px solid rgba(212,165,44,.6);border-radius:20px;padding:22px;text-align:center;display:flex;flex-direction:column;gap:12px;box-shadow:0 30px 80px rgba(0,0,0,.6);animation:in .3s cubic-bezier(.2,.8,.3,1.2)}
+@keyframes in{from{transform:scale(.92);opacity:0}}
+.dlg h2{font-family:var(--display);margin:0;color:var(--gold-2);font-size:1.6rem}
+.dlg p{margin:0;color:#dfe2ee;line-height:1.5}
+.dlg ul{text-align:left;margin:0;padding-left:20px;color:#d3d7e6;line-height:1.5;font-size:.9rem}
+.seg{display:flex;gap:6px;justify-content:center}
+.seg button{flex:1;height:38px;border-radius:12px;border:1px solid var(--line);background:rgba(255,255,255,.06);font-weight:800}
+.seg button.on{background:var(--gold);color:#241a08;border-color:var(--gold)}
+.big{height:48px;border-radius:14px;border:0;background:linear-gradient(180deg,#f3d27a,#c9972c);color:#241a08;font-weight:900;font-size:1.05rem;box-shadow:0 6px 16px rgba(0,0,0,.35)}
+.big.alt{background:rgba(255,255,255,.08);color:var(--text);border:1px solid var(--line)}
+.small{color:var(--muted);font-size:.85rem}
+@media (max-width:620px){
+  .brand{font-size:1.02rem}.ib{height:36px;min-width:36px}
+  .pl{padding:5px 8px;gap:6px}.pl .nm{font-size:12.5px}.mb{width:11px;height:11px}.mb.st::after{top:3px;bottom:3px}
+  .pl .bs{gap:2px}
+  .fine{width:40px;height:46px}.pow{height:46px}.spin{width:46px;height:46px}
+  .hint{display:none}
+}
+</style>
+</head>
+<body>
+<div class="app">
+  <header class="top">
+    <div class="brand">8-Ball Pool<small>AFSOON GAMES</small></div>
+    <button class="ib" id="newBtn" aria-label="New game" title="New game"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 11a8 8 0 1 0-2.3 5.7"/><path d="M20 4v7h-7"/></svg></button>
+    <button class="ib" id="snd" aria-label="Sound on"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"><path d="M4 10v4h4l5 4V6L8 10z"/><path id="wave" d="M16 9a4 4 0 0 1 0 6M18.5 6.5a8 8 0 0 1 0 11"/></svg></button>
+    <a class="ib" href="/" aria-label="Home" title="Home"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"><path d="M3 11 12 4l9 7v9h-6v-6H9v6H3z"/></svg></a>
+  </header>
+  <div class="players">
+    <div class="pl" id="p0"><div class="who"><div class="nm"></div><div class="gp"></div></div><div class="bs"></div></div>
+    <div class="pl r" id="p1"><div class="who"><div class="nm"></div><div class="gp"></div></div><div class="bs"></div></div>
+  </div>
+  <div class="stage" id="stage"><canvas id="cv"></canvas><div class="msg" id="msg"></div></div>
+  <div class="ctl">
+    <button class="fine" id="fl" aria-label="Turn aim left"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="m15 6-6 6 6 6"/></svg></button>
+    <div class="pow" id="pow" role="slider" aria-label="Shot power: drag and let go to shoot" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" tabindex="0"><i id="powFill"></i><span id="powTxt">Drag to set power, let go to shoot</span></div>
+    <button class="fine" id="fr" aria-label="Turn aim right"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="m9 6 6 6-6 6"/></svg></button>
+    <div class="spin" id="spin" role="slider" aria-label="Spin: tap high for follow, low for draw" title="Spin: tap high for follow, low for draw"><b id="spinDot"></b></div>
+  </div>
+  <div class="hint">Touch or drag on the table to aim · arrows turn the aim a tiny bit · the white ball with the red dot sets spin</div>
+</div>
+
+<div class="ov" id="ov"><a class="ov-home" href="/" aria-label="Home" title="Home"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"><path d="M3 11 12 4l9 7v9h-6v-6H9v6H3z"/></svg>Home</a><div class="dlg" id="dlg" role="dialog" aria-modal="true"></div></div>
+
+<script>
+(()=>{
+const $=id=>document.getElementById(id);
+/* ---------- table geometry (world units, play area W x H) ---------- */
+const W=1000,H=500,R=11.5,F=50,J=20,CM=34,SM=25;
+const VMAX=2700,FA=120,FK=0.55,EB=0.95,EC=0.76;
+const HEAD=W*0.25,FOOT=W*0.75;
+const COLORS={1:'#f2c200',2:'#1f4fd1',3:'#d12a2a',4:'#5b2a8c',5:'#ef7a12',6:'#178a4a',7:'#7d1c22',8:'#121212'};
+const colorOf=n=>COLORS[n>8?n-8:n];
+const kind=n=>n===0?'cue':n===8?'eight':n<8?'solid':'stripe';
+const GN={solid:'solids',stripe:'stripes',eight:'the 8-ball'};
+const POCKETS=[
+  {x:-5,y:-5,r:27,ax:10,ay:10,dx:-1,dy:-1},{x:W/2,y:-14,r:23,ax:W/2,ay:2,side:1,dx:0,dy:-1},{x:W+5,y:-5,r:27,ax:W-10,ay:10,dx:1,dy:-1},
+  {x:-5,y:H+5,r:27,ax:10,ay:H-10,dx:-1,dy:1},{x:W/2,y:H+14,r:23,ax:W/2,ay:H-2,side:1,dx:0,dy:1},{x:W+5,y:H+5,r:27,ax:W-10,ay:H-10,dx:1,dy:1}];
+const RAILS=[
+  [[CM-14,-J],[CM,0],[W/2-SM,0],[W/2-SM,-J]],[[W/2+SM,-J],[W/2+SM,0],[W-CM,0],[W-CM+14,-J]],
+  [[CM-14,H+J],[CM,H],[W/2-SM,H],[W/2-SM,H+J]],[[W/2+SM,H+J],[W/2+SM,H],[W-CM,H],[W-CM+14,H+J]],
+  [[-J,CM-14],[0,CM],[0,H-CM],[-J,H-CM+14]],[[W+J,CM-14],[W,CM],[W,H-CM],[W+J,H-CM+14]]];
+const SEGS=[];RAILS.forEach(p=>{for(let i=0;i<p.length-1;i++)SEGS.push([p[i][0],p[i][1],p[i+1][0],p[i+1][1]])});
+
+/* ---------- saved settings ---------- */
+let muted=false,level=1,stats={w:0,l:0};
+try{const s=JSON.parse(localStorage.getItem('afsoon-pool')||'{}');muted=!!s.muted;if(s.level>=0&&s.level<=2)level=s.level;if(s.stats)stats=s.stats}catch(e){}
+const save=()=>{try{localStorage.setItem('afsoon-pool',JSON.stringify({muted,level,stats}))}catch(e){}};
+
+/* ---------- sound ---------- */
+let AC=null,NB=null,lastClick=0;
+function audio(){
+  if(!AC){try{AC=new (window.AudioContext||window.webkitAudioContext)();const n=AC.sampleRate*.5;NB=AC.createBuffer(1,n,AC.sampleRate);const d=NB.getChannelData(0);for(let i=0;i<n;i++)d[i]=Math.random()*2-1}catch(e){}}
+  if(AC&&AC.state==='suspended')AC.resume();return AC;
+}
+function noise(vol,freq,q,dur,type){
+  if(muted||!AC||vol<.01)return;const t=AC.currentTime;
+  const s=AC.createBufferSource();s.buffer=NB;const f=AC.createBiquadFilter();f.type=type||'bandpass';f.frequency.value=freq;f.Q.value=q;
+  const g=AC.createGain();g.gain.setValueAtTime(vol,t);g.gain.exponentialRampToValueAtTime(.0008,t+dur);
+  s.connect(f);f.connect(g);g.connect(AC.destination);s.start(t,Math.random()*.3);s.stop(t+dur+.02);
+}
+function tone(vol,f1,f2,dur){
+  if(muted||!AC)return;const t=AC.currentTime,o=AC.createOscillator(),g=AC.createGain();
+  o.frequency.setValueAtTime(f1,t);o.frequency.exponentialRampToValueAtTime(f2,t+dur);g.gain.setValueAtTime(vol,t);g.gain.exponentialRampToValueAtTime(.0008,t+dur);
+  o.connect(g);g.connect(AC.destination);o.start(t);o.stop(t+dur+.02);
+}
+const sBall=v=>{const now=performance.now();if(now-lastClick<12)return;lastClick=now;const a=Math.min(1,v/1400);noise(.15+a*.85,2400+a*900,1.4,.05);tone(a*.12,1900,1500,.03)};
+const sRail=v=>{const a=Math.min(1,v/1600);if(a<.03)return;noise(a*.55,420,.8,.09,'lowpass');tone(a*.25,140,90,.1)};
+const sPocket=()=>{noise(.45,500,.7,.2,'lowpass');tone(.3,110,55,.25);setTimeout(()=>noise(.2,900,1,.06),110);setTimeout(()=>noise(.12,800,1,.05),190)};
+const sCue=p=>{noise(.3+p*.6,1500,1.2,.05);tone(.1+p*.15,700,400,.05)};
+function sndUI(){$('wave').style.display=muted?'none':'';$('snd').setAttribute('aria-label',muted?'Sound off':'Sound on')}
+$('snd').onclick=()=>{audio();muted=!muted;sndUI();save()};sndUI();
+
+/* ---------- state ---------- */
+let balls=[],cue=null,players=[],turn=0,mode='ai',state='menu',ballInHand=false,kitchen=false,breakShot=true;
+let aim=0,power=0,spin=0,shot=null,aiBusy=false,aiPull=0,strike=null,dragCue=false,msgT=0;
+const isAI=p=>mode==='ai'&&p===1;
+const human=()=>!isAI(turn);
+const ballN=n=>balls.find(b=>b.n===n);
+
+function rack(){
+  balls=[];cue={n:0,x:HEAD*.88,y:H/2,vx:0,vy:0,on:true,sink:0,ph:0,dir:0};balls.push(cue);
+  const solids=[2,3,4,5,6,7],stripes=[9,10,11,12,13,14,15];
+  const shuffle=a=>{for(let i=a.length-1;i>0;i--){const j=Math.random()*(i+1)|0;[a[i],a[j]]=[a[j],a[i]]}return a};
+  shuffle(solids);shuffle(stripes);
+  const order=new Array(15);order[0]=1;order[4]=8;
+  const flip=Math.random()<.5;order[10]=flip?solids.pop():stripes.pop();order[14]=flip?stripes.pop():solids.pop();
+  const rest=shuffle(solids.concat(stripes));for(let i=0;i<15;i++)if(order[i]==null)order[i]=rest.pop();
+  let k=0;const dx=R*2*Math.cos(Math.PI/6)+.35;
+  for(let row=0;row<5;row++)for(let j=0;j<=row;j++){
+    balls.push({n:order[k++],x:FOOT+row*dx+(Math.random()-.5)*.2,y:H/2+(j-row/2)*(R*2+.35),vx:0,vy:0,on:true,sink:0,ph:Math.random()*6,dir:Math.random()*6});
+  }
+}
+function newGame(m){
+  mode=m;rack();turn=0;breakShot=true;ballInHand=true;kitchen=true;aim=0;power=0;spin=0;shot=null;aiBusy=false;strike=null;
+  players=[{name:mode==='ai'?'You':'Player 1',group:null},{name:mode==='ai'?'Computer':'Player 2',group:null}];
+  state='aim';$('ov').hidden=true;setSpin(0);ui();
+  toast((human()?players[turn].name+' break':'Computer breaks')+' – the white ball can move behind the line',2600);
+  if(isAI(turn))aiTurn();
+}
+
+/* ---------- physics ---------- */
+function physics(dt){
+  let mv=0;for(const b of balls)if(b.on&&!b.sink)mv=Math.max(mv,Math.hypot(b.vx,b.vy));
+  const n=Math.max(1,Math.ceil(mv*dt/(R*.35)));const h=dt/n;
+  for(let k=0;k<n;k++)substep(h);
+}
+function substep(h){
+  const L=balls.length;
+  for(const b of balls){if(!b.on||b.sink)continue;const s=Math.hypot(b.vx,b.vy);if(!s)continue;
+    b.x+=b.vx*h;b.y+=b.vy*h;b.ph+=s*h/R;b.dir=Math.atan2(b.vy,b.vx);}
+  for(let i=0;i<L;i++){const a=balls[i];if(!a.on||a.sink)continue;
+    for(let j=i+1;j<L;j++){const b=balls[j];if(!b.on||b.sink)continue;
+      const dx=b.x-a.x,dy=b.y-a.y,d2=dx*dx+dy*dy;if(d2>=4*R*R||d2===0)continue;
+      const d=Math.sqrt(d2),nx=dx/d,ny=dy/d,ov=(2*R-d)/2;a.x-=nx*ov;a.y-=ny*ov;b.x+=nx*ov;b.y+=ny*ov;
+      const rel=(a.vx-b.vx)*nx+(a.vy-b.vy)*ny;if(rel<=0)continue;
+      const imp=rel*(1+EB)/2;a.vx-=imp*nx;a.vy-=imp*ny;b.vx+=imp*nx;b.vy+=imp*ny;sBall(rel);
+      if(shot&&shot.firstHit==null&&(a.n===0||b.n===0)){shot.firstHit=a.n===0?b.n:a.n;
+        if(shot.spin){const add=shot.spin*.36*shot.speed*Math.max(.25,Math.abs(rel)/shot.speed);cue.vx+=Math.cos(shot.a)*add;cue.vy+=Math.sin(shot.a)*add}}
+    }}
+  for(const b of balls){if(!b.on||b.sink)continue;
+    if(b.x>R&&b.x<W-R&&b.y>R&&b.y<H-R){friction(b,h);continue}
+    for(const s of SEGS){
+      const ex=s[2]-s[0],ey=s[3]-s[1],l2=ex*ex+ey*ey;let t=((b.x-s[0])*ex+(b.y-s[1])*ey)/l2;t=t<0?0:t>1?1:t;
+      const qx=s[0]+ex*t,qy=s[1]+ey*t,dx=b.x-qx,dy=b.y-qy,d2=dx*dx+dy*dy;if(d2>=R*R)continue;
+      const d=Math.sqrt(d2)||1e-6,nx=dx/d,ny=dy/d;b.x=qx+nx*R;b.y=qy+ny*R;
+      const vn=b.vx*nx+b.vy*ny;if(vn<0){b.vx-=(1+EC)*vn*nx;b.vy-=(1+EC)*vn*ny;b.vx*=.985;b.vy*=.985;sRail(-vn);if(shot)shot.rail=true}
+    }
+    for(const p of POCKETS){if((b.x-p.x)**2+(b.y-p.y)**2<p.r*p.r){pot(b,p);break}}
+    if(!b.sink&&(b.x<-F*.7||b.x>W+F*.7||b.y<-F*.7||b.y>H+F*.7)){let bp=POCKETS[0],bd=1e9;for(const p of POCKETS){const d=(b.x-p.x)**2+(b.y-p.y)**2;if(d<bd){bd=d;bp=p}}pot(b,bp)}
+    if(!b.sink)friction(b,h);
+  }
+}
+function friction(b,h){const s=Math.hypot(b.vx,b.vy);if(!s)return;const ns=s-(FA+FK*s)*h;if(ns<3){b.vx=b.vy=0}else{b.vx*=ns/s;b.vy*=ns/s}}
+function pot(b,p){b.sink=.001;b.px=p.x;b.py=p.y;b.sx=b.x;b.sy=b.y;b.vx=b.vy=0;sPocket();
+  if(shot){if(b.n===0)shot.cuePotted=true;else shot.potted.push(b.n)}}
+function moving(){return balls.some(b=>b.on&&(b.sink||b.vx||b.vy))}
+
+/* ---------- rules ---------- */
+function groupLeft(g){return balls.filter(b=>b.on&&!b.sink&&kind(b.n)===g).length}
+function cleared(p){const g=players[p].group;return !!g&&groupLeft(g)===0}
+function legal(p){
+  if(breakShot)return balls.filter(b=>b.on&&b.n);
+  const g=players[p].group;
+  if(!g)return balls.filter(b=>b.on&&b.n&&b.n!==8);
+  if(cleared(p))return balls.filter(b=>b.on&&b.n===8);
+  return balls.filter(b=>b.on&&kind(b.n)===g);
+}
+function shoot(a,p){
+  audio();if(!cue.on)return;
+  const speed=40+Math.pow(Math.max(0,Math.min(1,p)),1.25)*VMAX;
+  shot={a,speed,spin,firstHit:null,potted:[],cuePotted:false,rail:false,shooter:turn,wasBreak:breakShot,clearedBefore:cleared(turn)};
+  cue.vx=Math.cos(a)*speed;cue.vy=Math.sin(a)*speed;
+  strike={x:cue.x,y:cue.y,a,pull:p*90+8,t:0};
+  sCue(p);ballInHand=false;kitchen=false;state='moving';power=0;powUI();
+}
+function freeSpot(x,y,limitX){
+  for(let k=0;k<400;k++){const ang=k*.7,rad=k*1.6,px=x+Math.cos(ang)*rad,py=y+Math.sin(ang)*rad*.6;
+    if(validSpot(px,py,limitX))return[px,py]}
+  return[x,y];
+}
+function validSpot(x,y,limitX){
+  if(x<R||x>(limitX||W-R)||y<R||y>H-R)return false;
+  return balls.every(b=>b===cue||!b.on||(b.x-x)**2+(b.y-y)**2>=(2*R+.5)**2);
+}
+function endShot(){
+  const s=shot,me=s.shooter,op=1-me,P=players[me];shot=null;
+  let foul=false,why='';
+  if(s.cuePotted){foul=true;why='Scratch! The white ball went in.'}
+  else if(s.firstHit==null){foul=true;why='Foul: no ball was hit.'}
+  else if(!s.wasBreak){
+    if(P.group){const need=s.clearedBefore?'eight':P.group;if(kind(s.firstHit)!==need){foul=true;why='Foul: '+P.name+(P.name==='You'?' hit ':' hit ')+(kind(s.firstHit)==='eight'?'the 8-ball':GN[kind(s.firstHit)].replace(/s$/,''))+' first.'}}
+    else if(s.firstHit===8){foul=true;why='Foul: the 8-ball was hit first.'}
+  }
+  const pot8=s.potted.includes(8);
+  if(pot8){
+    if(s.wasBreak){const e=ballN(8);const[px,py]=freeSpot(FOOT,H/2);Object.assign(e,{on:true,sink:0,x:px,y:py,vx:0,vy:0});toast('8-ball on the break – it goes back on the spot')}
+    else if(s.clearedBefore&&!foul)return over(me,'potted the 8-ball');
+    else return over(op,foul?'8-ball went in on a foul':'8-ball went in too early');
+  }
+  const objs=s.potted.filter(n=>n!==8);let cont=false,msg='';
+  if(!P.group&&!s.wasBreak&&!foul&&objs.length){const g=kind(objs[0]);P.group=g;players[op].group=g==='solid'?'stripe':'solid';msg=(P.name==='You'?'You take ':P.name+' takes ')+GN[g]+'. '}
+  if(!foul){if(s.wasBreak)cont=objs.length>0;else if(P.group)cont=objs.some(n=>kind(n)===P.group)}
+  breakShot=false;
+  if(foul){
+    turn=op;ballInHand=true;
+    if(!cue.on||cue.sink){const[px,py]=freeSpot(HEAD,H/2);Object.assign(cue,{on:true,sink:0,x:px,y:py,vx:0,vy:0})}
+    toast(why+' '+(isAI(turn)?'Computer has':players[turn].name==='You'?'You have':players[turn].name+' has')+' ball in hand.',2600);
+  }else if(!cont){turn=op;toast(msg+(isAI(turn)?"Computer's turn":players[turn].name==='You'?'Your turn':players[turn].name+"'s turn"))}
+  else toast(msg+(isAI(turn)?'Computer shoots again':'Nice! Shoot again'));
+  state='aim';
+  if(human()){const t=legal(turn)[0];if(t&&!ballInHand)aim=Math.atan2(t.y-cue.y,t.x-cue.x)}
+  ui();if(isAI(turn))aiTurn();
+}
+function over(w,why){
+  state='over';ui();
+  const vsAI=mode==='ai',won=vsAI?w===0:true;
+  if(vsAI){if(w===0)stats.w++;else stats.l++;save()}
+  const head=vsAI?(w===0?'You win!':'Computer wins'):players[w].name+' wins!';
+  const sub=(vsAI&&w!==0?'':'')+(why==='potted the 8-ball'?players[w].name+(players[w].name==='You'?' potted':' potted')+' the 8-ball.':'The '+why+'.');
+  setTimeout(()=>{dialog(`<h2>${head}</h2><p>${sub}</p>${vsAI?`<p class="small">Against the computer: ${stats.w} won · ${stats.l} lost</p>`:''}
+    <button class="big" id="again">Play again</button><button class="big alt" id="menu">Change game</button>`);
+    $('again').onclick=()=>newGame(mode);$('menu').onclick=menu;if(won)tone(.15,523,1046,.5)},700);
+}
+
+/* ---------- computer player ---------- */
+const DSTOP=v=>v/FK-(FA/(FK*FK))*Math.log(1+FK*v/FA);
+function speedFor(D){let lo=0,hi=VMAX*1.5;for(let i=0;i<32;i++){const m=(lo+hi)/2;if(DSTOP(m)<D)lo=m;else hi=m}return hi}
+function pathClear(ax,ay,bx,by,skip){
+  const ex=bx-ax,ey=by-ay,l2=ex*ex+ey*ey||1;
+  for(const b of balls){if(!b.on||b.sink||skip.includes(b))continue;let t=((b.x-ax)*ex+(b.y-ay)*ey)/l2;t=t<0?0:t>1?1:t;
+    if((ax+ex*t-b.x)**2+(ay+ey*t-b.y)**2<(2*R-.5)**2)return false}
+  return true;
+}
+function shotsFrom(cx,cy,p){
+  const out=[];
+  for(const b of legal(p))for(const pk of POCKETS){
+    let dx=pk.ax-b.x,dy=pk.ay-b.y;const d2=Math.hypot(dx,dy);dx/=d2;dy/=d2;
+    if(pk.side&&Math.abs(dy)<.42)continue;
+    if(!pk.side&&(dx*pk.dx+dy*pk.dy)/Math.SQRT2<.2)continue;
+    const gx=b.x-dx*2*R,gy=b.y-dy*2*R;if(gx<R||gx>W-R||gy<R||gy>H-R)continue;
+    let cx2=gx-cx,cy2=gy-cy;const d1=Math.hypot(cx2,cy2);if(d1<1)continue;cx2/=d1;cy2/=d1;
+    const cos=cx2*dx+cy2*dy;if(cos<.22)continue;
+    if(!pathClear(cx,cy,gx,gy,[cue,b])||!pathClear(b.x,b.y,pk.ax,pk.ay,[cue,b]))continue;
+    const vo=speedFor(d2+70),vc=vo/(cos*(1+EB)/2),v0=speedFor(d1+DSTOP(vc))*1.08;
+    if(v0>VMAX*1.05)continue;
+    out.push({a:Math.atan2(cy2,cx2),p:Math.pow(Math.max(0,Math.min(1,(v0-40)/VMAX)),1/1.25),score:Math.pow(cos,1.6)/(1+(d1+d2)/900)*(pk.side?.85:1),b});
+  }
+  return out.sort((x,y)=>y.score-x.score);
+}
+function plan(){
+  if(breakShot){const apex=ballN(1);return{a:Math.atan2(apex.y-cue.y,apex.x-cue.x)+(Math.random()-.5)*.01,p:.96+Math.random()*.04}}
+  const S=shotsFrom(cue.x,cue.y,turn);
+  if(S.length){const pick=level===0?S[Math.min(S.length-1,Math.random()*3|0)]:S[0];return{a:pick.a,p:pick.p}}
+  // no clean pot: just hit a legal ball safely
+  const L=legal(turn).map(b=>({b,d:Math.hypot(b.x-cue.x,b.y-cue.y)})).sort((x,y)=>x.d-y.d);
+  for(const o of L){if(pathClear(cue.x,cue.y,o.b.x,o.b.y,[cue,o.b]))return{a:Math.atan2(o.b.y-cue.y,o.b.x-cue.x),p:.42}}
+  const o=L[0];return{a:o?Math.atan2(o.b.y-cue.y,o.b.x-cue.x):0,p:.6};
+}
+function placeAI(){
+  let best=null,bs=-1;
+  for(let k=0;k<160;k++){const x=R+Math.random()*((kitchen?HEAD:W-R)-R),y=R+Math.random()*(H-2*R);if(!validSpot(x,y,kitchen?HEAD:0))continue;
+    const s=breakShot?1-Math.abs(y-H/2)/H:(shotsFrom(x,y,turn)[0]||{score:0}).score;if(s>bs){bs=s;best=[x,y]}}
+  if(best){cue.x=best[0];cue.y=best[1]}
+}
+function aiTurn(){
+  aiBusy=true;
+  setTimeout(()=>{
+    if(state!=='aim')return;
+    if(ballInHand)placeAI();
+    const pl=plan(),err=[.035,.011,.0035][level],perr=[.12,.06,.025][level];
+    const target=pl.a+gauss()*err,pw=Math.max(.1,Math.min(1,pl.p*(1+gauss()*perr)));
+    const from=aim;let d=((target-from+Math.PI*3)%(Math.PI*2))-Math.PI;const t0=performance.now(),dur=550;
+    const step=()=>{if(state!=='aim')return;const k=Math.min(1,(performance.now()-t0)/dur),e=k<.5?2*k*k:1-Math.pow(-2*k+2,2)/2;aim=from+d*e;
+      if(k<1)requestAnimationFrame(step);else{const t1=performance.now();const pull=()=>{const q=Math.min(1,(performance.now()-t1)/420);aiPull=pw*q;
+        if(q<1)requestAnimationFrame(pull);else{aiPull=0;aiBusy=false;shoot(target,pw)}};pull()}};
+    step();
+  },ballInHand?700:850);
+}
+function gauss(){let u=0,v=0;while(!u)u=Math.random();while(!v)v=Math.random();return Math.sqrt(-2*Math.log(u))*Math.cos(2*Math.PI*v)}
+
+/* ---------- drawing ---------- */
+const cv=$('cv'),ctx=cv.getContext('2d');
+let SPEED=1,dpr=1,M=null,INV=null,portrait=false,LX=-.35,LY=-.4;
+function resize(){
+  const r=$('stage').getBoundingClientRect();dpr=Math.min(2.5,window.devicePixelRatio||1);
+  cv.width=Math.round(r.width*dpr);cv.height=Math.round(r.height*dpr);
+  portrait=r.height>r.width*1.05;
+  const Lw=portrait?H+2*F:W+2*F,Lh=portrait?W+2*F:H+2*F,s=Math.min(r.width/Lw,r.height/Lh);
+  const ox=(r.width-Lw*s)/2,oy=(r.height-Lh*s)/2;
+  M=portrait?new DOMMatrix([0,s,-s,0,ox+(H+F)*s,oy+F*s]):new DOMMatrix([s,0,0,s,ox+F*s,oy+F*s]);
+  INV=M.inverse();
+  // light from the top-left of the screen, whatever the table turn
+  if(portrait){LX=-.4;LY=.35}else{LX=-.35;LY=-.4}
+}
+new ResizeObserver(resize).observe($('stage'));resize();
+function toWorld(e){const r=cv.getBoundingClientRect();const p=INV.transformPoint(new DOMPoint(e.clientX-r.left,e.clientY-r.top));return p}
+
+function star(x,y,r1,r2,n){ctx.beginPath();for(let i=0;i<n*2;i++){const a=i*Math.PI/n-Math.PI/2,r=i%2?r2:r1;ctx.lineTo(x+Math.cos(a)*r,y+Math.sin(a)*r)}ctx.closePath()}
+function rr(x,y,w,h,r){ctx.beginPath();ctx.roundRect?ctx.roundRect(x,y,w,h,r):ctx.rect(x,y,w,h)}
+function drawTable(){
+  // walnut frame
+  let g=ctx.createLinearGradient(0,-F,0,H+F);g.addColorStop(0,'#6b3618');g.addColorStop(.5,'#4a230f');g.addColorStop(1,'#2e1508');
+  rr(-F,-F,W+2*F,H+2*F,28);ctx.fillStyle=g;ctx.fill();
+  ctx.strokeStyle='rgba(0,0,0,.5)';ctx.lineWidth=3;ctx.stroke();
+  rr(-F+7,-F+7,W+2*F-14,H+2*F-14,22);ctx.strokeStyle='rgba(230,184,92,.75)';ctx.lineWidth=1.6;ctx.stroke();
+  rr(-F+11,-F+11,W+2*F-22,H+2*F-22,19);ctx.strokeStyle='rgba(230,184,92,.3)';ctx.lineWidth=1;ctx.stroke();
+  // gold eight-point stars as the sights
+  ctx.fillStyle='#e6c068';
+  for(let i=1;i<8;i++){if(i===4)continue;const x=W*i/8;star(x,-J-(F-J)/2,5.5,2.4,8);ctx.fill();star(x,H+J+(F-J)/2,5.5,2.4,8);ctx.fill()}
+  for(let i=1;i<4;i++){const y=H*i/4;star(-J-(F-J)/2,y,5.5,2.4,8);ctx.fill();star(W+J+(F-J)/2,y,5.5,2.4,8);ctx.fill()}
+  // cushions
+  ctx.fillStyle='#0a4d48';ctx.fillRect(-J,-J,W+2*J,H+2*J);
+  // felt
+  g=ctx.createRadialGradient(W/2,H/2,40,W/2,H/2,W*.62);g.addColorStop(0,'#1a9a90');g.addColorStop(1,'#0d625c');
+  ctx.fillStyle=g;ctx.fillRect(0,0,W,H);
+  // pocket throats in felt colour
+  ctx.fillStyle='#0f6a63';
+  const throat=pts=>{ctx.beginPath();pts.forEach(p=>ctx.lineTo(p[0],p[1]));ctx.closePath();ctx.fill()};
+  throat([[CM,0],[CM-14,-J],[-J,-J],[-J,CM-14],[0,CM],[0,0]]);throat([[W-CM,0],[W-CM+14,-J],[W+J,-J],[W+J,CM-14],[W,CM],[W,0]]);
+  throat([[CM,H],[CM-14,H+J],[-J,H+J],[-J,H-CM+14],[0,H-CM],[0,H]]);throat([[W-CM,H],[W-CM+14,H+J],[W+J,H+J],[W+J,H-CM+14],[W,H-CM],[W,H]]);
+  ctx.fillRect(W/2-SM,-J,SM*2,J+1);ctx.fillRect(W/2-SM,H-1,SM*2,J+1);
+  // faint Persian medallion in the middle of the cloth
+  ctx.save();ctx.globalAlpha=.09;ctx.strokeStyle='#f6d999';ctx.lineWidth=2;
+  star(W/2,H/2,86,46,8);ctx.stroke();star(W/2,H/2,56,30,8);ctx.stroke();ctx.beginPath();ctx.arc(W/2,H/2,104,0,7);ctx.stroke();ctx.restore();
+  // head string and foot spot
+  ctx.strokeStyle=kitchen&&ballInHand?'rgba(246,217,153,.6)':'rgba(255,255,255,.13)';ctx.lineWidth=kitchen&&ballInHand?2:1.2;
+  ctx.beginPath();ctx.moveTo(HEAD,0);ctx.lineTo(HEAD,H);ctx.stroke();
+  ctx.fillStyle='rgba(255,255,255,.25)';ctx.beginPath();ctx.arc(FOOT,H/2,2.6,0,7);ctx.fill();
+  // cushion noses
+  ctx.strokeStyle='rgba(255,255,255,.12)';ctx.lineWidth=1.5;
+  for(const s of SEGS){ctx.beginPath();ctx.moveTo(s[0],s[1]);ctx.lineTo(s[2],s[3]);ctx.stroke()}
+  // pockets
+  for(const p of POCKETS){
+    const pr=p.side?21:25;g=ctx.createRadialGradient(p.x,p.y,2,p.x,p.y,pr);g.addColorStop(0,'#000');g.addColorStop(.8,'#070605');g.addColorStop(1,'#2a1a0c');
+    ctx.fillStyle=g;ctx.beginPath();ctx.arc(p.x,p.y,pr,0,7);ctx.fill();
+    ctx.strokeStyle='rgba(230,184,92,.55)';ctx.lineWidth=1.6;ctx.beginPath();ctx.arc(p.x,p.y,pr+1.5,0,7);ctx.stroke();
+  }
+}
+function drawBall(b,x,y,sc){
+  const r=R*sc;ctx.save();ctx.translate(x,y);
+  ctx.fillStyle='rgba(0,0,0,.32)';ctx.beginPath();ctx.ellipse(-LX*r*.5,-LY*r*.5,r*1.02,r*1.02,0,0,7);ctx.fill();
+  ctx.beginPath();ctx.arc(0,0,r,0,7);ctx.closePath();
+  const st=b.n>8;ctx.fillStyle=b.n===0?'#f7f4ea':st?'#f4f0e4':colorOf(b.n);ctx.fill();
+  ctx.save();ctx.clip();
+  if(st){ctx.fillStyle=colorOf(b.n);ctx.save();ctx.rotate(b.dir);ctx.fillRect(-r,-r*.54,2*r,r*1.08);ctx.restore()}
+  if(b.n){
+    // the number is printed on two opposite sides, like a real ball
+    let c=Math.cos(b.ph),off=Math.sin(b.ph)*r*.55;if(c<0){c=-c;off=-off}
+    {const ux=Math.cos(b.dir),uy=Math.sin(b.dir),sx=ux*off,sy=uy*off,sq=Math.max(.25,Math.abs(c));
+      ctx.save();ctx.translate(sx,sy);ctx.rotate(b.dir);ctx.scale(sq,1);ctx.fillStyle='#fbf8ef';ctx.beginPath();ctx.arc(0,0,r*.5,0,7);ctx.fill();ctx.restore();
+      if(c>.3&&sc>.6){ctx.save();ctx.translate(sx,sy);if(portrait)ctx.rotate(-Math.PI/2);ctx.fillStyle='#111';ctx.font='900 '+(r*.62)+'px Nunito,system-ui,sans-serif';ctx.textAlign='center';ctx.textBaseline='middle';ctx.fillText(b.n,0,r*.04);ctx.restore()}}
+  }
+  ctx.restore();
+  let g=ctx.createRadialGradient(LX*r,LY*r,r*.05,0,0,r*1.05);g.addColorStop(0,'rgba(255,255,255,.75)');g.addColorStop(.22,'rgba(255,255,255,.12)');g.addColorStop(.7,'rgba(0,0,0,0)');g.addColorStop(1,'rgba(0,0,0,.38)');
+  ctx.fillStyle=g;ctx.beginPath();ctx.arc(0,0,r,0,7);ctx.fill();
+  ctx.restore();
+}
+function cast(ox,oy,dx,dy){
+  let best=Infinity,hit=null;
+  for(const b of balls){if(!b.on||b.sink||b===cue)continue;const fx=ox-b.x,fy=oy-b.y,bq=fx*dx+fy*dy,c=fx*fx+fy*fy-4*R*R,disc=bq*bq-c;
+    if(disc<0)continue;const t=-bq-Math.sqrt(disc);if(t>0&&t<best){best=t;hit=b}}
+  const tx=dx>0?(W-R-ox)/dx:dx<0?(R-ox)/dx:Infinity,ty=dy>0?(H-R-oy)/dy:dy<0?(R-oy)/dy:Infinity,tw=Math.min(tx,ty);
+  if(tw<best)return{t:tw,hit:null,wall:tx<ty?'x':'y'};
+  return{t:best,hit};
+}
+function drawGuide(){
+  const dx=Math.cos(aim),dy=Math.sin(aim),c=cast(cue.x,cue.y,dx,dy),gx=cue.x+dx*c.t,gy=cue.y+dy*c.t;
+  const ok=!c.hit||breakShot||legal(turn).includes(c.hit);
+  ctx.save();ctx.lineWidth=2;ctx.strokeStyle='rgba(255,255,255,.75)';ctx.setLineDash([7,6]);
+  ctx.beginPath();ctx.moveTo(cue.x+dx*R,cue.y+dy*R);ctx.lineTo(gx,gy);ctx.stroke();ctx.setLineDash([]);
+  ctx.strokeStyle=ok?'rgba(255,255,255,.9)':'#ff5a4e';ctx.beginPath();ctx.arc(gx,gy,R,0,7);ctx.stroke();
+  if(!ok){ctx.beginPath();ctx.moveTo(gx-R*.6,gy-R*.6);ctx.lineTo(gx+R*.6,gy+R*.6);ctx.moveTo(gx+R*.6,gy-R*.6);ctx.lineTo(gx-R*.6,gy+R*.6);ctx.stroke()}
+  if(c.hit&&ok){
+    const nx=(c.hit.x-gx)/(2*R),ny=(c.hit.y-gy)/(2*R),cs=dx*nx+dy*ny;
+    ctx.strokeStyle='rgba(246,217,153,.95)';ctx.lineWidth=2.4;ctx.beginPath();ctx.moveTo(c.hit.x,c.hit.y);ctx.lineTo(c.hit.x+nx*(40+150*cs),c.hit.y+ny*(40+150*cs));ctx.stroke();
+    let tx=dx-cs*nx,ty=dy-cs*ny;const tl=Math.hypot(tx,ty);
+    if(tl>.02){tx/=tl;ty/=tl;ctx.strokeStyle='rgba(255,255,255,.4)';ctx.lineWidth=1.6;ctx.beginPath();ctx.moveTo(gx,gy);ctx.lineTo(gx+tx*(20+90*(1-cs)),gy+ty*(20+90*(1-cs)));ctx.stroke()}
+  }else if(!c.hit){
+    const rx=c.wall==='x'?-dx:dx,ry=c.wall==='y'?-dy:dy;ctx.strokeStyle='rgba(255,255,255,.35)';ctx.lineWidth=1.6;ctx.setLineDash([5,6]);
+    ctx.beginPath();ctx.moveTo(gx,gy);ctx.lineTo(gx+rx*110,gy+ry*110);ctx.stroke();ctx.setLineDash([]);
+  }
+  ctx.restore();
+}
+function drawCue(x,y,a,pull){
+  ctx.save();ctx.translate(x,y);ctx.rotate(a+Math.PI);
+  const s=R+4+pull,L=620;
+  ctx.fillStyle='rgba(0,0,0,.28)';ctx.beginPath();ctx.moveTo(s+3,1.5+3);ctx.lineTo(s+L+3,6+3);ctx.lineTo(s+L+3,-6+3);ctx.lineTo(s+3,-1.5+3);ctx.fill();
+  let g=ctx.createLinearGradient(s,0,s+L,0);
+  g.addColorStop(0,'#5aa9d6');g.addColorStop(.012,'#5aa9d6');g.addColorStop(.013,'#f4efe2');g.addColorStop(.03,'#f4efe2');g.addColorStop(.031,'#e9cf98');
+  g.addColorStop(.55,'#d9b06a');g.addColorStop(.56,'#e6b85c');g.addColorStop(.575,'#e6b85c');g.addColorStop(.58,'#2a1408');g.addColorStop(.93,'#140a04');g.addColorStop(.94,'#e6b85c');g.addColorStop(.955,'#e6b85c');g.addColorStop(.96,'#1a0d05');g.addColorStop(1,'#1a0d05');
+  ctx.fillStyle=g;ctx.beginPath();ctx.moveTo(s,-2.6);ctx.lineTo(s+L,-6.5);ctx.lineTo(s+L,6.5);ctx.lineTo(s,2.6);ctx.closePath();ctx.fill();
+  // gold diamond inlays on the butt
+  ctx.fillStyle='#f0cf7c';for(let i=0;i<4;i++){const px=s+L*(.66+i*.07);ctx.beginPath();ctx.moveTo(px-6,0);ctx.lineTo(px,-4.6);ctx.lineTo(px+6,0);ctx.lineTo(px,4.6);ctx.fill()}
+  ctx.fillStyle='rgba(255,255,255,.18)';ctx.fillRect(s,-2,L*.55,1.4);
+  ctx.restore();
+}
+function frame(now){
+  const dt=Math.min(.033,(now-(frame.t||now))/1000);frame.t=now;
+  if(state==='moving'){for(let k=0;k<SPEED;k++)physics(dt);}
+  for(const b of balls){if(b.sink){b.sink+=dt*SPEED/.22;const k=Math.min(1,b.sink);b.x=b.sx+(b.px-b.sx)*k;b.y=b.sy+(b.py-b.sy)*k;if(b.sink>=1){b.sink=0;b.on=false}}}
+  if(state==='moving'&&!moving()){state='settle';setTimeout(endShot,180)}
+  if(strike){strike.t+=dt}
+  if(msgT&&now>msgT){$('msg').classList.remove('show');msgT=0}
+  ctx.setTransform(dpr,0,0,dpr,0,0);ctx.clearRect(0,0,cv.width,cv.height);
+  ctx.setTransform(M.a*dpr,M.b*dpr,M.c*dpr,M.d*dpr,M.e*dpr,M.f*dpr);
+  drawTable();
+  for(const b of balls)if(b.on)drawBall(b,b.x,b.y,b.sink?1-b.sink*.55:1);
+  if(state==='aim'&&cue.on){
+    if(ballInHand&&human()){const pulse=.5+.5*Math.sin(now/220);ctx.strokeStyle='rgba(246,217,153,'+(.4+pulse*.5)+')';ctx.lineWidth=2;ctx.setLineDash([4,4]);ctx.beginPath();ctx.arc(cue.x,cue.y,R*2.3,0,7);ctx.stroke();ctx.setLineDash([])}
+    if(!dragCue){if(human())drawGuide();drawCue(cue.x,cue.y,aim,(human()?power:aiPull)*90)}
+  }
+  if(strike&&strike.t<.14){const k=strike.t/.14;drawCue(strike.x,strike.y,strike.a,strike.pull*(1-k)-k*4)}
+  requestAnimationFrame(frame);
+}
+requestAnimationFrame(frame);
+
+/* ---------- input ---------- */
+let aimId=null;
+cv.addEventListener('pointerdown',e=>{
+  if(state!=='aim'||!human()||aiBusy)return;audio();
+  const p=toWorld(e);
+  if(ballInHand&&Math.hypot(p.x-cue.x,p.y-cue.y)<R*3.2){dragCue=true}
+  else{aim=Math.atan2(p.y-cue.y,p.x-cue.x)}
+  aimId=e.pointerId;cv.setPointerCapture(e.pointerId);
+});
+cv.addEventListener('pointermove',e=>{
+  if(e.pointerId!==aimId||state!=='aim')return;const p=toWorld(e);
+  if(dragCue){const lim=kitchen?HEAD:W-R;const x=Math.max(R,Math.min(lim,p.x)),y=Math.max(R,Math.min(H-R,p.y));if(validSpot(x,y,kitchen?HEAD:0)){cue.x=x;cue.y=y}}
+  else if(Math.hypot(p.x-cue.x,p.y-cue.y)>R*1.5)aim=Math.atan2(p.y-cue.y,p.x-cue.x);
+});
+const upAim=e=>{if(e.pointerId===aimId){aimId=null;dragCue=false}};
+cv.addEventListener('pointerup',upAim);cv.addEventListener('pointercancel',upAim);
+// power bar
+const pow=$('pow');let powId=null;
+function powUI(){$('powFill').style.width=(power*100)+'%';pow.setAttribute('aria-valuenow',Math.round(power*100));
+  $('powTxt').textContent=power>0?Math.round(power*100)+'%  ·  let go to shoot':(canShoot()?'Drag to set power, let go to shoot':isAI(turn)?'Computer is playing…':'Wait…');pow.classList.toggle('off',!canShoot()&&!power)}
+const canShoot=()=>state==='aim'&&human()&&!aiBusy&&cue&&cue.on;
+const setPow=e=>{const r=pow.getBoundingClientRect();power=Math.max(0,Math.min(1,(e.clientX-r.left-6)/(r.width-12)));powUI()};
+pow.addEventListener('pointerdown',e=>{if(!canShoot())return;audio();powId=e.pointerId;pow.setPointerCapture(e.pointerId);setPow(e)});
+pow.addEventListener('pointermove',e=>{if(e.pointerId===powId)setPow(e)});
+pow.addEventListener('pointerup',e=>{if(e.pointerId!==powId)return;powId=null;if(power>.02&&canShoot())shoot(aim,power);else{power=0;powUI()}});
+pow.addEventListener('pointercancel',()=>{powId=null;power=0;powUI()});
+pow.addEventListener('keydown',e=>{if(!canShoot())return;if(e.key==='ArrowUp'||e.key==='ArrowRight'){power=Math.min(1,power+.05);powUI();e.preventDefault()}if(e.key==='ArrowDown'||e.key==='ArrowLeft'){power=Math.max(0,power-.05);powUI();e.preventDefault()}if(e.key==='Enter'||e.key===' '){if(power>.02)shoot(aim,power);e.preventDefault()}});
+// fine aim
+function holdBtn(el,dir){let t1=null,t2=null;const stop=()=>{clearTimeout(t1);clearInterval(t2)};
+  el.addEventListener('pointerdown',e=>{if(!canShoot())return;e.preventDefault();aim+=dir*.003;t1=setTimeout(()=>{t2=setInterval(()=>{if(canShoot())aim+=dir*.006},40)},320)});
+  ['pointerup','pointerleave','pointercancel'].forEach(k=>el.addEventListener(k,stop))}
+// in portrait the table is turned, so "left" means turning the other way on screen
+holdBtn($('fl'),-1);holdBtn($('fr'),1);
+document.addEventListener('keydown',e=>{if(!canShoot()||e.target===pow)return;
+  if(e.key==='ArrowLeft'||e.key==='ArrowUp'){aim-=e.shiftKey?.02:.003;e.preventDefault()}
+  if(e.key==='ArrowRight'||e.key==='ArrowDown'){aim+=e.shiftKey?.02:.003;e.preventDefault()}});
+// spin
+function setSpin(v){spin=v;$('spinDot').style.top=(50-v*32)+'%'}
+const sp=$('spin');let spId=null;
+const spinAt=e=>{const r=sp.getBoundingClientRect();setSpin(Math.max(-1,Math.min(1,-((e.clientY-r.top)/r.height-.5)/.36)))};
+sp.addEventListener('pointerdown',e=>{if(!canShoot())return;spId=e.pointerId;sp.setPointerCapture(e.pointerId);spinAt(e)});
+sp.addEventListener('pointermove',e=>{if(e.pointerId===spId)spinAt(e)});
+sp.addEventListener('pointerup',()=>{spId=null;toast(spin>.15?'Follow: the white ball rolls on after the hit':spin<-.15?'Draw: the white ball comes back after the hit':'No spin',1400)});
+sp.addEventListener('dblclick',()=>setSpin(0));
+
+/* ---------- UI ---------- */
+function toast(t,ms){$('msg').textContent=t;$('msg').classList.add('show');msgT=performance.now()+(ms||1900)}
+function ui(){
+  players.forEach((P,i)=>{const el=$('p'+i);el.classList.toggle('on',state!=='over'&&turn===i);
+    el.querySelector('.nm').textContent=P.name+(isAI(i)?' · '+['Easy','Normal','Hard'][level]:'');
+    let g=P.group?(cleared(i)?'Now the 8-ball':GN[P.group]):'Open table';el.querySelector('.gp').textContent=g;
+    const nums=P.group==='solid'?[1,2,3,4,5,6,7]:P.group==='stripe'?[9,10,11,12,13,14,15]:[];
+    el.querySelector('.bs').innerHTML=nums.map(n=>{const b=ballN(n);return'<span class="mb'+(n>8?' st':'')+(b&&b.on&&!b.sink?'':' gone')+'" style="background:'+colorOf(n)+';--c:'+colorOf(n)+'"></span>'}).join('')+(P.group&&cleared(i)?'<span class="mb" style="background:#121212;box-shadow:0 0 0 2px var(--gold)"></span>':'');
+  });
+  if(state==='aim'&&ballInHand&&human())toast((kitchen?'Break: drag the white ball anywhere behind the line':'Ball in hand: drag the white ball anywhere'),2400);
+  setSpin(0);powUI();
+}
+function dialog(html){$('dlg').innerHTML=html;$('ov').hidden=false}
+function menu(){
+  state='menu';
+  dialog(`<h2>Afsoon 8-Ball Pool</h2><p>Pot all your balls – solids or stripes – then the black 8-ball to win.</p>
+  <div class="seg" id="lv"><button data-l="0">Easy</button><button data-l="1">Normal</button><button data-l="2">Hard</button></div>
+  <button class="big" id="vsAI">Play the computer</button>
+  <button class="big alt" id="vs2">2 players on this device</button>
+  <ul><li>Touch the table to aim. Drag the power bar and let go to shoot.</li><li>Hit one of your own balls first, or it is a foul and the other player gets the white ball in hand.</li><li>Pot the 8-ball too early, or pot the white ball with it, and you lose.</li></ul>`);
+  const paint=()=>[...$('lv').children].forEach(b=>b.classList.toggle('on',+b.dataset.l===level));paint();
+  $('lv').onclick=e=>{const b=e.target.closest('button');if(b){level=+b.dataset.l;save();paint()}};
+  $('vsAI').onclick=()=>{audio();newGame('ai')};$('vs2').onclick=()=>{audio();newGame('2p')};
+}
+$('newBtn').onclick=menu;
+rack();players=[{name:'You',group:null},{name:'Computer',group:null}];ui();menu();
+window.__pool={get balls(){return balls},get state(){return state},get turn(){return turn},get players(){return players},newGame,shoot,setAim:a=>aim=a,get aim(){return aim},setLevel:l=>level=l,plan,get cue(){return cue},get ballInHand(){return ballInHand},set mode(m){mode=m},set speed(v){SPEED=v}};
+})();
+</script>
+
+<section class="afs-info" aria-labelledby="afs-h">
+<h2 id="afs-h">How to play Afsoon 8-Ball Pool</h2>
+<p>Afsoon 8-Ball Pool is a free billiards game on a Persian table with a walnut frame and turquoise cloth. The balls roll, bounce off the cushions and drop into the pockets like on a real table. Play the computer on three levels, or a friend on the same phone or computer.</p>
+<h3>Rules</h3>
+<ol><li>One player breaks the rack. The white ball can be placed anywhere behind the line.</li><li>The first player to pot a ball after the break gets that group: solids (1–7) or stripes (9–15). The other player gets the other group.</li><li>Pot one of your own balls and you shoot again. Miss, and it is the other player's turn.</li><li>It is a foul if the white ball goes in, if you hit no ball, or if the first ball you hit is not one of yours. After a foul the other player gets the white ball in hand and can put it anywhere.</li><li>When all your balls are gone, pot the black 8-ball to win. Pot the 8-ball too early, or with a foul, and you lose.</li></ol>
+<h3>Tips</h3>
+<ul><li>The dotted line shows where the white ball goes; the gold line shows where the ball you hit will roll.</li><li>Use the small arrow buttons to turn the aim a tiny bit for exact shots.</li><li>Tap high on the spin ball for follow (the white ball rolls on), low for draw (it comes back).</li><li>On a computer: arrow keys turn the aim, hold Shift to turn faster.</li></ul>
+<h3>More free games</h3>
+<ul class="more"><li><a href="/roulette/">Afsoon Roulette</a></li><li><a href="/blackjack/">Afsoon Blackjack</a></li><li><a href="/poker/">Afsoon Poker: Texas Hold&#x27;em</a></li><li><a href="/nard/">Nard: Persian Backgammon</a></li><li><a href="/chess/">Shatranj: Persian Chess</a></li><li><a href="/hokm/">Hokm</a></li><li><a href="/chogan/">Chogan: Paddle Ball</a></li><li><a href="/river-ride/">River Ride</a></li><li><a href="/water-sort/">Afsoon Water Sort</a></li><li><a href="/mahjong/">Afsoon Mahjong</a></li></ul>
+<p style="margin-top:20px"><a href="/">&larr; All games on Afsoon Games</a></p>
+</section>
+<style>
+.afs-info{box-sizing:border-box;max-width:900px;margin:0 auto;padding:40px 20px 56px;color:#d9dce6;font:16px/1.65 Nunito,system-ui,sans-serif}
+.afs-info h2{font-family:Cinzel,Georgia,serif;color:#f6d999;font-size:1.5rem;margin:0 0 12px}
+.afs-info h3{color:#f6d999;font-size:1.1rem;margin:22px 0 8px}
+.afs-info a{color:#f6d999}
+.afs-info ul.more{display:flex;flex-wrap:wrap;gap:8px;padding:0;list-style:none}.afs-info ul.more a{display:inline-block;padding:6px 12px;border:1px solid rgba(230,184,92,.35);border-radius:16px;text-decoration:none}
+</style>
+</body>
+</html>

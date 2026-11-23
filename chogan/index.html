@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, user-scalable=no">
-<meta name="theme-color" content="#220722">
+<meta name="theme-color" content="#130512">
 <link rel="icon" type="image/png" href="/img/favicon-64.png?v=5">
 <link rel="apple-touch-icon" href="/img/apple-touch-icon.png?v=5">
 <title>Chogan: Paddle Ball – Free Online 2-Player Game | Afsoon Games</title>
@@ -12,10 +12,10 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@600;700&family=Nunito:wght@600;700;800&display=swap" rel="stylesheet">
 <style>
-:root{--bg:#220722;--line:rgba(212,165,44,.35);--gold:#d4a52c;--gold-2:#f6d999;--text:#f1f6f5;--muted:#c09fc0;--display:Cinzel,Georgia,serif;--ui:Nunito,system-ui,sans-serif;color-scheme:dark}
+:root{--bg:#130512;--line:rgba(212,165,44,.35);--gold:#d4a52c;--gold-2:#f6d999;--text:#f1f6f5;--muted:#c09fc0;--display:Cinzel,Georgia,serif;--ui:Nunito,system-ui,sans-serif;color-scheme:dark}
 *{box-sizing:border-box}
 html,body{margin:0;height:100%;overflow:hidden}
-body{background:radial-gradient(90% 80% at 50% 40%,#4a124a 0%,var(--bg) 70%);color:var(--text);font-family:var(--ui);-webkit-tap-highlight-color:transparent;touch-action:none;user-select:none;-webkit-user-select:none}
+body{background:radial-gradient(90% 80% at 50% 40%,#2e1038 0%,var(--bg) 70%);color:var(--text);font-family:var(--ui);-webkit-tap-highlight-color:transparent;touch-action:none;user-select:none;-webkit-user-select:none}
 [hidden]{display:none!important}
 button{font:inherit;color:inherit;cursor:pointer}
 .app{height:100%;display:flex;flex-direction:column;align-items:center;gap:6px;padding:max(6px,env(safe-area-inset-top,0px)) 8px max(6px,env(safe-area-inset-bottom,0px))}
@@ -119,7 +119,7 @@ function point(w){P[w].score++;sfx.point();flash=30;server=1-w;
   serve()}
 function draw(){ctx.save();if(portrait){ctx.translate(0,L);ctx.rotate(-Math.PI/2)}
   /* field: polo green with gold lines, like an old palace maidan */
-  const g=ctx.createLinearGradient(0,0,L,0);g.addColorStop(0,'#6a0f6a');g.addColorStop(.5,'#8a1b8a');g.addColorStop(1,'#6a0f6a');ctx.fillStyle=g;ctx.fillRect(0,0,L,Wd);
+  const g=ctx.createLinearGradient(0,0,L,0);g.addColorStop(0,'#120e26');g.addColorStop(.5,'#1d1740');g.addColorStop(1,'#120e26');ctx.fillStyle=g;ctx.fillRect(0,0,L,Wd);
   ctx.strokeStyle='rgba(246,217,153,.35)';ctx.lineWidth=3;ctx.setLineDash([14,12]);ctx.beginPath();ctx.moveTo(L/2,8);ctx.lineTo(L/2,Wd-8);ctx.stroke();ctx.setLineDash([]);
   ctx.beginPath();ctx.arc(L/2,Wd/2,60,0,7);ctx.stroke();ctx.strokeRect(6,6,L-12,Wd-12);
   /* score */
