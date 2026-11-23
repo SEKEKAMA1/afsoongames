@@ -63,47 +63,85 @@ body.mini main{margin-left:72px}
 /* main */
 main{margin-left:var(--rail);padding-top:calc(var(--top) + 22px);padding-bottom:40px;
   padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));transition:margin .2s ease}
-.inner{max-width:1360px;margin:0 auto;display:flex;flex-direction:column;gap:34px}
-.row h2{display:flex;align-items:baseline;gap:12px;margin:0 0 14px;font-size:20px;font-weight:800}
-.row h2 small{font-size:14px;color:var(--muted);font-weight:700}
+.inner{max-width:1360px;margin:0 auto;display:flex;flex-direction:column;gap:26px}
 
-/* tiles: cover art carries the title, like CrazyGames */
-.tile{position:relative;display:block;border-radius:10px;overflow:hidden;background:var(--panel);aspect-ratio:16/9;isolation:isolate;
-  transition:transform .22s cubic-bezier(.2,.8,.3,1.2),box-shadow .22s ease}
-.tile img{width:100%;height:100%;object-fit:cover;transition:transform .35s ease}
-.tile .name{position:absolute;left:0;right:0;bottom:0;z-index:2;padding:22px 12px 9px;font-weight:800;font-size:14px;
-  background:linear-gradient(180deg,transparent,rgba(8,6,18,.92));opacity:0;transform:translateY(6px);transition:.18s ease}
-.tile:hover .name,.tile:focus-visible .name{opacity:1;transform:none}
-.badge{position:absolute;top:7px;left:7px;z-index:2;width:26px;height:26px;border-radius:7px;display:grid;place-items:center;background:#e8553f;color:#fff}
+/* page backdrop: soft coloured glows + faint Persian star lattice, so it is not one flat blue */
+body{background:
+  radial-gradient(900px 520px at 85% -10%,rgba(123,92,255,.22),transparent 60%),
+  radial-gradient(700px 480px at 10% 30%,rgba(230,184,92,.10),transparent 60%),
+  radial-gradient(800px 600px at 70% 90%,rgba(46,196,182,.10),transparent 60%),
+  var(--bg);background-attachment:fixed}
+body::before{content:"";position:fixed;inset:0;z-index:-1;pointer-events:none;opacity:.05;
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='56' height='56' viewBox='0 0 56 56'%3E%3Cg fill='none' stroke='%23e6b85c' stroke-width='1'%3E%3Cpath d='M28 6l6 16 16 6-16 6-6 16-6-16-16-6 16-6z'/%3E%3Crect x='19' y='19' width='18' height='18' transform='rotate(45 28 28)'/%3E%3C/g%3E%3C/svg%3E")}
+.top{background:rgba(18,17,31,.92);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);
+  border-bottom:1px solid transparent;border-image:linear-gradient(90deg,transparent,rgba(230,184,92,.55),rgba(123,92,255,.55),transparent) 1}
+
+/* hero */
+.hero{position:relative;overflow:hidden;border-radius:20px;padding:26px 30px;display:flex;align-items:center;gap:26px;
+  background:linear-gradient(120deg,#2a1d55 0%,#1b1838 45%,#13283a 100%);border:1px solid rgba(230,184,92,.28);
+  box-shadow:0 20px 50px rgba(0,0,0,.35),inset 0 1px 0 rgba(255,255,255,.06)}
+.hero::after{content:"";position:absolute;inset:0;pointer-events:none;opacity:.12;
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='40' height='40' viewBox='0 0 40 40'%3E%3Cpath d='M20 2l5 13 13 5-13 5-5 13-5-13-13-5 13-5z' fill='none' stroke='%23f6d999'/%3E%3C/svg%3E");
+  -webkit-mask-image:linear-gradient(90deg,transparent 30%,#000);mask-image:linear-gradient(90deg,transparent 30%,#000)}
+.hero h1{margin:0 0 8px;font-family:var(--brand);font-size:clamp(22px,3vw,32px);line-height:1.15;color:var(--gold-2);letter-spacing:.02em}
+.hero p{margin:0;color:#cfc9e2;max-width:56ch;line-height:1.5}
+.hero .facts{display:flex;flex-wrap:wrap;gap:8px;margin-top:14px}
+.hero .facts span{font-size:13px;font-weight:800;padding:5px 11px;border-radius:14px;background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.1)}
+.hero .facts span:nth-child(1){color:#ffe066}.hero .facts span:nth-child(2){color:#7ff0b8}.hero .facts span:nth-child(3){color:#8fd0ff}
+.hero img{width:120px;flex:none;margin-left:auto;position:relative;z-index:1;filter:drop-shadow(0 0 24px rgba(230,184,92,.45))}
+
+/* tiles: one size everywhere; cover on top, name bar below */
+.tile{position:relative;display:flex;flex-direction:column;border-radius:12px;overflow:hidden;background:var(--panel);isolation:isolate;
+  border:1px solid rgba(255,255,255,.08);box-shadow:0 6px 16px rgba(0,0,0,.28);
+  transition:transform .22s cubic-bezier(.2,.8,.3,1.2),box-shadow .22s ease,border-color .22s}
+.tile::before{content:"";position:absolute;left:0;right:0;top:0;height:3px;z-index:3;background:var(--c,var(--gold))}
+.tile img{width:100%;aspect-ratio:16/9;height:auto;object-fit:cover;transition:transform .35s ease}
+.tile .name{display:flex;align-items:center;gap:8px;padding:9px 11px 10px;font-weight:800;font-size:14px;line-height:1.2;
+  background:linear-gradient(180deg,var(--panel-2),var(--panel));white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.tile .name::before{content:"";flex:none;width:8px;height:8px;border-radius:50%;background:var(--c,var(--gold));box-shadow:0 0 8px var(--c,var(--gold))}
+.tile .name em{font-style:normal;overflow:hidden;text-overflow:ellipsis}
+.badge{position:absolute;top:9px;left:8px;z-index:2;height:22px;padding:0 8px 0 6px;border-radius:11px;display:flex;align-items:center;gap:4px;
+  background:#e8553f;color:#fff;font-size:11px;font-weight:800;letter-spacing:.04em;text-transform:uppercase;box-shadow:0 3px 8px rgba(0,0,0,.35)}
 .badge.new{background:var(--plum)}
-.badge svg{width:15px;height:15px}
-.tile:hover,.tile:focus-visible{transform:scale(1.08);box-shadow:0 0 0 2px var(--gold),0 18px 40px rgba(0,0,0,.6);z-index:3}
+.badge svg{width:13px;height:13px}
+.tile:hover,.tile:focus-visible{transform:translateY(-4px);border-color:var(--c,var(--gold));box-shadow:0 0 0 1px var(--c,var(--gold)),0 16px 34px rgba(0,0,0,.55);z-index:3}
+.tile:hover img{transform:scale(1.05)}
+.tiles{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:14px}
+
+/* category sections, each with its own colour */
+.cat{position:relative;padding:18px 18px 20px;border-radius:18px;background:linear-gradient(180deg,color-mix(in srgb,var(--c) 9%,transparent),rgba(255,255,255,.015) 70%);
+  border:1px solid color-mix(in srgb,var(--c) 22%,transparent)}
+.cat h2{display:flex;align-items:center;gap:12px;margin:0 0 14px;font-size:20px;font-weight:800}
+.cat h2 .ci{width:36px;height:36px;border-radius:11px;display:grid;place-items:center;color:#0c0b17;background:var(--c);box-shadow:0 0 18px color-mix(in srgb,var(--c) 45%,transparent)}
+.cat h2 .ci svg{width:20px;height:20px}
+.cat h2 small{font-size:13px;color:var(--muted);font-weight:700;padding:3px 10px;border-radius:12px;background:rgba(255,255,255,.06)}
+.cats{display:flex;flex-direction:column;gap:22px}
+
+/* recently played: small chips, not full cards, so games do not repeat on screen */
+.recent{display:flex;gap:10px;overflow-x:auto;scrollbar-width:none;padding:2px}
+.recent::-webkit-scrollbar{display:none}
+.rc{flex:none;display:flex;align-items:center;gap:10px;padding:5px 14px 5px 5px;border-radius:12px;background:var(--panel);border:1px solid var(--line);font-weight:800;font-size:13px;white-space:nowrap}
+.rc img{width:64px;height:36px;object-fit:cover;border-radius:8px}
+.rc:hover{border-color:rgba(230,184,92,.6);background:var(--panel-2)}
+.row h2{display:flex;align-items:baseline;gap:12px;margin:0 0 12px;font-size:18px;font-weight:800}
+.row h2 small{font-size:13px;color:var(--muted);font-weight:700}
 
 /* mood cards */
-.moods{display:grid;grid-auto-flow:column;grid-auto-columns:minmax(200px,1fr);gap:12px;overflow-x:auto;scrollbar-width:none;padding:8px;margin:-8px}
+.moods{display:grid;grid-auto-flow:column;grid-auto-columns:minmax(180px,1fr);gap:12px;overflow-x:auto;scrollbar-width:none;padding:8px;margin:-8px}
 .moods::-webkit-scrollbar{display:none}
-.mood{position:relative;height:118px;border-radius:14px;padding:14px;display:flex;align-items:flex-end;font-weight:800;font-size:16px;
-  overflow:hidden;cursor:pointer;border:0;text-align:left;transition:transform .18s ease,filter .18s ease}
-.mood i{position:absolute;right:12px;top:8px;font-style:normal;font-size:50px;line-height:1;filter:drop-shadow(0 6px 8px rgba(0,0,0,.35));transition:transform .2s ease}
-.mood:hover{transform:scale(1.05);filter:brightness(1.12)}
+.mood{position:relative;height:96px;border-radius:14px;padding:14px;display:flex;align-items:flex-end;font-weight:800;font-size:16px;
+  overflow:hidden;cursor:pointer;border:1px solid rgba(255,255,255,.08);text-align:left;transition:transform .18s ease,filter .18s ease}
+.mood i{position:absolute;right:12px;top:8px;font-style:normal;font-size:44px;line-height:1;filter:drop-shadow(0 6px 8px rgba(0,0,0,.35));transition:transform .2s ease}
+.mood:hover{transform:scale(1.04);filter:brightness(1.12)}
 .mood:hover i{transform:rotate(-8deg) scale(1.08)}
 .m1{background:linear-gradient(135deg,#1f3a5c,#1a2238);color:#8fd0ff}
-.m2{background:linear-gradient(135deg,#55213f,#24182b);color:#ff8ec1}
+.m2{background:linear-gradient(135deg,#5a2140,#24182b);color:#ff8ec1}
 .m3{background:linear-gradient(135deg,#1f4a3c,#18262a);color:#7ff0b8}
-.m4{background:linear-gradient(135deg,#4c4517,#24221a);color:#ffe066}
+.m4{background:linear-gradient(135deg,#55491a,#24221a);color:#ffe066}
 .m5{background:linear-gradient(135deg,#3a2a5e,#1d1830);color:#c9b2ff}
+.m6{background:linear-gradient(135deg,#5a3517,#261c16);color:#ffb37a}
 
-/* mosaic: big | 2x2 small | big, like "Top games today" */
-.mosaic{display:grid;grid-template-columns:repeat(var(--cols,6),minmax(0,1fr));grid-auto-rows:auto;gap:8px;max-width:calc(var(--cols,6) * 240px)}
-.mosaic .big{grid-column:span 2;grid-row:span 2;aspect-ratio:auto}
-.mosaic .big img{position:absolute;inset:0}
-
-/* scroll row */
-.strip{display:grid;grid-auto-flow:column;grid-auto-columns:230px;gap:8px;overflow-x:auto;scrollbar-width:none;padding:14px 12px 16px;margin:-14px -12px -8px}
-.strip::-webkit-scrollbar{display:none}
-.tiles{display:grid;grid-template-columns:repeat(auto-fill,minmax(210px,1fr));gap:8px}
-.flt{display:none;align-items:center;gap:10px;margin:0 0 14px}
-.flt.on{display:flex}
+.flt{display:flex;align-items:center;gap:10px;margin:0 0 14px}
 .flt button{border:1px solid var(--line);background:var(--panel);border-radius:16px;height:32px;padding:0 14px;font-weight:800;cursor:pointer}
 .flt button:hover{border-color:rgba(230,184,92,.5)}
 
@@ -139,18 +177,21 @@ body.mini footer{margin-left:72px}
 @media (max-width:620px){
   .logo b{display:none}
   .cta{display:none}
-  .tiles{grid-template-columns:repeat(2,minmax(0,1fr))}
-  .mosaic{--cols:2!important;max-width:none}
-  .mosaic>.m6{grid-column:auto!important;grid-row:auto!important}
-  .mosaic>.m6.big{grid-column:span 2!important}
-  .strip{grid-auto-columns:168px}
-  .moods{grid-auto-columns:150px}
-  .mood{height:96px;font-size:14px}
-  .mood i{font-size:38px}
-  .mosaic .big{grid-row:auto;aspect-ratio:16/9}
-  .tile .name{display:none}
+  .tiles{grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
+  .moods{grid-auto-columns:140px}
+  .mood{height:80px;font-size:14px}
+  .mood i{font-size:34px}
+  .tile .name{font-size:12.5px;padding:7px 9px 8px}
+  .cat{padding:14px 10px 14px}
+  .cat h2{font-size:17px}
+  .hero{padding:16px;gap:12px}
+  .hero h1{font-size:20px;margin-bottom:6px}
+  .hero img{width:54px;align-self:flex-start}
+  .hero p{font-size:13.5px;line-height:1.45}
+  .hero .facts{gap:6px;margin-top:10px}
+  .hero .facts span{font-size:11.5px;padding:4px 8px}
 }
-@media (prefers-reduced-motion:reduce){*{transition:none!important}.tile:hover,.mood:hover{transform:none}}
+@media (prefers-reduced-motion:reduce){*{transition:none!important}.tile:hover,.mood:hover,.tile:hover img{transform:none}}
 </style>
 <!--afs-seo--><link rel="canonical" href="https://afsoongames.com/">
 <!--afs-seo--><meta property="og:type" content="website">
@@ -195,37 +236,34 @@ body.mini footer{margin-left:72px}
 <main>
   <div class="inner">
     <section class="row" id="results" hidden>
-      <h2>Search results <small id="rcount"></small></h2>
+      <div class="flt"><h2 style="margin:0"><span id="rtitle">Search results</span> <small id="rcount"></small></h2><button type="button" id="clearF" style="margin-left:auto">Show all games</button></div>
       <div class="tiles" id="rtiles"></div>
     </section>
 
     <div id="home">
-      <section class="row" style="margin-bottom:30px">
+      <section class="hero">
+        <div>
+          <h1>Free games, a little bit of magic</h1>
+          <p>Card, board, puzzle and arcade games inspired by ancient Persia. Tap a game and play right away in your browser.</p>
+          <div class="facts"><span id="nGames">18 games</span><span>Phone &amp; computer</span><span>No download</span></div>
+        </div>
+        <img src="/img/afsoon-logo-96.png?v=5" width="96" height="96" alt="">
+      </section>
+
+      <section class="row" style="margin-top:26px">
         <div class="moods" id="moods"></div>
       </section>
 
-      <section class="row" id="new" style="margin-bottom:30px">
-        <h2>Top games today</h2>
-        <div class="mosaic" id="mosaic"></div>
+      <section class="row" id="recent" style="margin-top:26px" hidden>
+        <h2>Continue playing</h2>
+        <div class="recent" id="recentTiles"></div>
       </section>
 
-      <section class="row" id="recent" style="margin-bottom:30px" hidden>
-        <h2>Recently played</h2>
-        <div class="strip" id="recentTiles"></div>
+      <section id="all" style="margin-top:28px">
+        <div class="cats" id="cats"><div class="tiles" ><a class="tile" href="/roulette/" data-id="roulette" aria-label="Afsoon Roulette"><img src="/img/covers/roulette-s.webp" alt="" loading="lazy" width="480" height="270"><span class="name">Afsoon Roulette</span></a><a class="tile" href="/blackjack/" data-id="blackjack" aria-label="Afsoon Blackjack"><img src="/img/covers/blackjack-s.webp" alt="" loading="lazy" width="480" height="270"><span class="name">Afsoon Blackjack</span></a><a class="tile" href="/water-sort/" data-id="water-sort" aria-label="Afsoon Water Sort"><img src="/img/covers/water-sort-s.webp" alt="" loading="lazy" width="480" height="270"><span class="name">Afsoon Water Sort</span></a><a class="tile" href="/bubble-shooter/" data-id="bubble-shooter" aria-label="Afsoon Bubble Shooter"><img src="/img/covers/bubble-shooter-s.webp" alt="" loading="lazy" width="480" height="270"><span class="name">Afsoon Bubble Shooter</span></a><a class="tile" href="/kashi-blocks/" data-id="kashi-blocks" aria-label="Kashi Blocks"><img src="/img/covers/kashi-blocks-s.webp" alt="" loading="lazy" width="480" height="270"><span class="name">Kashi Blocks</span></a><a class="tile" href="/river-ride/" data-id="river-ride" aria-label="River Ride"><img src="/img/covers/river-ride-s.webp" alt="" loading="lazy" width="480" height="270"><span class="name">River Ride</span></a><a class="tile" href="/chogan/" data-id="chogan" aria-label="Chogan: Paddle Ball"><img src="/img/covers/chogan-s.webp" alt="" loading="lazy" width="480" height="270"><span class="name">Chogan: Paddle Ball</span></a><a class="tile" href="/sudoku/" data-id="sudoku" aria-label="Afsoon Sudoku"><img src="/img/covers/sudoku-s.webp" alt="" loading="lazy" width="480" height="270"><span class="name">Afsoon Sudoku</span></a><a class="tile" href="/poker/" data-id="poker" aria-label="Afsoon Poker: Texas Hold&#x27;em"><img src="/img/covers/poker-s.webp" alt="" loading="lazy" width="480" height="270"><span class="name">Afsoon Poker: Texas Hold&#x27;em</span></a><a class="tile" href="/hokm/" data-id="hokm" aria-label="Hokm"><img src="/img/covers/hokm-s.webp" alt="" loading="lazy" width="480" height="270"><span class="name">Hokm</span></a><a class="tile" href="/chess/" data-id="chess" aria-label="Shatranj: Persian Chess"><img src="/img/covers/chess-s.webp" alt="" loading="lazy" width="480" height="270"><span class="name">Shatranj: Persian Chess</span></a><a class="tile" href="/nard/" data-id="nard" aria-label="Nard: Persian Backgammon"><img src="/img/covers/nard-s.webp" alt="" loading="lazy" width="480" height="270"><span class="name">Nard: Persian Backgammon</span></a><a class="tile" href="/chariot-race/" data-id="chariot-race" aria-label="Chariot Race"><img src="/img/covers/chariot-race-s.webp" alt="" loading="lazy" width="480" height="270"><span class="name">Chariot Race</span></a><a class="tile" href="/mahjong/" data-id="mahjong" aria-label="Afsoon Mahjong"><img src="/img/covers/mahjong-s.webp" alt="" loading="lazy" width="480" height="270"><span class="name">Afsoon Mahjong</span></a><a class="tile" href="/history-puzzles/" data-id="history-puzzles" aria-label="History Building Puzzles"><img src="/img/covers/history-puzzles-s.webp" alt="" loading="lazy" width="480" height="270"><span class="name">History Building Puzzles</span></a><a class="tile" href="/solitaire/" data-id="solitaire" aria-label="Afsoon Solitaire"><img src="/img/covers/solitaire-s.webp" alt="" loading="lazy" width="480" height="270"><span class="name">Afsoon Solitaire</span></a><a class="tile" href="/anshan-run/" data-id="anshan-run" aria-label="Anshan Run"><img src="/img/covers/anshan-run-s.webp" alt="" loading="lazy" width="480" height="270"><span class="name">Anshan Run</span></a><a class="tile" href="/alchemy/" data-id="alchemy" aria-label="Afsoon Alchemy"><img src="/img/covers/alchemy-s.webp" alt="" loading="lazy" width="480" height="270"><span class="name">Afsoon Alchemy</span></a></div></div>
       </section>
 
-      <section class="row" style="margin-bottom:30px">
-        <h2>Featured games</h2>
-        <div class="strip" id="strip"></div>
-      </section>
-
-      <section class="row" id="all" style="margin-bottom:34px">
-        <h2><span id="allTitle">All games</span> <small id="allCount"></small></h2>
-        <div class="flt" id="flt"><button type="button" id="clearF">Show all games</button></div>
-        <div class="tiles" id="allTiles"><a class="tile" href="/roulette/" data-id="roulette" aria-label="Afsoon Roulette"><img src="/img/covers/roulette-s.webp" alt="" loading="lazy" width="480" height="270"><span class="name">Afsoon Roulette</span></a><a class="tile" href="/blackjack/" data-id="blackjack" aria-label="Afsoon Blackjack"><img src="/img/covers/blackjack-s.webp" alt="" loading="lazy" width="480" height="270"><span class="name">Afsoon Blackjack</span></a><a class="tile" href="/water-sort/" data-id="water-sort" aria-label="Afsoon Water Sort"><img src="/img/covers/water-sort-s.webp" alt="" loading="lazy" width="480" height="270"><span class="name">Afsoon Water Sort</span></a><a class="tile" href="/bubble-shooter/" data-id="bubble-shooter" aria-label="Afsoon Bubble Shooter"><img src="/img/covers/bubble-shooter-s.webp" alt="" loading="lazy" width="480" height="270"><span class="name">Afsoon Bubble Shooter</span></a><a class="tile" href="/kashi-blocks/" data-id="kashi-blocks" aria-label="Kashi Blocks"><img src="/img/covers/kashi-blocks-s.webp" alt="" loading="lazy" width="480" height="270"><span class="name">Kashi Blocks</span></a><a class="tile" href="/river-ride/" data-id="river-ride" aria-label="River Ride"><img src="/img/covers/river-ride-s.webp" alt="" loading="lazy" width="480" height="270"><span class="name">River Ride</span></a><a class="tile" href="/chogan/" data-id="chogan" aria-label="Chogan: Paddle Ball"><img src="/img/covers/chogan-s.webp" alt="" loading="lazy" width="480" height="270"><span class="name">Chogan: Paddle Ball</span></a><a class="tile" href="/sudoku/" data-id="sudoku" aria-label="Afsoon Sudoku"><img src="/img/covers/sudoku-s.webp" alt="" loading="lazy" width="480" height="270"><span class="name">Afsoon Sudoku</span></a><a class="tile" href="/poker/" data-id="poker" aria-label="Afsoon Poker: Texas Hold&#x27;em"><img src="/img/covers/poker-s.webp" alt="" loading="lazy" width="480" height="270"><span class="name">Afsoon Poker: Texas Hold&#x27;em</span></a><a class="tile" href="/hokm/" data-id="hokm" aria-label="Hokm"><img src="/img/covers/hokm-s.webp" alt="" loading="lazy" width="480" height="270"><span class="name">Hokm</span></a><a class="tile" href="/chess/" data-id="chess" aria-label="Shatranj: Persian Chess"><img src="/img/covers/chess-s.webp" alt="" loading="lazy" width="480" height="270"><span class="name">Shatranj: Persian Chess</span></a><a class="tile" href="/nard/" data-id="nard" aria-label="Nard: Persian Backgammon"><img src="/img/covers/nard-s.webp" alt="" loading="lazy" width="480" height="270"><span class="name">Nard: Persian Backgammon</span></a><a class="tile" href="/chariot-race/" data-id="chariot-race" aria-label="Chariot Race"><img src="/img/covers/chariot-race-s.webp" alt="" loading="lazy" width="480" height="270"><span class="name">Chariot Race</span></a><a class="tile" href="/mahjong/" data-id="mahjong" aria-label="Afsoon Mahjong"><img src="/img/covers/mahjong-s.webp" alt="" loading="lazy" width="480" height="270"><span class="name">Afsoon Mahjong</span></a><a class="tile" href="/history-puzzles/" data-id="history-puzzles" aria-label="History Building Puzzles"><img src="/img/covers/history-puzzles-s.webp" alt="" loading="lazy" width="480" height="270"><span class="name">History Building Puzzles</span></a><a class="tile" href="/solitaire/" data-id="solitaire" aria-label="Afsoon Solitaire"><img src="/img/covers/solitaire-s.webp" alt="" loading="lazy" width="480" height="270"><span class="name">Afsoon Solitaire</span></a><a class="tile" href="/anshan-run/" data-id="anshan-run" aria-label="Anshan Run"><img src="/img/covers/anshan-run-s.webp" alt="" loading="lazy" width="480" height="270"><span class="name">Anshan Run</span></a><a class="tile" href="/alchemy/" data-id="alchemy" aria-label="Afsoon Alchemy"><img src="/img/covers/alchemy-s.webp" alt="" loading="lazy" width="480" height="270"><span class="name">Afsoon Alchemy</span></a></div>
-      </section>
-
-      <section class="partner" id="partners">
+      <section class="partner" id="partners" style="margin-top:30px">
         <img src="/img/afsoon-logo-96.png?v=5" width="88" height="88" alt="">
         <div>
           <h3>Put our games on your platform</h3>
@@ -234,7 +272,7 @@ body.mini footer{margin-left:72px}
         <a class="btn" href="mailto:info@afsoongames.com">info@afsoongames.com</a>
       </section>
 
-      <section class="row" id="about" style="margin-top:34px">
+      <section class="row" id="about" style="margin-top:30px">
         <h2>About Afsoon</h2>
         <p style="margin:0;color:#cfc9e2;line-height:1.65;max-width:70ch">Afsoon means magic in Persian. We are an independent studio making free browser games inspired by ancient Persia, from the rooftops of Anshan to the royal alchemists. Every game runs on phone and computer with no download.</p>
       </section>
@@ -294,7 +332,7 @@ const MOODS=[
   {id:'relax',name:'Just relax',icon:'\u{1F375}',cls:'m3'},
   {id:'quick',name:'5-minute fun',icon:'⏱️',cls:'m4'},
   {id:'classic',name:'Timeless classics',icon:'\u{1F0CF}',cls:'m5'},
-  {id:'friends',name:'Play with friends',icon:'\u{1F91D}',cls:'m1'}
+  {id:'friends',name:'Play with friends',icon:'\u{1F91D}',cls:'m6'}
 ];
 const CATS={
   Puzzle:'<path d="M9 3h6v3a2 2 0 1 0 4 0h2v6h-3a2 2 0 1 0 0 4h3v5H3V3h6z"/>',
@@ -303,53 +341,59 @@ const CATS={
   Casino:'<circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="4"/><path d="M12 3v5M12 16v5M3 12h5M16 12h5"/>',
   Board:'<rect x="3" y="4" width="18" height="16" rx="2"/><path d="M6 4l2 7 2-7M14 20l2-7 2 7"/><circle cx="16" cy="8" r="1.5"/>'
 };
+// each category has its own colour: card stripe, dot, section tint and rail icon
+const COL={Puzzle:'#5ee0a0',Arcade:'#ff7ab8',Card:'#5cc8ff',Casino:'#ff6b5e',Board:'#c39bff'};
+const ORDER=['Puzzle','Arcade','Card','Casino','Board'];
 const ico=p=>'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">'+p+'</svg>';
-const BADGE={hot:'<span class="badge" title="Hot">'+ico('<path d="M12 3c1 4 5 5 5 10a5 5 0 0 1-10 0c0-2 1-3 2-4 0 2 1 3 2 3 0-3-1-5 1-9z" fill="currentColor" stroke="none"/>')+'</span>',
-  new:'<span class="badge new" title="New">'+ico('<path d="m12 3 2.6 5.6 6.1.7-4.5 4.2 1.2 6L12 16.6 6.6 19.5l1.2-6L3.3 9.3l6.1-.7z" fill="currentColor" stroke="none"/>')+'</span>'};
-function tile(g,big){
-  return '<a class="tile'+(big?' big':'')+'" href="'+g.url+'" data-id="'+g.id+'" aria-label="'+g.name+'">'+(BADGE[g.badge]||'')+
-    '<img src="/img/covers/'+g.id+(big?'':'-s')+'.webp'+(g.id=='hokm'?'?v=2':'')+'" alt="" loading="lazy" width="'+(big?960:480)+'" height="'+(big?540:270)+'">'+
-    '<span class="name">'+g.name+'</span></a>';
+const BADGE={hot:'<span class="badge" title="Hot">'+ico('<path d="M12 3c1 4 5 5 5 10a5 5 0 0 1-10 0c0-2 1-3 2-4 0 2 1 3 2 3 0-3-1-5 1-9z" fill="currentColor" stroke="none"/>')+'Hot</span>',
+  new:'<span class="badge new" title="New">'+ico('<path d="m12 3 2.6 5.6 6.1.7-4.5 4.2 1.2 6L12 16.6 6.6 19.5l1.2-6L3.3 9.3l6.1-.7z" fill="currentColor" stroke="none"/>')+'New</span>'};
+const NEWEST=GAMES.slice(0,6).map(g=>g.id);   // list is newest first
+const cover=g=>'/img/covers/'+g.id+'-s.webp'+(g.id=='hokm'?'?v=2':'');
+function tile(g){
+  return '<a class="tile" style="--c:'+COL[g.cat]+'" href="'+g.url+'" data-id="'+g.id+'" aria-label="'+g.name+'">'+(NEWEST.includes(g.id)?BADGE.new:g.badge=='hot'?BADGE.hot:'')+
+    '<img src="'+cover(g)+'" alt="" loading="lazy" width="480" height="270">'+
+    '<span class="name"><em>'+g.name+'</em></span></a>';
 }
 const $=id=>document.getElementById(id);
 $('moods').innerHTML=MOODS.map(m=>'<button type="button" class="mood '+m.cls+'" data-mood="'+m.id+'"><i aria-hidden="true">'+m.icon+'</i>'+m.name+'</button>').join('');
-// mosaic pattern: big, small x4, big ...
-(function(){
-  const pat=['b','s','s','s','s','b'];let cols=0,html='';
-  GAMES.slice(0,6).forEach((g,i)=>{const big=pat[i]=='b';html+=tile(g,big)});
-  const n=Math.min(GAMES.length,6);cols=[0,2,3,3,4,4,6][n];
-  $('mosaic').style.setProperty('--cols',cols);$('mosaic').innerHTML=html;
-  // place the tiles as big | 2x2 small | big on wide screens
-  if(cols==6)[...$('mosaic').children].forEach((el,i)=>{const P=['1/3','3','4','3','4','5/7'],Rw=['1/3','1','1','2','2','1/3'];el.style.gridColumn=P[i];el.style.gridRow=Rw[i];el.classList.add('m6')});
-})();
-$('strip').innerHTML=GAMES.map(g=>tile(g)).join('');
 const counts={};GAMES.forEach(g=>counts[g.cat]=(counts[g.cat]||0)+1);
-$('railCats').innerHTML=Object.keys(CATS).map(c=>'<a href="#all" data-cat="'+c+'">'+ico(CATS[c])+'<span>'+c+' games</span><b class="n">'+(counts[c]||0)+'</b></a>').join('');
-$('nAll').textContent=GAMES.length;
-function showAll(title,list,filtered){
-  $('allTitle').textContent=title;$('allCount').textContent=list.length+(list.length==1?' game':' games');
-  $('allTiles').innerHTML=list.map(g=>tile(g)).join('');$('flt').classList.toggle('on',!!filtered);
+// home: every game once, grouped by category
+$('cats').innerHTML=ORDER.filter(c=>counts[c]).map(c=>
+  '<section class="cat" id="cat-'+c.toLowerCase()+'" style="--c:'+COL[c]+'"><h2><span class="ci">'+ico(CATS[c])+'</span>'+c+' games<small>'+counts[c]+'</small></h2>'+
+  '<div class="tiles">'+GAMES.filter(g=>g.cat==c).map(tile).join('')+'</div></section>').join('');
+$('railCats').innerHTML=ORDER.map(c=>'<a href="#cat-'+c.toLowerCase()+'" data-cat="'+c+'" style="--c:'+COL[c]+'">'+ico(CATS[c]).replace('<svg','<svg style="color:'+COL[c]+'"')+'<span>'+c+' games</span><b class="n">'+(counts[c]||0)+'</b></a>').join('');
+$('nAll').textContent=GAMES.length;$('nGames').textContent=GAMES.length+' free games';
+function showList(title,list){
+  $('home').hidden=true;$('results').hidden=false;$('rtitle').textContent=title;
+  $('rcount').textContent=list.length+(list.length==1?' game':' games');
+  $('rtiles').innerHTML=list.map(tile).join('');scrollTo({top:0,behavior:'smooth'});
 }
-showAll('All games',GAMES,false);
-$('clearF').onclick=()=>showAll('All games',GAMES,false);
+function showHome(){$('results').hidden=true;$('home').hidden=false;$('q').value=''}
+$('clearF').onclick=()=>{showHome();scrollTo({top:0})};
 document.addEventListener('click',e=>{
-  const c=e.target.closest('[data-cat]'),m=e.target.closest('[data-mood]');
-  if(c){e.preventDefault();showAll(c.dataset.cat+' games',GAMES.filter(g=>g.cat==c.dataset.cat),true);$('all').scrollIntoView({behavior:'smooth',block:'start'});closeRail()}
-  if(m){const md=MOODS.find(x=>x.id==m.dataset.mood);showAll(md.name,GAMES.filter(g=>g.moods.includes(md.id)),true);$('all').scrollIntoView({behavior:'smooth',block:'start'})}
-  const t=e.target.closest('.tile');
+  const c=e.target.closest('[data-cat]'),m=e.target.closest('[data-mood]'),nav=e.target.closest('[data-nav]');
+  if(c){e.preventDefault();showHome();const el=$('cat-'+c.dataset.cat.toLowerCase());if(el)el.scrollIntoView({behavior:'smooth',block:'start'});closeRail()}
+  if(m){const md=MOODS.find(x=>x.id==m.dataset.mood);showList(md.name,GAMES.filter(g=>g.moods.includes(md.id)))}
+  if(nav){const k=nav.dataset.nav;
+    if(k=='new'){e.preventDefault();showList('New games',GAMES.filter(g=>NEWEST.includes(g.id)))}
+    else if(k=='all'){e.preventDefault();showHome();$('all').scrollIntoView({behavior:'smooth',block:'start'})}
+    else if(k=='recent'){e.preventDefault();showHome();if(!$('recent').hidden)$('recent').scrollIntoView({behavior:'smooth',block:'center'})}
+    else if(k=='home'&&!$('home').hidden){}
+  }
+  const t=e.target.closest('.tile,.rc');
   if(t){try{let r=JSON.parse(localStorage.getItem('afsoon-recent')||'[]');r=[t.dataset.id,...r.filter(x=>x!=t.dataset.id)].slice(0,8);localStorage.setItem('afsoon-recent',JSON.stringify(r))}catch(_){}}
   if(e.target.closest('.rail a:not([data-cat])'))closeRail();
 });
 let recent=[];try{recent=JSON.parse(localStorage.getItem('afsoon-recent')||'[]')}catch(_){}
-const rec=recent.map(id=>GAMES.find(g=>g.id==id)).filter(Boolean);
-if(rec.length){$('recent').hidden=false;$('recentTiles').innerHTML=rec.map(g=>tile(g)).join('')}
+const rec=recent.map(id=>GAMES.find(g=>g.id==id)).filter(Boolean).slice(0,6);
+if(rec.length){$('recent').hidden=false;$('recentTiles').innerHTML=rec.map(g=>'<a class="rc" href="'+g.url+'" data-id="'+g.id+'"><img src="'+cover(g)+'" alt="" width="64" height="36">'+g.name+'</a>').join('')}
 $('q').addEventListener('input',e=>{
   const v=e.target.value.trim().toLowerCase();
   if(!v){$('results').hidden=true;$('home').hidden=false;return}
   const list=GAMES.filter(g=>(g.name+' '+g.cat+' '+g.desc).toLowerCase().includes(v));
-  $('home').hidden=true;$('results').hidden=false;
+  $('home').hidden=true;$('results').hidden=false;$('rtitle').textContent='Search results';
   $('rcount').textContent=list.length+(list.length==1?' game':' games');
-  $('rtiles').innerHTML=list.length?list.map(g=>tile(g)).join(''):'<div class="empty">No games match "'+e.target.value.replace(/[<>&"]/g,'')+'". Try "card", "puzzle" or "run".</div>';
+  $('rtiles').innerHTML=list.length?list.map(tile).join(''):'<div class="empty">No games match "'+e.target.value.replace(/[<>&"]/g,'')+'". Try "card", "puzzle" or "run".</div>';
 });
 const mq=matchMedia('(max-width:900px)');
 function closeRail(){document.body.classList.remove('open');$('burger').setAttribute('aria-expanded','false')}
