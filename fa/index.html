@@ -9,8 +9,7 @@
 <link rel="apple-touch-icon" href="/img/apple-touch-icon.png?v=5">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cinzel:wght@600;700&family=Vazirmatn:wght@400;700;800&display=swap">
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Nastaliq+Urdu:wght@700&display=swap&text=%20%D8%A7%D8%A8%D8%B2%D8%B3%D8%B4%D9%81%D9%85%D9%86%D9%88%DA%86%DA%A9%DB%8C">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cinzel:wght@600;700&family=Noto+Nastaliq+Urdu:wght@400;700&display=swap">
 <style>
 /* Layout: game-portal shell. Fixed top bar, left nav rail, main column of game rows. */
 :root{
@@ -194,7 +193,25 @@ body.mini footer{margin-left:72px}
 @media (prefers-reduced-motion:reduce){*{transition:none!important}.tile:hover,.mood:hover,.tile:hover img{transform:none}}
 
 /* Persian (right-to-left) version */
-:root{--ui:"Vazirmatn",Tahoma,system-ui,sans-serif}
+:root{--ui:"Noto Nastaliq Urdu","IranNastaliq",Tahoma,serif}
+/* Nastaliq needs tall lines: give every Persian line room so nothing is cut off */
+body{line-height:1.9}
+.tile .name{line-height:2.4;padding:2px 11px 6px;font-weight:700}
+.rail a{padding:4px 12px;line-height:2.3;font-weight:700}
+.rail h4{line-height:2.2;margin:6px 12px 0}
+.search input{height:44px;line-height:2.2;font-weight:400}
+.cta{height:42px;line-height:2.2}
+.badge{height:26px;line-height:2.4;font-weight:700}
+.hero p{line-height:2.3;font-size:16px}
+.hero .facts span{line-height:2.2;padding:2px 12px;font-weight:700}
+.mood{line-height:2.1;font-weight:700}
+.cat h2{line-height:2.3;font-weight:700}
+.cat h2 small{line-height:2;padding:0 10px}
+.flt button{height:38px;line-height:2.2}
+.btn{line-height:2.2}
+.partner p,#about p{line-height:2.3}
+footer .inner{line-height:2.2}
+.lang{font-family:"Nunito",system-ui,sans-serif}
 .rail{left:auto;right:0;border-right:0;border-left:1px solid var(--line)}
 main,footer{margin-left:0;margin-right:var(--rail)}
 body.mini main,body.mini footer{margin-left:0;margin-right:72px}
@@ -211,7 +228,6 @@ body.mini main,body.mini footer{margin-left:0;margin-right:72px}
 @media (max-width:620px){.hero h1.nast{font-size:27px;line-height:2.05;margin:-4px 0 2px}}
 .hero::after{-webkit-mask-image:linear-gradient(270deg,transparent 30%,#000);mask-image:linear-gradient(270deg,transparent 30%,#000)}
 .partner h3{font-family:var(--ui);letter-spacing:0}
-.hero p,#about p{line-height:1.9}
 @media (max-width:900px){
   .rail{transform:translateX(100%)}
   main,footer,body.mini main,body.mini footer{margin-right:0}

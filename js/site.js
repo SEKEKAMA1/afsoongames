@@ -171,6 +171,7 @@
       'padding:12px 14px;box-shadow:0 8px 28px rgba(0,0,0,.5);font:14px/1.45 system-ui,-apple-system,"Segoe UI",Tahoma,sans-serif;' +
       'display:flex;flex-wrap:wrap;align-items:center;gap:10px}' +
       '#afs-consent p{margin:0;flex:1 1 200px}' +
+      'html[lang=fa] #afs-consent,html[lang=fa] #afs-consent button{font-family:"Noto Nastaliq Urdu",Tahoma,serif;line-height:2.1}' +
       '#afs-consent button{font:700 14px system-ui,Tahoma,sans-serif;border-radius:18px;padding:7px 14px;cursor:pointer;border:1px solid rgba(230,184,92,.55)}' +
       '#afs-consent .y{background:#e6b85c;color:#241a08;border-color:#e6b85c}#afs-consent .n{background:transparent;color:#e6b85c}</style>' +
       '<p>' + T.msg + '</p><button type="button" class="n">' + T.no + '</button><button type="button" class="y">' + T.yes + '</button>';
