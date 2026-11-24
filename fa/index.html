@@ -1,0 +1,440 @@
+<!doctype html>
+<html lang="fa" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>بازی آنلاین رایگان – بدون دانلود | افسون گیمز</title>
+<meta name="description" content="بازی‌های آنلاین رایگان افسون: حکم، تخته نرد، چهار برگ، شطرنج، منچ، پازل و بازی‌های هیجانی با الهام از ایران باستان. روی گوشی و کامپیوتر، بدون دانلود و بدون ثبت‌نام.">
+<link rel="icon" type="image/png" href="/img/favicon-64.png?v=5">
+<link rel="apple-touch-icon" href="/img/apple-touch-icon.png?v=5">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cinzel:wght@600;700&family=Vazirmatn:wght@400;700;800&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Nastaliq+Urdu:wght@700&display=swap&text=%20%D8%A7%D8%A8%D8%B2%D8%B3%D8%B4%D9%81%D9%85%D9%86%D9%88%DA%86%DA%A9%DB%8C">
+<style>
+/* Layout: game-portal shell. Fixed top bar, left nav rail, main column of game rows. */
+:root{
+  --bg:#0c0b17; --bar:#12111f; --panel:#181628; --panel-2:#211e36; --line:rgba(255,255,255,.07);
+  --text:#ece8f6; --muted:#9a94b3; --gold:#e6b85c; --gold-2:#f6d999; --plum:#7b5cff;
+  --brand:"Cinzel",Georgia,serif; --ui:"Nunito",system-ui,sans-serif;
+  --top:64px; --rail:232px;
+  color-scheme:dark;
+}
+*{box-sizing:border-box}
+html,body{margin:0}
+body{background:var(--bg);color:var(--text);font-family:var(--ui);font-size:15px;-webkit-font-smoothing:antialiased}
+a{color:inherit;text-decoration:none}
+img{max-width:100%;display:block}
+button{font:inherit;color:inherit}
+:focus-visible{outline:2px solid var(--gold);outline-offset:2px;border-radius:6px}
+
+/* top bar */
+.top{position:fixed;inset:0 0 auto 0;height:var(--top);z-index:30;background:var(--bar);border-bottom:1px solid var(--line);
+  display:flex;align-items:center;gap:14px;padding-left:max(12px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+.burger{width:40px;height:40px;border:0;background:transparent;border-radius:10px;display:grid;place-items:center;cursor:pointer;flex:none}
+.burger:hover{background:var(--panel-2)}
+.burger svg{width:22px;height:22px}
+.logo{display:flex;align-items:center;gap:10px;flex:none}
+.logo img{width:38px;height:auto}
+.logo b{font-family:var(--brand);font-weight:700;letter-spacing:.12em;font-size:16px;white-space:nowrap}
+.logo b span{color:var(--gold)}
+.search{flex:1;max-width:520px;margin:0 auto;position:relative}
+.search input{width:100%;height:42px;border-radius:21px;border:1px solid var(--line);background:var(--panel);color:var(--text);
+  padding:0 16px 0 42px;font:600 15px var(--ui)}
+.search input::placeholder{color:var(--muted)}
+.search input:focus{outline:none;border-color:rgba(230,184,92,.6);background:var(--panel-2)}
+.search svg{position:absolute;left:14px;top:50%;transform:translateY(-50%);width:18px;height:18px;color:var(--muted)}
+.cta{flex:none;height:40px;padding:0 18px;border-radius:20px;background:var(--gold);color:#241a08;font-weight:800;display:flex;align-items:center;gap:8px}
+.cta:hover{background:var(--gold-2)}
+.lang{flex:none;height:40px;padding:0 14px;border-radius:20px;border:1px solid rgba(230,184,92,.55);color:var(--gold-2);font-weight:800;display:flex;align-items:center;gap:7px;white-space:nowrap}
+.lang:hover{background:var(--panel-2);border-color:var(--gold)}
+.lang svg{width:17px;height:17px;flex:none}
+
+/* rail */
+.rail{position:fixed;top:var(--top);bottom:0;left:0;width:var(--rail);background:var(--bar);border-right:1px solid var(--line);
+  overflow-y:auto;padding:12px 10px 24px;z-index:20;transition:transform .2s ease}
+.rail a{display:flex;align-items:center;gap:14px;padding:10px 12px;border-radius:10px;font-weight:700;color:#d8d3ea}
+.rail a:hover{background:var(--panel-2)}
+.rail a.on{background:var(--panel-2);color:var(--gold-2)}
+.rail svg{width:20px;height:20px;flex:none;color:var(--gold)}
+.rail .n{margin-left:auto;font-size:12px;color:var(--muted);font-weight:700}
+.rail hr{border:0;border-top:1px solid var(--line);margin:10px 6px}
+.rail h4{margin:12px 12px 6px;font-size:12px;letter-spacing:.12em;text-transform:uppercase;color:var(--muted)}
+body.mini .rail{width:72px}
+body.mini .rail a span,body.mini .rail .n,body.mini .rail h4{display:none}
+body.mini main{margin-left:72px}
+
+/* main */
+main{margin-left:var(--rail);padding-top:calc(var(--top) + 22px);padding-bottom:40px;
+  padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));transition:margin .2s ease}
+.inner{max-width:1360px;margin:0 auto;display:flex;flex-direction:column;gap:26px}
+
+/* page backdrop: soft coloured glows + faint Persian star lattice, so it is not one flat blue */
+body{background:
+  radial-gradient(900px 520px at 85% -10%,rgba(123,92,255,.22),transparent 60%),
+  radial-gradient(700px 480px at 10% 30%,rgba(230,184,92,.10),transparent 60%),
+  radial-gradient(800px 600px at 70% 90%,rgba(46,196,182,.10),transparent 60%),
+  var(--bg);background-attachment:fixed}
+body::before{content:"";position:fixed;inset:0;z-index:-1;pointer-events:none;opacity:.05;
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='56' height='56' viewBox='0 0 56 56'%3E%3Cg fill='none' stroke='%23e6b85c' stroke-width='1'%3E%3Cpath d='M28 6l6 16 16 6-16 6-6 16-6-16-16-6 16-6z'/%3E%3Crect x='19' y='19' width='18' height='18' transform='rotate(45 28 28)'/%3E%3C/g%3E%3C/svg%3E")}
+.top{background:rgba(18,17,31,.92);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);
+  border-bottom:1px solid transparent;border-image:linear-gradient(90deg,transparent,rgba(230,184,92,.55),rgba(123,92,255,.55),transparent) 1}
+
+/* hero */
+.hero{position:relative;overflow:hidden;border-radius:20px;padding:26px 30px;display:flex;align-items:center;gap:26px;
+  background:linear-gradient(120deg,#2a1d55 0%,#1b1838 45%,#13283a 100%);border:1px solid rgba(230,184,92,.28);
+  box-shadow:0 20px 50px rgba(0,0,0,.35),inset 0 1px 0 rgba(255,255,255,.06)}
+.hero::after{content:"";position:absolute;inset:0;pointer-events:none;opacity:.12;
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='40' height='40' viewBox='0 0 40 40'%3E%3Cpath d='M20 2l5 13 13 5-13 5-5 13-5-13-13-5 13-5z' fill='none' stroke='%23f6d999'/%3E%3C/svg%3E");
+  -webkit-mask-image:linear-gradient(90deg,transparent 30%,#000);mask-image:linear-gradient(90deg,transparent 30%,#000)}
+.hero h1{margin:0 0 8px;font-family:var(--brand);font-size:clamp(22px,3vw,32px);line-height:1.15;color:var(--gold-2);letter-spacing:.02em}
+.hero p{margin:0;color:#cfc9e2;max-width:56ch;line-height:1.5}
+.hero .facts{display:flex;flex-wrap:wrap;gap:8px;margin-top:14px}
+.hero .facts span{font-size:13px;font-weight:800;padding:5px 11px;border-radius:14px;background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.1)}
+.hero .facts span:nth-child(1){color:#ffe066}.hero .facts span:nth-child(2){color:#7ff0b8}.hero .facts span:nth-child(3){color:#8fd0ff}
+.hero img{width:120px;flex:none;margin-left:auto;position:relative;z-index:1;filter:drop-shadow(0 0 24px rgba(230,184,92,.45))}
+
+/* tiles: one size everywhere; cover on top, name bar below */
+.tile{position:relative;display:flex;flex-direction:column;border-radius:12px;overflow:hidden;background:var(--panel);isolation:isolate;
+  border:1px solid rgba(255,255,255,.08);box-shadow:0 6px 16px rgba(0,0,0,.28);
+  transition:transform .22s cubic-bezier(.2,.8,.3,1.2),box-shadow .22s ease,border-color .22s}
+.tile::before{content:"";position:absolute;left:0;right:0;top:0;height:3px;z-index:3;background:var(--c,var(--gold))}
+.tile img{width:100%;aspect-ratio:16/9;height:auto;object-fit:cover;transition:transform .35s ease}
+.tile .name{display:flex;align-items:center;gap:8px;padding:9px 11px 10px;font-weight:800;font-size:14px;line-height:1.2;
+  background:linear-gradient(180deg,var(--panel-2),var(--panel));white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.tile .name::before{content:"";flex:none;width:8px;height:8px;border-radius:50%;background:var(--c,var(--gold));box-shadow:0 0 8px var(--c,var(--gold))}
+.tile .name em{font-style:normal;overflow:hidden;text-overflow:ellipsis}
+.badge{position:absolute;top:9px;left:8px;z-index:2;height:22px;padding:0 8px 0 6px;border-radius:11px;display:flex;align-items:center;gap:4px;
+  background:#e8553f;color:#fff;font-size:11px;font-weight:800;letter-spacing:.04em;text-transform:uppercase;box-shadow:0 3px 8px rgba(0,0,0,.35)}
+.badge.new{background:var(--plum)}
+.badge svg{width:13px;height:13px}
+.tile:hover,.tile:focus-visible{transform:translateY(-4px);border-color:var(--c,var(--gold));box-shadow:0 0 0 1px var(--c,var(--gold)),0 16px 34px rgba(0,0,0,.55);z-index:3}
+.tile:hover img{transform:scale(1.05)}
+.tiles{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:14px}
+
+/* category sections, each with its own colour */
+.cat{position:relative;padding:18px 18px 20px;border-radius:18px;background:linear-gradient(180deg,color-mix(in srgb,var(--c) 9%,transparent),rgba(255,255,255,.015) 70%);
+  border:1px solid color-mix(in srgb,var(--c) 22%,transparent)}
+.cat h2{display:flex;align-items:center;gap:12px;margin:0 0 14px;font-size:20px;font-weight:800}
+.cat h2 .ci{width:36px;height:36px;border-radius:11px;display:grid;place-items:center;color:#0c0b17;background:var(--c);box-shadow:0 0 18px color-mix(in srgb,var(--c) 45%,transparent)}
+.cat h2 .ci svg{width:20px;height:20px}
+.cat h2 small{font-size:13px;color:var(--muted);font-weight:700;padding:3px 10px;border-radius:12px;background:rgba(255,255,255,.06)}
+.cats{display:flex;flex-direction:column;gap:22px}
+
+.row h2{display:flex;align-items:baseline;gap:12px;margin:0 0 12px;font-size:18px;font-weight:800}
+.row h2 small{font-size:13px;color:var(--muted);font-weight:700}
+
+/* mood cards */
+.moods{display:grid;grid-auto-flow:column;grid-auto-columns:minmax(180px,1fr);gap:12px;overflow-x:auto;scrollbar-width:none;padding:8px;margin:-8px}
+.moods::-webkit-scrollbar{display:none}
+.mood{position:relative;height:96px;border-radius:14px;padding:14px;display:flex;align-items:flex-end;font-weight:800;font-size:16px;
+  overflow:hidden;cursor:pointer;border:1px solid rgba(255,255,255,.08);text-align:left;transition:transform .18s ease,filter .18s ease}
+.mood i{position:absolute;right:12px;top:8px;font-style:normal;font-size:44px;line-height:1;filter:drop-shadow(0 6px 8px rgba(0,0,0,.35));transition:transform .2s ease}
+.mood:hover{transform:scale(1.04);filter:brightness(1.12)}
+.mood:hover i{transform:rotate(-8deg) scale(1.08)}
+.m1{background:linear-gradient(135deg,#1f3a5c,#1a2238);color:#8fd0ff}
+.m2{background:linear-gradient(135deg,#5a2140,#24182b);color:#ff8ec1}
+.m3{background:linear-gradient(135deg,#1f4a3c,#18262a);color:#7ff0b8}
+.m4{background:linear-gradient(135deg,#55491a,#24221a);color:#ffe066}
+.m5{background:linear-gradient(135deg,#3a2a5e,#1d1830);color:#c9b2ff}
+.m6{background:linear-gradient(135deg,#5a3517,#261c16);color:#ffb37a}
+
+.flt{display:flex;align-items:center;gap:10px;margin:0 0 14px}
+.flt button{border:1px solid var(--line);background:var(--panel);border-radius:16px;height:32px;padding:0 14px;font-weight:800;cursor:pointer}
+.flt button:hover{border-color:rgba(230,184,92,.5)}
+
+/* partner banner */
+.partner{display:grid;grid-template-columns:auto 1fr auto;gap:24px;align-items:center;padding:24px 28px;border-radius:18px;
+  background:radial-gradient(120% 140% at 0% 0%,#2b2150 0%,var(--panel) 60%);border:1px solid rgba(230,184,92,.25)}
+.partner img{width:84px}
+.partner h3{margin:0 0 6px;font-family:var(--brand);font-size:22px;color:var(--gold-2);letter-spacing:.04em}
+.partner p{margin:0;color:#cfc9e2;line-height:1.55;max-width:62ch}
+.btn{display:inline-flex;align-items:center;height:44px;padding:0 22px;border-radius:22px;font-weight:800;background:var(--gold);color:#241a08;white-space:nowrap}
+.btn:hover{background:var(--gold-2)}
+.empty{color:var(--muted);padding:20px;border:1px dashed var(--line);border-radius:14px;text-align:center}
+
+footer{margin-left:var(--rail);border-top:1px solid var(--line);background:var(--bar);
+  padding-block:28px;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));transition:margin .2s ease}
+footer .inner{flex-direction:row;flex-wrap:wrap;justify-content:space-between;gap:18px;color:var(--muted);font-size:14px}
+footer nav{display:flex;flex-wrap:wrap;gap:20px}
+footer a:hover{color:var(--gold-2)}
+body.mini footer{margin-left:72px}
+.scrim{display:none}
+
+@media (max-width:900px){
+  :root{--rail:250px}
+  .rail{transform:translateX(-100%);box-shadow:0 0 40px rgba(0,0,0,.6)}
+  body.open .rail{transform:none}
+  body.open .scrim{display:block;position:fixed;inset:var(--top) 0 0 0;background:rgba(0,0,0,.5);z-index:15}
+  main,footer,body.mini main,body.mini footer{margin-left:0}
+  body.mini .rail{width:var(--rail)}
+  body.mini .rail a span,body.mini .rail .n,body.mini .rail h4{display:revert}
+  .partner{grid-template-columns:1fr;text-align:left}
+  .partner img{width:64px}
+}
+@media (max-width:620px){
+  .logo b{display:none}
+  .cta{display:none}
+  .lang{height:36px;padding:0 11px;font-size:14px}
+  .lang svg{display:none}
+  .tiles{grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
+  .moods{grid-auto-columns:140px}
+  .mood{height:80px;font-size:14px}
+  .mood i{font-size:34px}
+  .tile .name{font-size:12.5px;padding:7px 9px 8px}
+  .cat{padding:14px 10px 14px}
+  .cat h2{font-size:17px}
+  .hero{padding:16px;gap:12px}
+  .hero h1{font-size:20px;margin-bottom:6px}
+  .hero img{width:54px;align-self:flex-start}
+  .hero p{font-size:13.5px;line-height:1.45}
+  .hero .facts{gap:6px;margin-top:10px}
+  .hero .facts span{font-size:11.5px;padding:4px 8px}
+}
+@media (prefers-reduced-motion:reduce){*{transition:none!important}.tile:hover,.mood:hover,.tile:hover img{transform:none}}
+
+/* Persian (right-to-left) version */
+:root{--ui:"Vazirmatn",Tahoma,system-ui,sans-serif}
+.rail{left:auto;right:0;border-right:0;border-left:1px solid var(--line)}
+main,footer{margin-left:0;margin-right:var(--rail)}
+body.mini main,body.mini footer{margin-left:0;margin-right:72px}
+.rail .n{margin-left:0;margin-right:auto}
+.rail h4{letter-spacing:0}
+.search input{padding:0 42px 0 16px}
+.search svg{left:auto;right:14px}
+.badge{left:auto;right:8px;letter-spacing:0}
+.mood{text-align:right}
+.mood i{right:auto;left:12px}
+.hero img{margin-left:0;margin-right:auto}
+.hero h1{font-family:var(--ui);font-weight:800;letter-spacing:0}
+.hero h1.nast{font-family:"Noto Nastaliq Urdu","IranNastaliq",var(--ui);font-weight:700;font-size:clamp(30px,4.2vw,46px);line-height:2;margin:-6px 0 4px;color:var(--gold-2);text-shadow:0 2px 14px rgba(230,184,92,.35)}
+@media (max-width:620px){.hero h1.nast{font-size:27px;line-height:2.05;margin:-4px 0 2px}}
+.hero::after{-webkit-mask-image:linear-gradient(270deg,transparent 30%,#000);mask-image:linear-gradient(270deg,transparent 30%,#000)}
+.partner h3{font-family:var(--ui);letter-spacing:0}
+.hero p,#about p{line-height:1.9}
+@media (max-width:900px){
+  .rail{transform:translateX(100%)}
+  main,footer,body.mini main,body.mini footer{margin-right:0}
+  .partner{text-align:right}
+}
+</style>
+<!--afs-seo--><link rel="canonical" href="https://afsoongames.com/fa/">
+<link rel="alternate" hreflang="fa" href="https://afsoongames.com/fa/">
+<link rel="alternate" hreflang="en" href="https://afsoongames.com/">
+<link rel="alternate" hreflang="x-default" href="https://afsoongames.com/">
+<link rel="alternate" hreflang="en" href="https://afsoongames.com/">
+<link rel="alternate" hreflang="fa" href="https://afsoongames.com/fa/">
+<link rel="alternate" hreflang="x-default" href="https://afsoongames.com/">
+<!--afs-seo--><meta property="og:type" content="website">
+<!--afs-seo--><meta property="og:site_name" content="Afsoon Games">
+<!--afs-seo--><meta property="og:title" content="بازی آنلاین رایگان – بدون دانلود | افسون گیمز">
+<meta property="og:locale" content="fa_IR">
+<!--afs-seo--><meta property="og:description" content="بازی‌های آنلاین رایگان افسون: حکم، تخته نرد، چهار برگ، شطرنج، منچ و پازل. روی گوشی و کامپیوتر، بدون دانلود.">
+<!--afs-seo--><meta property="og:url" content="https://afsoongames.com/fa/">
+<!--afs-seo--><meta property="og:image" content="https://afsoongames.com/img/covers/anshan-run.webp">
+<!--afs-seo--><meta name="twitter:card" content="summary_large_image">
+<!--afs-seo--><script type="application/ld+json">{"@context": "https://schema.org", "@type": "WebSite", "name": "افسون گیمز", "alternateName": "Afsoon Games", "url": "https://afsoongames.com/fa/", "inLanguage": "fa"}</script>
+<!--afs-seo--><script src="/js/site.js" defer></script>
+</head>
+<body>
+
+<header class="top">
+  <button class="burger" id="burger" aria-label="منو" aria-expanded="false">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M4 7h16M4 12h16M4 17h16"/></svg>
+  </button>
+  <a class="logo" href="/fa/" aria-label="صفحهٔ اصلی افسون گیمز"><img src="/img/afsoon-logo-96.png?v=5" width="40" height="40" alt=""><b>AFSOON <span>GAMES</span></b></a>
+  <label class="search">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>
+    <input id="q" type="search" placeholder="جستجوی بازی" autocomplete="off" aria-label="جستجوی بازی">
+  </label>
+  <a class="lang" href="/" hreflang="en" lang="en" title="English version"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3c2.5 2.6 3.8 5.6 3.8 9s-1.3 6.4-3.8 9c-2.5-2.6-3.8-5.6-3.8-9S9.5 5.6 12 3z"/></svg>English</a>
+  <a class="cta" href="#partners">همکاری با ما</a>
+</header>
+
+<nav class="rail" id="rail" aria-label="Main">
+  <a href="/fa/" class="on" data-nav="home"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"><path d="M3 11 12 4l9 7v9h-6v-6H9v6H3z"/></svg><span>خانه</span></a>
+  <a href="#new" data-nav="new"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"><path d="m12 3 2.6 5.6 6.1.7-4.5 4.2 1.2 6L12 16.6 6.6 19.5l1.2-6L3.3 9.3l6.1-.7z"/></svg><span>بازی‌های جدید</span></a>
+  <a href="#all" data-nav="all"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7" rx="2"/><rect x="14" y="3" width="7" height="7" rx="2"/><rect x="3" y="14" width="7" height="7" rx="2"/><rect x="14" y="14" width="7" height="7" rx="2"/></svg><span>همهٔ بازی‌ها</span><b class="n" id="nAll"></b></a>
+  <hr>
+  <h4>دسته‌ها</h4>
+  <div id="railCats"></div>
+  <hr>
+  <a href="#partners"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"><path d="M8 12l3 3 5-6"/><circle cx="12" cy="12" r="9"/></svg><span>اجارهٔ بازی‌های ما</span></a>
+  <a href="#about"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="9"/><path d="M12 11v6M12 7.5v.01"/></svg><span>دربارهٔ افسون</span></a>
+  <a href="mailto:info@afsoongames.com"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="m3 7 9 6 9-6"/></svg><span>تماس</span></a>
+</nav>
+<div class="scrim" id="scrim"></div>
+
+<main>
+  <div class="inner">
+    <section class="row" id="results" hidden>
+      <div class="flt"><h2 style="margin:0"><span id="rtitle">نتیجهٔ جستجو</span> <small id="rcount"></small></h2><button type="button" id="clearF" style="margin-right:auto">نمایش همهٔ بازی‌ها</button></div>
+      <div class="tiles" id="rtiles"></div>
+    </section>
+
+    <div id="home">
+      <section class="hero">
+        <div>
+          <h1 class="nast">بازی با کمی چاشنی افسون</h1>
+          <p>بازی‌های کارتی، تخته‌ای، پازل، ورزشی و هیجانی با الهام از ایران باستان؛ از حکم و تخته نرد تا چهار برگ و شطرنج. روی یک بازی بزنید و همین حالا در مرورگر بازی کنید.</p>
+          <div class="facts"><span id="nGames">بازی رایگان</span><span>گوشی و کامپیوتر</span><span>بدون دانلود</span></div>
+        </div>
+        <img src="/img/afsoon-logo-96.png?v=5" width="96" height="96" alt="">
+      </section>
+
+      <section class="row" style="margin-top:26px">
+        <div class="moods" id="moods"></div>
+      </section>
+
+      <section id="all" style="margin-top:28px">
+        <div class="cats" id="cats"><div class="tiles" ><a class="tile" href="/chahar-barg/" data-id="chahar-barg" aria-label="چهار برگ (پاسور)"><img src="/img/covers/chahar-barg-s.webp" alt="" loading="lazy" width="480" height="270"><span class="name">چهار برگ (پاسور)</span></a><a class="tile" href="/stack/" data-id="stack" aria-label="افسون استک"><img src="/img/covers/stack-s.webp" alt="" loading="lazy" width="480" height="270"><span class="name">افسون استک</span></a><a class="tile" href="/ludo/" data-id="ludo" aria-label="منچ افسون"><img src="/img/covers/ludo-s.webp" alt="" loading="lazy" width="480" height="270"><span class="name">منچ افسون</span></a><a class="tile" href="/pool/" data-id="pool" aria-label="بیلیارد هشت‌توپ افسون"><img src="/img/covers/pool-s.webp" alt="" loading="lazy" width="480" height="270"><span class="name">بیلیارد هشت‌توپ افسون</span></a><a class="tile" href="/roulette/" data-id="roulette" aria-label="رولت افسون"><img src="/img/covers/roulette-s.webp" alt="" loading="lazy" width="480" height="270"><span class="name">رولت افسون</span></a><a class="tile" href="/blackjack/" data-id="blackjack" aria-label="بلک‌جک افسون"><img src="/img/covers/blackjack-s.webp" alt="" loading="lazy" width="480" height="270"><span class="name">بلک‌جک افسون</span></a><a class="tile" href="/water-sort/" data-id="water-sort" aria-label="مرتب‌سازی آب افسون"><img src="/img/covers/water-sort-s.webp" alt="" loading="lazy" width="480" height="270"><span class="name">مرتب‌سازی آب افسون</span></a><a class="tile" href="/bubble-shooter/" data-id="bubble-shooter" aria-label="حباب‌زن افسون"><img src="/img/covers/bubble-shooter-s.webp" alt="" loading="lazy" width="480" height="270"><span class="name">حباب‌زن افسون</span></a><a class="tile" href="/kashi-blocks/" data-id="kashi-blocks" aria-label="بلوک‌های کاشی"><img src="/img/covers/kashi-blocks-s.webp" alt="" loading="lazy" width="480" height="270"><span class="name">بلوک‌های کاشی</span></a><a class="tile" href="/river-ride/" data-id="river-ride" aria-label="ریور راید"><img src="/img/covers/river-ride-s.webp" alt="" loading="lazy" width="480" height="270"><span class="name">ریور راید</span></a><a class="tile" href="/chogan/" data-id="chogan" aria-label="چوگان: توپ و راکت"><img src="/img/covers/chogan-s.webp" alt="" loading="lazy" width="480" height="270"><span class="name">چوگان: توپ و راکت</span></a><a class="tile" href="/sudoku/" data-id="sudoku" aria-label="سودوکو افسون"><img src="/img/covers/sudoku-s.webp" alt="" loading="lazy" width="480" height="270"><span class="name">سودوکو افسون</span></a><a class="tile" href="/poker/" data-id="poker" aria-label="پوکر افسون: تگزاس هولدم"><img src="/img/covers/poker-s.webp" alt="" loading="lazy" width="480" height="270"><span class="name">پوکر افسون: تگزاس هولدم</span></a><a class="tile" href="/fa/hokm/" data-id="hokm" aria-label="حکم"><img src="/img/covers/hokm-s.webp" alt="" loading="lazy" width="480" height="270"><span class="name">حکم</span></a><a class="tile" href="/chess/" data-id="chess" aria-label="شطرنج"><img src="/img/covers/chess-s.webp" alt="" loading="lazy" width="480" height="270"><span class="name">شطرنج</span></a><a class="tile" href="/fa/nard/" data-id="nard" aria-label="تخته نرد"><img src="/img/covers/nard-s.webp" alt="" loading="lazy" width="480" height="270"><span class="name">تخته نرد</span></a><a class="tile" href="/chariot-race/" data-id="chariot-race" aria-label="مسابقهٔ ارابه‌رانی"><img src="/img/covers/chariot-race-s.webp" alt="" loading="lazy" width="480" height="270"><span class="name">مسابقهٔ ارابه‌رانی</span></a><a class="tile" href="/mahjong/" data-id="mahjong" aria-label="ماهجونگ افسون"><img src="/img/covers/mahjong-s.webp" alt="" loading="lazy" width="480" height="270"><span class="name">ماهجونگ افسون</span></a><a class="tile" href="/history-puzzles/" data-id="history-puzzles" aria-label="پازل بناهای تاریخی"><img src="/img/covers/history-puzzles-s.webp" alt="" loading="lazy" width="480" height="270"><span class="name">پازل بناهای تاریخی</span></a><a class="tile" href="/solitaire/" data-id="solitaire" aria-label="سولیتر افسون"><img src="/img/covers/solitaire-s.webp" alt="" loading="lazy" width="480" height="270"><span class="name">سولیتر افسون</span></a><a class="tile" href="/anshan-run/" data-id="anshan-run" aria-label="دوی انشان"><img src="/img/covers/anshan-run-s.webp" alt="" loading="lazy" width="480" height="270"><span class="name">دوی انشان</span></a><a class="tile" href="/alchemy/" data-id="alchemy" aria-label="کیمیاگری افسون"><img src="/img/covers/alchemy-s.webp" alt="" loading="lazy" width="480" height="270"><span class="name">کیمیاگری افسون</span></a></div></div>
+      </section>
+
+      <section class="partner" id="partners" style="margin-top:30px">
+        <img src="/img/afsoon-logo-96.png?v=5" width="88" height="88" alt="">
+        <div>
+          <h3>بازی‌های ما را روی سایت خودتان بگذارید</h3>
+          <p>سایت‌های بازی، ناشران و برندها می‌توانند هر بازی افسون را اجاره کنند یا مجوز آن را بگیرند. برای کمپین‌ها و رویدادها هم بازی اختصاصی می‌سازیم.</p>
+        </div>
+        <a class="btn" href="mailto:info@afsoongames.com">info@afsoongames.com</a>
+      </section>
+
+      <section class="row" id="about" style="margin-top:30px">
+        <h2>دربارهٔ افسون</h2>
+        <p style="margin:0;color:#cfc9e2;max-width:70ch">افسون یعنی جادو. ما یک استودیوی مستقل هستیم که بازی‌های رایگان مرورگری با الهام از ایران باستان می‌سازیم، از بام‌های انشان تا کیمیاگران دربار. همهٔ بازی‌ها روی گوشی و کامپیوتر اجرا می‌شوند و نیازی به دانلود ندارند.</p>
+      </section>
+    </div>
+  </div>
+</main>
+
+<footer>
+  <div class="inner">
+    <span>&copy; ۲۰۲۶ افسون گیمز</span>
+    <nav><a href="#all">همهٔ بازی‌ها</a><a href="#partners">همکاری</a><a href="#about">دربارهٔ ما</a><a href="mailto:info@afsoongames.com">تماس</a><a href="/" hreflang="en" lang="en">English</a></nav>
+  </div>
+</footer>
+
+<script>
+const GAMES=[
+  {id:'chahar-barg',name:"چهار برگ (پاسور)",en:'Chahar Barg (Pasur)',url:'/chahar-barg/',cat:'Card',badge:'new',moods:['brain','classic','friends'],
+   desc:"بازی محبوب ایرانی که به آن پاسور هم می‌گویند. با کارت‌هایی که جمعشان ۱۱ می‌شود برگ بردارید، خاج‌ها را ببرید و با «سور» میز را خالی کنید. ۲، ۳ یا ۴ نفره، تا ۶۱ امتیاز."},
+  {id:'stack',name:"افسون استک",en:'Afsoon Stack',url:'/stack/',cat:'Card',badge:'new',moods:['brain','classic','quick'],
+   desc:"بازی کارتی دسته‌ای: خانه‌های وسط را از ۱ تا ۱۲ بچینید، از کارت‌های طلایی جوکر استفاده کنید و زودتر از همه دسته‌تان را تمام کنید. با ۱ تا ۳ حریف کامپیوتری."},
+  {id:'ludo',name:"منچ افسون",en:'Afsoon Ludo (Mench)',url:'/ludo/',cat:'Board',badge:'new',moods:['friends','classic','quick'],
+   desc:"منچ، بازی تاس خانوادگی. با ۶ مهره را بیرون بیاورید، مهره‌های حریف را به خانه برگردانید و چهار مهره‌تان را زودتر به خانه برسانید. با کامپیوتر یا ۲ تا ۴ نفر روی یک گوشی."},
+  {id:'pool',name:"بیلیارد هشت‌توپ افسون",en:'Afsoon 8-Ball Pool',url:'/pool/',cat:'Sports',badge:'new',moods:['friends','classic','brain'],
+   desc:"بیلیارد هشت‌توپ روی میزی ایرانی با حرکت واقعی توپ‌ها. با کامپیوتر در سه سطح یا با دوستتان روی یک صفحه بازی کنید."},
+  {id:'roulette',name:"رولت افسون",en:'Afsoon Roulette',url:'/roulette/',cat:'Casino',badge:'new',moods:['quick','relax'],
+   desc:"رولت اروپایی با چرخ واقعی: ژتون‌هایتان را بچینید، چرخ را بچرخانید و ببینید توپ در کدام خانه می‌افتد. فقط با ژتون، بدون پول واقعی."},
+  {id:'blackjack',name:"بلک‌جک افسون",en:'Afsoon Blackjack',url:'/blackjack/',cat:'Casino',badge:'new',moods:['quick','brain'],
+   desc:"با قوانین واقعی کازینو به ۲۱ برسید و دیلر را شکست دهید: کارت بگیرید، بایستید، دوبل یا اسپلیت کنید. کارت‌های بزرگ و دکمهٔ راهنما. فقط با ژتون، بدون پول واقعی."},
+  {id:'water-sort',name:"مرتب‌سازی آب افسون",en:'Afsoon Water Sort',url:'/water-sort/',cat:'Puzzle',badge:'new',moods:['brain','relax','quick'],
+   desc:"مایع‌های رنگی را بین بطری‌ها جابه‌جا کنید تا هر بطری فقط یک رنگ داشته باشد. آرام و هوشمندانه، و همهٔ مرحله‌ها راه‌حل دارند."},
+  {id:'bubble-shooter',name:"حباب‌زن افسون",en:'Afsoon Bubble Shooter',url:'/bubble-shooter/',cat:'Puzzle',badge:'new',moods:['relax','quick','classic'],
+   desc:"نشانه بگیرید، به دیواره بزنید و سه حباب جواهری هم‌رنگ را بترکانید. گروه‌های بزرگ را بیندازید تا امتیاز بیشتری بگیرید."},
+  {id:'kashi-blocks',name:"بلوک‌های کاشی",en:'Kashi Blocks',url:'/kashi-blocks/',cat:'Puzzle',badge:'new',moods:['brain','relax','quick'],
+   desc:"پازل بلوکی آرامش‌بخش با کاشی‌های لعابی ایرانی. ردیف‌ها و ستون‌ها را پر کنید تا پاک شوند و رکورد بزنید."},
+  {id:'river-ride',name:"ریور راید",en:'River Ride',url:'/river-ride/',cat:'Arcade',badge:'new',moods:['rush','classic'],
+   desc:"بازی کلاسیک رودخانه. روی رودخانه پرواز کنید، قایق‌ها و پل‌ها را بزنید و قبل از تمام شدن سوخت، سوخت بگیرید."},
+  {id:'chogan',name:"چوگان: توپ و راکت",en:'Chogan: Paddle Ball',url:'/chogan/',cat:'Arcade',badge:'new',moods:['quick','classic','friends'],
+   desc:"بازی کلاسیک تنیس تلویزیونی. دو راکت و یک توپ. با کامپیوتر یا با دوستتان روی یک صفحه بازی کنید."},
+  {id:'sudoku',name:"سودوکو افسون",en:'Afsoon Sudoku',url:'/sudoku/',cat:'Puzzle',badge:'new',moods:['brain','relax','classic'],
+   desc:"جدول‌های تازهٔ سودوکو، هرکدام با یک جواب، در چهار سطح، با یادداشت و راهنما."},
+  {id:'poker',name:"پوکر افسون: تگزاس هولدم",en:"Afsoon Poker: Texas Hold'em",url:'/poker/',cat:'Casino',badge:'new',moods:['brain','friends'],
+   desc:"پوکر تگزاس هولدم مقابل پنج بازیکن کامپیوتری سر میزی در کاخ ایرانی. فقط با ژتون، بدون پول واقعی."},
+  {id:'hokm',name:"حکم",en:'Hokm',url:'/fa/hokm/',cat:'Card',badge:'new',moods:['brain','classic','friends'],
+   desc:"محبوب‌ترین بازی کارتی ایران. با یارتان هم‌تیمی شوید، حکم را تعیین کنید و هفت دست ببرید."},
+  {id:'chess',name:"شطرنج",en:'Shatranj: Persian Chess',url:'/chess/',cat:'Board',badge:'new',moods:['brain','classic'],
+   desc:"شطرنج در ایران رشد کرد و «کیش و مات» از «شاه مات» می‌آید. با کامپیوتر در سه سطح یا با دوستتان بازی کنید."},
+  {id:'nard',name:"تخته نرد",en:'Nard: Persian Backgammon',url:'/fa/nard/',cat:'Board',badge:'new',moods:['brain','classic','friends'],
+   desc:"تخته نرد در ایران به دنیا آمد. با کامپیوتر یا با دوستتان روی صفحه‌ای فیروزه‌ای به سبک باغ‌های مینیاتوری بازی کنید."},
+  {id:'chariot-race',name:"مسابقهٔ ارابه‌رانی",en:'Chariot Race',url:'/chariot-race/',cat:'Arcade',badge:'hot',moods:['rush','quick'],
+   desc:"با ارابهٔ پارسی از کنار ستون‌های تخت جمشید بتازید، از سنگ‌ها جاخالی دهید و از پنج رقیب جلو بزنید."},
+  {id:'mahjong',name:"ماهجونگ افسون",en:'Afsoon Mahjong',url:'/mahjong/',cat:'Puzzle',badge:'hot',moods:['relax','classic','brain'],
+   desc:"ماهجونگ کلاسیک با کاشی‌های ایرانی: دایره‌های لاجوردی، سرو، شیر و انار."},
+  {id:'history-puzzles',name:"پازل بناهای تاریخی",en:'History Building Puzzles',url:'/history-puzzles/',cat:'Puzzle',badge:'hot',moods:['brain','relax','classic'],
+   desc:"کاشی‌ها را جفت کنید تا ده بنای شگفت‌انگیز جهان را بازسازی کنید، از تخت جمشید تا برج ایفل."},
+  {id:'solitaire',name:"سولیتر افسون",en:'Afsoon Solitaire',url:'/solitaire/',cat:'Card',badge:'',moods:['relax','classic','quick'],
+   desc:"سولیتر کلاسیک (پاسیانس) با کارت‌هایی به سبک مینیاتور ایرانی."},
+  {id:'anshan-run',name:"دوی انشان",en:'Anshan Run',url:'/anshan-run/',cat:'Arcade',badge:'hot',moods:['rush','quick'],
+   desc:"در نقش پیک شاهی روی بام‌های شهر باستانی انشان بدوید."},
+  {id:'alchemy',name:"کیمیاگری افسون",en:'Afsoon Alchemy',url:'/alchemy/',cat:'Puzzle',badge:'',moods:['brain','relax'],
+   desc:"جرقه‌ها را دم کنید، آن‌ها را به معجون تبدیل کنید و سفارش‌های دربار را آماده کنید."}
+];
+const MOODS=[
+  {id:'brain',name:'تمرین ذهن',icon:'\u{1F9E0}',cls:'m1'},
+  {id:'rush',name:'هیجان و سرعت',icon:'\u{1F525}',cls:'m2'},
+  {id:'relax',name:'فقط آرامش',icon:'\u{1F375}',cls:'m3'},
+  {id:'quick',name:'سرگرمی پنج‌دقیقه‌ای',icon:'⏱️',cls:'m4'},
+  {id:'classic',name:'کلاسیک‌های همیشگی',icon:'\u{1F0CF}',cls:'m5'},
+  {id:'friends',name:'بازی با دوستان',icon:'\u{1F91D}',cls:'m6'}
+];
+const CATS={
+  Puzzle:'<path d="M9 3h6v3a2 2 0 1 0 4 0h2v6h-3a2 2 0 1 0 0 4h3v5H3V3h6z"/>',
+  Arcade:'<rect x="3" y="7" width="18" height="11" rx="4"/><path d="M8 11v3M6.5 12.5h3M15 12h.01M17.5 13.5h.01"/>',
+  Card:'<rect x="4" y="5" width="11" height="15" rx="2"/><path d="M9 3h9a2 2 0 0 1 2 2v13"/>',
+  Casino:'<circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="4"/><path d="M12 3v5M12 16v5M3 12h5M16 12h5"/>',
+  Board:'<rect x="3" y="4" width="18" height="16" rx="2"/><path d="M6 4l2 7 2-7M14 20l2-7 2 7"/><circle cx="16" cy="8" r="1.5"/>',
+  Sports:'<circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="3.6"/><path d="M12 10.6v2.8"/>'
+};
+// each category has its own colour: card stripe, dot, section tint and rail icon
+const COL={Puzzle:'#5ee0a0',Arcade:'#ff7ab8',Sports:'#ffc04d',Card:'#5cc8ff',Casino:'#ff6b5e',Board:'#c39bff'};
+const CATFA={Puzzle:'بازی‌های پازل',Arcade:'بازی‌های هیجانی',Sports:'بازی‌های ورزشی',Card:'بازی‌های کارتی',Casino:'بازی‌های کازینو',Board:'بازی‌های تخته‌ای'};
+const fa=n=>Number(n).toLocaleString('fa-IR');
+const ngames=n=>fa(n)+' بازی';
+const ORDER=['Card','Board','Casino','Puzzle','Arcade','Sports'];
+const ico=p=>'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">'+p+'</svg>';
+const BADGE={hot:'<span class="badge" title="داغ">'+ico('<path d="M12 3c1 4 5 5 5 10a5 5 0 0 1-10 0c0-2 1-3 2-4 0 2 1 3 2 3 0-3-1-5 1-9z" fill="currentColor" stroke="none"/>')+'داغ</span>',
+  new:'<span class="badge new" title="جدید">'+ico('<path d="m12 3 2.6 5.6 6.1.7-4.5 4.2 1.2 6L12 16.6 6.6 19.5l1.2-6L3.3 9.3l6.1-.7z" fill="currentColor" stroke="none"/>')+'جدید</span>'};
+const NEWEST=GAMES.slice(0,6).map(g=>g.id);   // list is newest first
+const cover=g=>'/img/covers/'+g.id+'-s.webp'+(g.id=='hokm'?'?v=2':'');
+function tile(g){
+  return '<a class="tile" style="--c:'+COL[g.cat]+'" href="'+g.url+'" data-id="'+g.id+'" aria-label="'+g.name+'">'+(NEWEST.includes(g.id)?BADGE.new:g.badge=='hot'?BADGE.hot:'')+
+    '<img src="'+cover(g)+'" alt="" loading="lazy" width="480" height="270">'+
+    '<span class="name"><em>'+g.name+'</em></span></a>';
+}
+const $=id=>document.getElementById(id);
+$('moods').innerHTML=MOODS.map(m=>'<button type="button" class="mood '+m.cls+'" data-mood="'+m.id+'"><i aria-hidden="true">'+m.icon+'</i>'+m.name+'</button>').join('');
+const counts={};GAMES.forEach(g=>counts[g.cat]=(counts[g.cat]||0)+1);
+// home: every game once, grouped by category
+$('cats').innerHTML=ORDER.filter(c=>counts[c]).map(c=>
+  '<section class="cat" id="cat-'+c.toLowerCase()+'" style="--c:'+COL[c]+'"><h2><span class="ci">'+ico(CATS[c])+'</span>'+CATFA[c]+'<small>'+fa(counts[c])+'</small></h2>'+
+  '<div class="tiles">'+GAMES.filter(g=>g.cat==c).map(tile).join('')+'</div></section>').join('');
+$('railCats').innerHTML=ORDER.map(c=>'<a href="#cat-'+c.toLowerCase()+'" data-cat="'+c+'" style="--c:'+COL[c]+'">'+ico(CATS[c]).replace('<svg','<svg style="color:'+COL[c]+'"')+'<span>'+CATFA[c]+'</span><b class="n">'+fa(counts[c]||0)+'</b></a>').join('');
+$('nAll').textContent=fa(GAMES.length);$('nGames').textContent=fa(GAMES.length)+' بازی رایگان';
+function showList(title,list){
+  $('home').hidden=true;$('results').hidden=false;$('rtitle').textContent=title;
+  $('rcount').textContent=ngames(list.length);
+  $('rtiles').innerHTML=list.map(tile).join('');scrollTo({top:0,behavior:'smooth'});
+}
+function showHome(){$('results').hidden=true;$('home').hidden=false;$('q').value=''}
+$('clearF').onclick=()=>{showHome();scrollTo({top:0})};
+document.addEventListener('click',e=>{
+  const c=e.target.closest('[data-cat]'),m=e.target.closest('[data-mood]'),nav=e.target.closest('[data-nav]');
+  if(c){e.preventDefault();showHome();const el=$('cat-'+c.dataset.cat.toLowerCase());if(el)el.scrollIntoView({behavior:'smooth',block:'start'});closeRail()}
+  if(m){const md=MOODS.find(x=>x.id==m.dataset.mood);showList(md.name,GAMES.filter(g=>g.moods.includes(md.id)))}
+  if(nav){const k=nav.dataset.nav;
+    if(k=='new'){e.preventDefault();showList('بازی‌های جدید',GAMES.filter(g=>NEWEST.includes(g.id)))}
+    else if(k=='all'){e.preventDefault();showHome();$('all').scrollIntoView({behavior:'smooth',block:'start'})}
+    else if(k=='home'&&!$('home').hidden){}
+  }
+  if(e.target.closest('.rail a:not([data-cat])'))closeRail();
+});
+$('q').addEventListener('input',e=>{
+  const v=e.target.value.trim().toLowerCase();
+  if(!v){$('results').hidden=true;$('home').hidden=false;return}
+  const list=GAMES.filter(g=>(g.name+' '+g.en+' '+g.cat+' '+CATFA[g.cat]+' '+g.desc).toLowerCase().includes(v));
+  $('home').hidden=true;$('results').hidden=false;$('rtitle').textContent='نتیجهٔ جستجو';
+  $('rcount').textContent=ngames(list.length);
+  $('rtiles').innerHTML=list.length?list.map(tile).join(''):'<div class="empty">هیچ بازی‌ای با «'+e.target.value.replace(/[<>&"]/g,'')+'» پیدا نشد. «کارت»، «پازل» یا «نرد» را امتحان کنید.</div>';
+});
+const mq=matchMedia('(max-width:900px)');
+function closeRail(){document.body.classList.remove('open');$('burger').setAttribute('aria-expanded','false')}
+$('burger').onclick=()=>{
+  if(mq.matches){const o=document.body.classList.toggle('open');$('burger').setAttribute('aria-expanded',o)}
+  else{const m=document.body.classList.toggle('mini');$('burger').setAttribute('aria-expanded',!m)}
+};
+$('scrim').onclick=closeRail;
+</script>
+</body>
+</html>

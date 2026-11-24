@@ -43,14 +43,27 @@
 
   function ready(fn) { if (document.readyState !== 'loading') fn(); else document.addEventListener('DOMContentLoaded', fn); }
   ready(function () {
+    // Language: remember English or Persian from the home pages, and send "home" links in the games
+    // back to the Persian home page for visitors who chose Persian.
+    var LK = 'afsoon-lang', lang = 'en', p = location.pathname;
+    try {
+      if (p === '/' || p === '/index.html') localStorage.setItem(LK, 'en');
+      else if (p.indexOf('/fa/') === 0) localStorage.setItem(LK, 'fa');
+      lang = localStorage.getItem(LK) || 'en';
+    } catch (e) {}
+    var HOME = (lang === 'fa' || p.indexOf('/fa/') === 0) ? '/fa/' : '/';
+    if (HOME !== '/') document.querySelectorAll('a[href="/"]').forEach(function (a) {
+      if (!a.hasAttribute('hreflang')) a.setAttribute('href', HOME);
+    });
+
     // tap the game name / AFSOON GAMES in a game's top bar to go home
     var brand = document.querySelector('header .brand') || document.querySelector('header h1');
-    if (brand && location.pathname !== '/' && !brand.closest('a')) {
+    if (brand && location.pathname !== '/' && location.pathname !== '/fa/' && !brand.closest('a')) {
       brand.style.cursor = 'pointer';
       brand.setAttribute('role', 'link'); brand.tabIndex = 0;
       brand.title = 'Afsoon Games home';
-      brand.addEventListener('click', function () { location.href = '/'; });
-      brand.addEventListener('keydown', function (e) { if (e.key === 'Enter') location.href = '/'; });
+      brand.addEventListener('click', function () { location.href = HOME; });
+      brand.addEventListener('keydown', function (e) { if (e.key === 'Enter') location.href = HOME; });
     }
 
     var btn = document.querySelector('#snd, #mute');
