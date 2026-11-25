@@ -121,6 +121,9 @@ button:focus-visible,a:focus-visible{outline:2px solid var(--gold-2);outline-off
   .app{max-width:none}.ctrl{flex-direction:row;justify-content:center;flex-wrap:wrap}.chips button .chip{width:42px;height:42px}.btn{height:40px}.table{padding:6px 8px 8px}}
 @media (prefers-reduced-motion:reduce){.card.new,.card.flip{animation:none}}
 </style>
+<style id="fit-screen">/* laptop and desktop: the table fills the whole screen */
+@media (min-width:900px) and (min-height:600px){:root{--cw:min(14vw,17vh,180px)}.app{max-width:none}.hands.two{--cw:min(11vw,15vh,150px)}.hands.many{--cw:min(8vw,12vh,115px)}.spot{max-width:120px;max-height:120px}}
+</style>
 </head>
 <body>
 <div class="app">
