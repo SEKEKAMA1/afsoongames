@@ -95,24 +95,42 @@ input[type=range]{width:min(320px,60vw);accent-color:var(--gold)}
 <!--afs-seo--><meta name="twitter:card" content="summary_large_image">
 <!--afs-seo--><script type="application/ld+json">{"@context": "https://schema.org", "@type": "VideoGame", "name": "Afsoon Poker: Texas Hold'em", "url": "https://afsoongames.com/poker/", "description": "Afsoon Poker by Afsoon Games. Texas Hold'em against five computer players at a Persian palace table. Play for chips only, no real money. Free in your browser.", "genre": "Card game", "image": "https://afsoongames.com/img/covers/poker.webp", "gamePlatform": "Web browser", "applicationCategory": "Game", "operatingSystem": "Any", "offers": {"@type": "Offer", "price": "0", "priceCurrency": "EUR"}, "publisher": {"@type": "Organization", "name": "Afsoon Games", "url": "https://afsoongames.com/"}}</script>
 <!--afs-seo--><script src="/js/site.js" defer></script>
-<style id="fit-screen">/* laptop and desktop: the table fills the whole screen */
-@media (min-width:900px) and (min-height:600px){:root{--cw:min(8vw,11vh,130px)}.app{max-width:none}.seat .cards .card{--cw:min(5.5vw,8.5vh,96px)}.seat.me .cards .card{--cw:min(9vw,13vh,150px)}.plate .nm{font-size:.95rem}.plate .ch{font-size:1rem}.pot{font-size:1.1rem}}
-</style>
-<style id="felt-all">/* the whole screen is the table: felt and gold frame edge to edge, your cards on the felt */
-.app{max-width:none;border-radius:26px;border:8px solid #5a3a14;background:radial-gradient(70% 70% at 50% 45%,#4f1b8a 0%,#390f6a 60%,#260a47 100%);
-  box-shadow:inset 0 0 0 3px var(--gold),inset 0 0 60px rgba(0,0,0,.4)}
-.felt{inset:3% 2% 4%;background:rgba(255,255,255,.025);border:2px solid rgba(246,217,153,.35);box-shadow:none}
-</style>
-<style id="table-size">/* laptop and desktop: the table takes 80% of the screen, centred */
-@media (min-width:900px) and (min-height:600px){.app{zoom:.8;width:100vw;height:100vh;height:100dvh;margin:12.5vh 0 12.5vh 12.5vw;margin-block:12.5dvh;min-height:0;box-sizing:border-box}}
+<style id="layout-v3">/* big avatars on the rim of the table, chips board under the table */
+:root{--av:clamp(46px,min(13vw,10.5vh),104px);--cw:min(12vw,8.5vh,92px)}
+.app{max-width:none}
+.tablewrap{width:100%;margin:0 auto}
+.felt{inset:7% 6% 9%}
+.seat{width:auto;gap:0;z-index:2}
+.seat.hi{transform:translate(-50%,calc(var(--av)*-.5))}
+.seat.lo{transform:translate(-50%,calc(-100% + var(--av)*.5 + 36px))}
+.seat.hi .cards{order:3;margin-top:3px}.seat.hi .act,.seat.hi .hn{order:4}
+.seat.lo .cards{margin-bottom:3px}
+.seat .cards{height:auto}
+.seat .cards .card{--cw:min(6.5vw,5.2vh,58px)}
+.seat.me .cards .card{--cw:min(15vw,9.5vh,118px)}
+.seat .av{position:relative;width:var(--av);height:var(--av);border-radius:50%;flex:none;display:grid;place-items:center;overflow:hidden;
+  font:700 calc(var(--av)*.42) var(--display);color:#fff6dc;background:radial-gradient(circle at 35% 30%,#6c3bb0,#2a0f4d);
+  border:max(3px,calc(var(--av)*.04)) solid var(--gold);box-shadow:0 6px 16px rgba(0,0,0,.55)}
+.seat .av img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:50% 25%;background:#2a0f4d}
+.seat.turn .av{box-shadow:0 0 0 4px #ffe08a,0 0 24px rgba(255,224,138,.85)}
+.seat .plate{margin-top:calc(var(--av)*-.14);min-width:0;padding:1px 9px;z-index:1}
+.seat.sl .cards,.seat.sr .cards{position:absolute;top:calc(var(--av)*.5);transform:translateY(-50%);margin:0;order:0}
+.seat.sl .cards{left:calc(50% + var(--av)*.56)}.seat.sr .cards{right:calc(50% + var(--av)*.56)}
+.seat.sr .cards{flex-direction:row-reverse}
+.tablewrap{margin-bottom:calc(var(--av)*.5 + 30px)}
+.scorebar{display:flex;gap:8px;justify-content:center}.scorebar .pill{font-size:.9rem;padding:4px 14px}
+@media (max-width:430px){.scorebar .pill.hand{display:inline-block}}
+@media (min-width:900px) and (min-height:600px){
+  :root{--av:clamp(60px,min(8vw,12vh),120px)}
+  .tablewrap{width:78vw}
+  .seat .cards .card{--cw:min(4.6vw,7vh,84px)}.seat.me .cards .card{--cw:min(8vw,12vh,140px)}
+  .plate .nm{font-size:.95rem}.plate .ch{font-size:1rem}.pot{font-size:1.1rem}}
 </style>
 </head>
 <body>
 <div class="app">
   <header class="top">
     <div class="brand">Afsoon Poker<small>TEXAS HOLD'EM</small></div>
-    <span class="pill">Blinds <b id="blinds">10/20</b></span>
-    <span class="pill hand">Hand <b id="handNo">0</b></span>
     <button class="ib" id="menuBtn" aria-label="Game menu"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M4 7h16M4 12h16M4 17h16"/></svg></button>
     <button class="ib" id="snd" aria-label="Sound on"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"><path d="M4 10v4h4l5 4V6L8 10z"/><path id="wave" d="M16 9a4 4 0 0 1 0 6M18.5 6.5a8 8 0 0 1 0 11"/></svg></button>
     <a class="ib" href="/" aria-label="Home" title="Home"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"><path d="M3 11 12 4l9 7v9h-6v-6H9v6H3z"/></svg></a>
@@ -122,6 +140,7 @@ input[type=range]{width:min(320px,60vw);accent-color:var(--gold)}
     <div class="center"><div class="board" id="board"></div><div class="pot" id="pot">Pot 0</div></div>
     <div id="seats"></div>
   </div>
+  <div class="scorebar"><span class="pill">Blinds <b id="blinds">10/20</b></span><span class="pill hand">Hand <b id="handNo">0</b></span></div>
   <div class="status" id="status" aria-live="polite"></div>
   <div class="controls" id="controls" hidden>
     <div class="row" id="presets"></div>
@@ -135,6 +154,7 @@ input[type=range]{width:min(320px,60vw);accent-color:var(--gold)}
 </div>
 <div class="ov" id="ov" hidden><a class="ov-home" href="/" aria-label="Home" title="Home"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"><path d="M3 11 12 4l9 7v9h-6v-6H9v6H3z"/></svg>Home</a><div class="dlg" id="dlg" role="dialog" aria-modal="true"></div></div>
 
+<script src="/js/avatars.js"></script>
 <script>
 /* ===== LOGIC START ===== */
 const SUITS=['s','h','d','c'],SYM={s:'♠',h:'♥',d:'♦',c:'♣'},SNAME={s:'spades',h:'hearts',d:'diamonds',c:'clubs'};
@@ -184,11 +204,12 @@ function settle(players,order){const levels=[...new Set(players.map(p=>p.total).
 (function(){
 'use strict';
 const $=id=>document.getElementById(id);
-const NAMES=['You','Kourosh','Roxana','Dariush','Shirin','Arash'];
+const AVS=[AfsAv.mine()].concat(AfsAv.pick(5).map(a=>a.id));
+const NAMES=['You'].concat(AVS.slice(1).map(id=>AfsAv.get(id).n));
 /* tightness: higher folds more. aggression: higher raises more. */
 const STYLE=[null,{t:.05,a:.55,bl:.06},{t:.0,a:.35,bl:.04},{t:.08,a:.75,bl:.1},{t:-.03,a:.45,bl:.05},{t:.12,a:.6,bl:.03}];
-const POS=[[50,83],[12,74],[13,25],[50,10],[87,25],[88,74]];
-const BETPOS=[[50,63],[26,66],[27,36],[50,28],[73,36],[74,66]];
+const POS=[[50,91],[12,70],[12,27],[50,6],[88,27],[88,70]];
+const BETPOS=[[50,64],[27,63],[27,37],[50,30],[73,37],[73,63]];
 let P=[],dealer=-1,board=[],deckA=[],handNo=0,sb=10,bb=20,startChips=1000,speed=1,muted=false,actx,curBet=0,minRaise=20,turn=-1,showdown=false,resolveHuman=null,running=false,lastAct={};
 let stats={w:0,l:0,best:0};
 let shown=new Set();/* cards already on screen: only new ones get the deal animation */
@@ -212,9 +233,9 @@ function render(hl){
   const hlIds=hl?new Set(hl):null;
   $('board').innerHTML=[0,1,2,3,4].map(i=>cardHTML(board[i],board[i]&&hlIds?(hlIds.has(board[i].id)?'hi':'dim'):'')).join('');
   $('pot').textContent='Pot '+fmt(pot());
-  let h='';P.forEach((p,i)=>{const[x,y]=POS[i];const cls=['seat',i===0?'me':'',turn===i?'turn':'',p.folded?'fold':'',p.out?'out':'',p.winner?'winner':''].join(' ');
+  let h='';P.forEach((p,i)=>{const[x,y]=POS[i];const cls=['seat',i===0?'lo':'hi',x<30?'sl':x>70?'sr':'',i===0?'me':'',turn===i?'turn':'',p.folded?'fold':'',p.out?'out':'',p.winner?'winner':''].join(' ');
     let cards='';if(p.hand.length&&!p.out){const show=i===0||(showdown&&!p.folded);cards=show?p.hand.map(c=>cardHTML(c,hlIds&&p.winner?(hlIds.has(c.id)?'hi':''):'')).join(''):p.hand.map((c,k)=>backHTML('b'+i+'-'+k)).join('')}
-    h+=`<div class="${cls}" style="left:${x}%;top:${y}%"><div class="cards">${cards}</div><div class="plate"><div class="nm">${NAMES[i]}</div><div class="ch">${p.out?'Out':fmt(p.chips)}</div></div><div class="act">${p.label||''}</div>${p.hn?`<div class="hn">${p.hn}</div>`:''}</div>`;
+    h+=`<div class="${cls}" style="left:${x}%;top:${y}%"><div class="cards">${cards}</div><div class="av">${AfsAv.inner(AVS[i])}</div><div class="plate"><div class="nm">${NAMES[i]}</div><div class="ch">${p.out?'Out':fmt(p.chips)}</div></div><div class="act">${p.label||''}</div>${p.hn?`<div class="hn">${p.hn}</div>`:''}</div>`;
     if(p.bet>0){const[bx,by]=BETPOS[i];h+=`<div class="bet" style="left:${bx}%;top:${by}%">${fmt(p.bet)}</div>`}
     if(i===dealer){const[bx,by]=BETPOS[i];h+=`<div class="dealer" style="left:${bx+(i===0||i===3?9:0)}%;top:${by+(i===0||i===3?0:-8)}%" title="Dealer">D</div>`}});
   $('seats').innerHTML=h}

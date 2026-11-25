@@ -123,20 +123,34 @@ button{font:inherit;color:inherit;cursor:pointer}
   .opps.many .card i{display:none}
 }
 </style>
-<style id="fit-screen">/* laptop and desktop: the table fills the whole screen */
-@media (min-width:900px) and (min-height:600px){:root{--cw:clamp(60px,min(8vw,17vh),150px)}
-  .app{max-width:none;display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);grid-template-rows:auto 1fr 1fr auto;column-gap:36px;row-gap:10px}
-  .top{grid-column:1/3}.zone{display:contents}
-  .opps{grid-column:1;grid-row:2;align-self:center;justify-content:center}.mid{grid-column:1;grid-row:3;align-self:center}
-  .mine{grid-column:2;grid-row:2;align-self:center}.hand{grid-column:2;grid-row:3;align-self:center}
-  .bar{grid-column:1/3;grid-row:4}.lbl{font-size:12.5px}.opp .who{width:110px}.opp .who b{font-size:15px}.opp .who small{font-size:12.5px}.say{font-size:16px}}
-</style>
-<style id="felt-all">/* the whole screen is the table: felt and gold frame edge to edge, your cards on the felt */
-.app{max-width:none;border-radius:20px;border:3px solid var(--gold);background:radial-gradient(90% 70% at 50% 45%,#6a2340 0%,#3d1324 70%,#2a0d18 100%);
-  box-shadow:inset 0 0 0 2px rgba(246,217,153,.3),inset 0 0 50px rgba(0,0,0,.35)}
-</style>
-<style id="table-size">/* laptop and desktop: the table takes 80% of the screen, centred */
-@media (min-width:900px) and (min-height:600px){.app{zoom:.8;width:100vw;height:100vh;height:100dvh;margin:12.5vh 0 12.5vh 12.5vw;margin-block:12.5dvh;min-height:0;box-sizing:border-box}}
+<style id="layout-v3">/* a felt table with big avatars on its rim */
+:root{--av:clamp(48px,min(13vw,10.5vh),104px);--cw:clamp(40px,min(15.5vw,7.4vh),84px)}
+.app{max-width:none}
+.stage{flex:1;min-height:0;display:flex;width:100%;margin:0 auto;padding:calc(var(--av)*.62) 4px calc(var(--av)*.62 + 22px)}
+.zone{position:relative;flex:1;min-width:0;border-radius:20px;border:3px solid var(--gold);
+  background:radial-gradient(90% 70% at 50% 45%,#6a2340 0%,#3d1324 70%,#2a0d18 100%);
+  box-shadow:inset 0 0 0 2px rgba(246,217,153,.3),inset 0 0 50px rgba(0,0,0,.35),0 14px 36px rgba(0,0,0,.45);
+  padding:calc(var(--av)*.45) 10px calc(var(--av)*.5)}
+.rimtop{position:absolute;left:50%;top:0;transform:translate(-50%,calc(var(--av)*-.62));display:flex;gap:clamp(6px,2vw,22px);z-index:3}
+.rimtop.many{--av:clamp(40px,min(11vw,9vh),84px)}
+.rimme{position:absolute;left:50%;bottom:0;transform:translate(-50%,calc(var(--av)*.62));z-index:3}
+.rav{display:flex;flex-direction:column;align-items:center}
+.rav .av{position:relative;width:var(--av);height:var(--av);border-radius:50%;display:grid;place-items:center;overflow:hidden;
+  font:700 calc(var(--av)*.42) var(--display);color:#fff6dc;background:radial-gradient(circle at 35% 30%,#a8406a,#4a1428);
+  border:max(3px,calc(var(--av)*.04)) solid var(--gold);box-shadow:0 6px 16px rgba(0,0,0,.55)}
+.rav .av img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:50% 25%;background:#4a1428}
+.rav.on .av{box-shadow:0 0 0 4px #ffe08a,0 0 24px rgba(255,224,138,.85)}
+.rav .nm{margin-top:calc(var(--av)*-.12);z-index:1;background:rgba(28,9,18,.92);border:1px solid rgba(212,165,44,.6);border-radius:10px;padding:1px 8px;font-size:clamp(11px,1.6vh,14px);font-weight:900;white-space:nowrap}
+.rav.on .nm{border-color:#ffe08a}
+.opp{background:rgba(0,0,0,.18)}
+.hand{padding-top:6px}
+@media (min-width:900px) and (min-height:600px),(max-height:520px) and (orientation:landscape){
+  .app{display:flex;flex-direction:column}
+  .zone{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);grid-template-rows:1fr 1fr;column-gap:36px;row-gap:10px;align-items:center}
+  .opps{grid-column:1;grid-row:1;align-self:center}.mid{grid-column:1;grid-row:2}
+  .mine{grid-column:2;grid-row:1}.hand{grid-column:2;grid-row:2}}
+@media (min-width:900px) and (min-height:600px){:root{--av:clamp(60px,min(8vw,12vh),120px);--cw:clamp(56px,min(7vw,12.5vh),140px)}.stage{width:78vw}.lbl{font-size:12.5px}.say{font-size:16px}}
+@media (max-height:520px) and (orientation:landscape){:root{--av:clamp(36px,11vh,60px);--cw:clamp(36px,min(7vw,14vh),70px)}}
 </style>
 </head>
 <body>
@@ -147,20 +161,24 @@ button{font:inherit;color:inherit;cursor:pointer}
     <button class="ib" id="snd" aria-label="Sound on"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"><path d="M4 10v4h4l5 4V6L8 10z"/><path id="wave" d="M16 9a4 4 0 0 1 0 6M18.5 6.5a8 8 0 0 1 0 11"/></svg></button>
     <a class="ib" href="/" aria-label="Home" title="Home"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"><path d="M3 11 12 4l9 7v9h-6v-6H9v6H3z"/></svg></a>
   </header>
-  <div class="zone">
+  <div class="stage"><div class="zone">
+    <div class="rimtop" id="rimtop"></div>
     <div class="opps" id="opps"></div>
     <div class="mid"><div class="row" id="mid"></div></div>
     <div class="mine"><div class="row" id="mine"></div></div>
     <div class="hand" id="hand"></div>
-  </div>
+    <div class="rimme" id="rimme"></div>
+  </div></div>
   <div class="bar"><div class="say" id="say" aria-live="polite"></div><button class="hintb" id="hintBtn">Hint</button></div>
 </div>
 <div class="ov" id="ov"><a class="ov-home" href="/" aria-label="Home" title="Home"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"><path d="M3 11 12 4l9 7v9h-6v-6H9v6H3z"/></svg>Home</a><div class="dlg" id="dlg" role="dialog" aria-modal="true"></div></div>
 
+<script src="/js/avatars.js"></script>
 <script>
 {
 const $=id=>document.getElementById(id);
-const NAMES=['Dariush','Roxana','Kourosh','Shirin','Arash'];
+const AVS=[AfsAv.mine()].concat(AfsAv.pick(5).map(a=>a.id));
+const NAMES=AVS.slice(1).map(id=>AfsAv.get(id).n);
 const colorOf=v=>v===0?'#8a6516':v<=4?'#16807f':v<=8?'#b37508':'#b3283b';
 /* ---------- settings ---------- */
 let muted=false,nOpp=1,stockSize=20;
@@ -211,6 +229,9 @@ function render(){
   const me=P[0],myTurn=cur===0&&!busy&&!over;
   // opponents
   $('opps').classList.toggle('many',P.length>3);
+  $('rimtop').classList.toggle('many',P.length>3);
+  $('rimtop').innerHTML=P.slice(1).map((p,k)=>`<div class="rav${cur===k+1&&!over?' on':''}"><div class="av">${AfsAv.inner(AVS[k+1])}</div><div class="nm">${p.name}</div></div>`).join('');
+  $('rimme').innerHTML=`<div class="rav${cur===0&&!over?' on':''}"><div class="av">${AfsAv.inner(AVS[0])}</div><div class="nm">You</div></div>`;
   $('opps').innerHTML=P.slice(1).map((p,k)=>{const q=k+1;
     return `<div class="opp${cur===q&&!over?' on':''}"><div class="who"><b>${p.name}</b><small>${p.hand.length} in hand</small></div>
       <div class="slot mini sp" id="os${q}">${face(top(p.stock))}<span class="cnt">${p.stock.length}</span></div>

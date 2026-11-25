@@ -108,41 +108,63 @@ button:focus-visible,a:focus-visible{outline:2px solid var(--gold-2);outline-off
 <!--afs-seo--><link rel="alternate" hreflang="x-default" href="https://afsoongames.com/hokm/">
 <!--afs-seo--><script type="application/ld+json">{"@context": "https://schema.org", "@type": "VideoGame", "name": "Hokm", "url": "https://afsoongames.com/hokm/", "description": "Hokm by Afsoon Games. A Persian card game for four players. Team up with your partner against two rivals, let the Hakem name the trump and win seven tricks. Free in your browser.", "genre": "Card game", "image": "https://afsoongames.com/img/covers/hokm.webp", "gamePlatform": "Web browser", "applicationCategory": "Game", "operatingSystem": "Any", "offers": {"@type": "Offer", "price": "0", "priceCurrency": "EUR"}, "publisher": {"@type": "Organization", "name": "Afsoon Games", "url": "https://afsoongames.com/"}}</script>
 <!--afs-seo--><script src="/js/site.js" defer></script>
-<style id="fit-screen">/* laptop and desktop: the table fills the whole screen */
-@media (min-width:900px) and (min-height:600px){:root{--cw:min(12vw,14.5vh,175px)}.app{max-width:none}.tag{font-size:.95rem}.tc,.trumpbox{font-size:.85rem}}
-</style>
-<style id="felt-all">/* the whole screen is the table: felt and gold frame edge to edge, your cards on the felt */
-.app{max-width:none;border-radius:20px;border:3px solid var(--gold);background:radial-gradient(70% 70% at 50% 42%,#1b8a5c 0%,#0f6a44 60%,#0a472e 100%);
-  box-shadow:inset 0 0 0 6px rgba(212,165,44,.18),inset 0 0 60px rgba(0,0,0,.35)}
-.table{background:none;border:0;box-shadow:none}
-</style>
-<style id="table-size">/* laptop and desktop: the table takes 80% of the screen, centred */
-@media (min-width:900px) and (min-height:600px){.app{zoom:.8;width:100vw;height:100vh;height:100dvh;margin:12.5vh 0 12.5vh 12.5vw;margin-block:12.5dvh;min-height:0;box-sizing:border-box}}
+<style id="layout-v3">/* big avatars on the rim of the table, your cards on the table, points under it */
+:root{--av:clamp(52px,min(15vw,13vh),120px);--cw:min(13.5vw,10.5vh,124px)}
+.app{max-width:none}
+.stage{flex:1;min-height:0;display:flex;width:100%;margin:0 auto;padding:calc(var(--av)*.62) calc(var(--av)*.6 + 6px) calc(var(--av)*.62 + 22px)}
+.table{flex:1;min-width:0;overflow:visible;display:flex;flex-direction:column;justify-content:flex-end;padding:0 calc(var(--av)*.45 + 4px) calc(var(--av)*.5)}
+.seat{z-index:3;gap:0}
+.seat.n{top:0;left:50%;transform:translate(-50%,calc(var(--av)*-.6))}
+.seat.w{left:0;top:40%;transform:translate(-50%,-50%)}
+.seat.e{right:0;top:40%;transform:translate(50%,-50%)}
+.seat.s{left:50%;bottom:0;transform:translate(-50%,calc(var(--av)*.62))}
+.av{position:relative;width:var(--av);height:var(--av);border-radius:50%;flex:none;display:grid;place-items:center;overflow:hidden;
+  font:700 calc(var(--av)*.42) var(--display);color:#fff6dc;background:radial-gradient(circle at 35% 30%,#2f9a6c,#0d4a31);
+  border:max(3px,calc(var(--av)*.04)) solid var(--gold);box-shadow:0 6px 16px rgba(0,0,0,.55)}
+.av img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:50% 25%;background:#0d4a31}
+.seat.e .av,.seat.w .av{border-color:#d9443b}.seat.n .av,.seat.s .av{border-color:#2a9d5c}
+.seat:has(.tag.turn) .av{box-shadow:0 0 0 4px #ffe08a,0 0 24px rgba(255,224,138,.85)}
+.seat .tag{margin-top:calc(var(--av)*-.12);z-index:1;background:rgba(5,30,20,.92);font-size:clamp(11px,1.6vh,14px)}
+.seat .backs{margin-top:3px}
+.seat.w .backs,.seat.e .backs{flex-direction:row;height:var(--sh);width:auto}
+.seat.w .bk,.seat.e .bk{width:var(--sw);height:var(--sh)}
+.seat.w .bk+.bk,.seat.e .bk+.bk{margin-top:0;margin-left:calc(var(--sw)*-.78)}
+.backs .bk+.bk{margin-left:calc(var(--sw)*-.82)}
+:root{--sw:calc(var(--cw)*.3)}
+.trick{top:40%}
+.tc{left:12px;top:12px;bottom:auto}.trumpbox{right:12px;top:12px;bottom:auto}
+.table>.hand{padding:10px 0 4px;min-height:calc(var(--ch) + 14px)}
+.hud{margin-top:2px;font-size:.95rem}.hud .pill{padding:5px 14px}
+.status{min-height:1.4em}
+@media (min-width:900px) and (min-height:600px){:root{--cw:min(7.5vw,12.5vh,150px)}.stage{width:78vw}}
+@media (max-width:560px){:root{--cw:min(17vw,9.5vh,124px)}.seat .tag{font-size:11px;padding:1px 6px}.seat .tag span[style]{display:none}}
+.seat .tag.turn{background:var(--gold);color:#2a1c06}
 </style>
 </head>
 <body>
 <div class="app">
   <header class="top">
     <div class="brand">Hokm</div>
-    <div class="hud"><span class="pill">Us <b id="ptsUs">0</b> – <b id="ptsThem">0</b> Them</span><span class="pill">to <b id="tgt">7</b></span></div>
     <button class="ib" id="menuBtn" aria-label="Game menu"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M4 7h16M4 12h16M4 17h16"/></svg></button>
     <button class="ib" id="snd" aria-label="Sound on"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"><path d="M4 10v4h4l5 4V6L8 10z"/><path id="wave" d="M16 9a4 4 0 0 1 0 6M18.5 6.5a8 8 0 0 1 0 11"/></svg></button>
     <a class="ib" href="/" aria-label="Home" title="Home"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"><path d="M3 11 12 4l9 7v9h-6v-6H9v6H3z"/></svg></a>
   </header>
-  <div class="table" id="table">
-    <div class="seat n"><div class="tag" id="tag2"></div><div class="backs" id="backs2"></div></div>
-    <div class="seat w"><div class="tag" id="tag3"></div><div class="backs" id="backs3"></div></div>
-    <div class="seat e"><div class="tag" id="tag1"></div><div class="backs" id="backs1"></div></div>
+  <div class="stage"><div class="table" id="table">
+    <div class="seat n"><div class="av" id="av2"></div><div class="tag" id="tag2"></div><div class="backs" id="backs2"></div></div>
+    <div class="seat w"><div class="av" id="av3"></div><div class="tag" id="tag3"></div><div class="backs" id="backs3"></div></div>
+    <div class="seat e"><div class="av" id="av1"></div><div class="tag" id="tag1"></div><div class="backs" id="backs1"></div></div>
     <div class="trick" id="trick"></div>
     <div class="tc" id="tc"></div>
     <div class="trumpbox" id="trumpbox" hidden>TRUMP<span class="s" id="trumpS"></span></div>
-  </div>
+    <div class="hand" id="hand"></div>
+    <div class="seat s"><div class="av" id="av0"></div><div class="tag" id="tag0"></div></div>
+  </div></div>
+  <div class="hud"><span class="pill">Us <b id="ptsUs">0</b> – <b id="ptsThem">0</b> Them</span><span class="pill">to <b id="tgt">7</b></span></div>
   <div class="status" id="status" aria-live="polite"></div>
-  <div class="mytag"><div class="tag" id="tag0"></div></div>
-  <div class="hand" id="hand"></div>
 </div>
 <div class="ov" id="ov" hidden><a class="ov-home" href="/" aria-label="Home" title="Home"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"><path d="M3 11 12 4l9 7v9h-6v-6H9v6H3z"/></svg>Home</a><div class="dlg" id="dlg" role="dialog" aria-modal="true"></div></div>
 
+<script src="/js/avatars.js"></script>
 <script>
 /* ===== LOGIC START ===== */
 /* Seats go counter-clockwise like in Iran: 0 you (south), 1 east, 2 partner (north), 3 west. Team 0 = seats 0 and 2. */
@@ -196,7 +218,9 @@ function aiChoose(G,seat){const hand=G.hands[seat],trick=G.trick,trump=G.trump;c
 (function(){
 'use strict';
 const $=id=>document.getElementById(id);
-const NAMES=['You','Babak','Roxana','Bardia'];
+const AVS=[AfsAv.mine()].concat(AfsAv.pick(3).map(a=>a.id));
+const NAMES=['You'].concat(AVS.slice(1).map(id=>AfsAv.get(id).n));
+AVS.forEach((id,i)=>{$('av'+i).innerHTML=AfsAv.inner(id)});
 const ROLE=['','rival','partner','rival'];
 let G,target=7,speed=1,muted=false,actx,busy=false,stats={w:0,l:0};
 try{const x=JSON.parse(localStorage.getItem('afsoon-hokm')||'null');if(x){stats=x.stats||stats;target=x.target||7;muted=!!x.muted}}catch(e){}
@@ -278,7 +302,7 @@ $('hand').addEventListener('click',e=>{const el=e.target.closest('.card.ok');if(
   if(!actx&&!muted){try{actx=new (window.AudioContext||window.webkitAudioContext)()}catch(_){}}
   const c=G.hands[0].find(x=>x.id===el.dataset.id);if(c){busy=true;play(0,c)}});
 function dialog(h){$('dlg').innerHTML=h;$('ov').hidden=false;const p=$('dlg').querySelector('.btn.primary');if(p)p.focus()}
-function menu(){dialog(`<h2>Hokm</h2><p>You and your partner <b>Roxana</b> (across the table) play against <b>Babak</b> and <b>Bardia</b>.</p>
+function menu(){dialog(`<h2>Hokm</h2><p>You and your partner <b>${NAMES[2]}</b> (across the table) play against <b>${NAMES[1]}</b> and <b>${NAMES[3]}</b>.</p>
   <ul><li>The <b>Hakem</b> sees five cards and names the trump suit, the <i>hokm</i>.</li><li>Follow the suit that was led if you can. If you cannot, play any card. A trump beats every other suit.</li><li>The first team to win <b>7 tricks</b> wins the hand and 1 point.</li><li><b>Kot</b> (7 to 0) is worth 2 points, or 3 if the Hakem's team is shut out.</li><li>If the Hakem's team loses, the next player becomes Hakem.</li></ul>
   <h3>Match length</h3><div class="btns">${[3,5,7].map(n=>`<button class="btn${n===target?' on':''}" data-g="${n}">First to ${n}</button>`).join('')}</div>
   <div class="btns">${G&&G.phase!=='idle'&&G.pts?'<button class="btn" data-a="close">Continue</button>':''}<button class="btn primary" data-a="again">New match</button></div>`);
@@ -366,7 +390,7 @@ window.AfsCele=(function(){
 <h2 id="afs-h">How to play Hokm</h2>
 <p>Hokm is a Persian card game for four players in two teams, and you can play it here free against the computer.</p>
 <h3>Rules and controls</h3>
-<ol><li>You and your partner Roxana, across the table, play against Babak and Bardia.</li><li>The Hakem looks at the first five cards and names the trump suit (hokm).</li><li>Each player plays one card per trick. You must follow the suit that was led if you can. The highest trump wins the trick, otherwise the highest card of the suit led.</li><li>The first team to win seven tricks wins the hand and 1 point. A 7 to 0 win (Kot) is worth 2 points, or 3 if the Hakem&#x27;s team is shut out.</li><li>If the Hakem&#x27;s team loses the hand, the next player becomes Hakem. Choose a match of 3, 5 or 7 points.</li></ol>
+<ol><li>You and your partner, across the table, play against two rivals.</li><li>The Hakem looks at the first five cards and names the trump suit (hokm).</li><li>Each player plays one card per trick. You must follow the suit that was led if you can. The highest trump wins the trick, otherwise the highest card of the suit led.</li><li>The first team to win seven tricks wins the hand and 1 point. A 7 to 0 win (Kot) is worth 2 points, or 3 if the Hakem&#x27;s team is shut out.</li><li>If the Hakem&#x27;s team loses the hand, the next player becomes Hakem. Choose a match of 3, 5 or 7 points.</li></ol>
 <h3>Tips</h3>
 <ul><li>Keep track of which trumps have already been played.</li><li>If your partner is already winning the trick, play a low card.</li></ul>
 <p style="margin-top:18px">Hokm is free and runs in your browser on phone, tablet and computer. No download or account needed.</p><p class="lang"><a href="/fa/hokm/" hreflang="fa" lang="fa" dir="rtl">این صفحه به فارسی</a></p>
