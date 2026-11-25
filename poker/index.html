@@ -98,6 +98,14 @@ input[type=range]{width:min(320px,60vw);accent-color:var(--gold)}
 <style id="fit-screen">/* laptop and desktop: the table fills the whole screen */
 @media (min-width:900px) and (min-height:600px){:root{--cw:min(8vw,11vh,130px)}.app{max-width:none}.seat .cards .card{--cw:min(5.5vw,8.5vh,96px)}.seat.me .cards .card{--cw:min(9vw,13vh,150px)}.plate .nm{font-size:.95rem}.plate .ch{font-size:1rem}.pot{font-size:1.1rem}}
 </style>
+<style id="felt-all">/* the whole screen is the table: felt and gold frame edge to edge, your cards on the felt */
+.app{max-width:none;border-radius:26px;border:8px solid #5a3a14;background:radial-gradient(70% 70% at 50% 45%,#4f1b8a 0%,#390f6a 60%,#260a47 100%);
+  box-shadow:inset 0 0 0 3px var(--gold),inset 0 0 60px rgba(0,0,0,.4)}
+.felt{inset:3% 2% 4%;background:rgba(255,255,255,.025);border:2px solid rgba(246,217,153,.35);box-shadow:none}
+</style>
+<style id="table-size">/* laptop and desktop: the table takes 80% of the screen, centred */
+@media (min-width:900px) and (min-height:600px){.app{zoom:.8;width:100vw;height:100vh;height:100dvh;margin:12.5vh 0 12.5vh 12.5vw;margin-block:12.5dvh;min-height:0;box-sizing:border-box}}
+</style>
 </head>
 <body>
 <div class="app">

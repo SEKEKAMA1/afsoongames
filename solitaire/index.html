@@ -57,8 +57,12 @@ button:focus-visible{outline:2px solid var(--gold-soft);outline-offset:2px}
 <!--afs-seo--><meta name="twitter:card" content="summary_large_image">
 <!--afs-seo--><script type="application/ld+json">{"@context": "https://schema.org", "@type": "VideoGame", "name": "Afsoon Solitaire", "url": "https://afsoongames.com/solitaire/", "description": "Afsoon Solitaire by Afsoon Games. Classic Klondike solitaire with a Persian miniature card back. Drag or tap cards, free in your browser, no download.", "genre": "Card game", "image": "https://afsoongames.com/img/covers/solitaire.webp", "gamePlatform": "Web browser", "applicationCategory": "Game", "operatingSystem": "Any", "offers": {"@type": "Offer", "price": "0", "priceCurrency": "EUR"}, "publisher": {"@type": "Organization", "name": "Afsoon Games", "url": "https://afsoongames.com/"}}</script>
 <!--afs-seo--><script src="/js/site.js" defer></script>
-<style id="fit-screen">/* phones: less frame around the table so the cards can be bigger */
+<style id="fit-screen">.wrap{max-width:none!important}
+/* phones: less frame around the table so the cards can be bigger */
 @media (max-width:600px){body{padding-left:max(6px,env(safe-area-inset-left,0px));padding-right:max(6px,env(safe-area-inset-right,0px));padding-block:8px}.table{padding:6px}.wrap{gap:8px}}
+</style>
+<style id="table-size">/* laptop and desktop: the game takes 80% of the screen, centred */
+@media (min-width:900px) and (min-height:600px){body{padding:10vh 10vw}}
 </style>
 </head>
 <body>
@@ -107,11 +111,11 @@ function render(){
   const bcs=getComputedStyle(document.body),bpad=parseFloat(bcs.paddingLeft)+parseFloat(bcs.paddingRight);
   const capW=(Math.min(2400,document.body.clientWidth-bpad)-chrome-6*gap)/7;
   const topGap=parseFloat(getComputedStyle($('top')).marginBottom)||12;
-  const below=$('win').offsetHeight+document.querySelector('.help').offsetHeight+24+16+10;
+  const below=$('win').offsetHeight+document.querySelector('.help').offsetHeight+24+16+10+parseFloat(getComputedStyle(document.body).paddingBottom);
   const avail=innerHeight-(tbl.getBoundingClientRect().top+scrollY)-parseFloat(cs.paddingTop)-parseFloat(cs.paddingBottom)-parseFloat(cs.borderTopWidth)*2-below;
   const capH=(avail-topGap)/(1.4*3.15);
   const want=Math.max(40,Math.min(capW,capH,230));
-  wrap.style.maxWidth=Math.max(320,Math.ceil(want*7+6*gap+chrome))+'px';
+  const rowW=Math.max(300,Math.ceil(want*7+6*gap))+'px';$('top').style.maxWidth=tabRow.style.maxWidth=rowW;$('top').style.marginInline=tabRow.style.marginInline='auto';
   // the felt fills the screen down to the help line
   tbl.style.minHeight=Math.max(0,Math.floor(avail+parseFloat(cs.paddingTop)+parseFloat(cs.paddingBottom)+parseFloat(cs.borderTopWidth)*2))+'px';
   const cw=Math.max(30,(tabRow.clientWidth-6*gap)/7);
