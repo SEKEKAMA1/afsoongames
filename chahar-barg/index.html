@@ -490,16 +490,24 @@ function endRound(){
   over=hi>=target&&leaders.length===1;
   const iWin=sides.indexOf(leaders[0])===0;
   const head=over?(iWin?(nPl===4?t('Your team wins!','تیم شما برد!'):t('You win!','شما بردید!')):leaders[0].name+t(' win'+(nPl===4?'':'s')+'!',(nPl===4?' بردند!':' برد!'))):t('Round over','پایان دور');
-  if(over){sWin();if(iWin)confetti()}
+  // who won this round (most points this round)
+  const rt=rows.map(r=>r.total),rmx=Math.max(...rt),rw=rt.filter(x=>x===rmx).length===1?rt.indexOf(rmx):-1;
+  const winName=i=>i===0?(nPl===4?t('Your team','تیم شما'):t('You','شما')):sides[i].name;
+  let top='';
+  if(over){sWin();if(iWin)confetti();AfsCele.bigWin(7000);const w=sides.indexOf(leaders[0]);
+    top=AfsCele.cup(winName(w),t('Champion · ','قهرمان · ')+N(sides[w].score)+t(' points',' امتیاز'))}
+  else if(rw>=0){AfsCele.fireworks(2800);
+    top=`<div class="afs-rw">🎆</div>`}
   const R=(label,f)=>`<tr><td>${label}</td>${rows.map(f).map(x=>`<td>${x}</td>`).join('')}</tr>`;
-  dialog(`<h2>${head}</h2>
+  const head2=over?head:rw<0?t('Round over – a tie','پایان دور – مساوی'):rw===0?(nPl===4?t('Your team won the round!','تیم شما این دور را برد!'):t('You won the round!','این دور را بردید!')):t(winName(rw)+' won the round!',winName(rw)+(nPl===4?' این دور را بردند!':' این دور را برد!'));
+  dialog(`${top}<h2>${head2}</h2>
     <table class="sc"><tr><th></th>${sides.map(s=>`<th>${s.short}</th>`).join('')}</tr>
     ${R(t('Clubs (7 pts)','خاج (۷ امتیاز)'),r=>N(r.clubs)+'♣'+(r.club7?' → '+N(7):''))}${R(t('Aces','آس'),r=>N(r.ace))}${R(t('Jacks','سرباز'),r=>N(r.jack))}${R(t('2 of clubs','دوی خاج'),r=>N(r.c2))}${R(t('10 of diamonds','دهِ خشت'),r=>N(r.d10))}${R(t('Sur','سور'),r=>N(r.sur))}
     <tr class="tot"><td>${t('This round','این دور')}</td>${rows.map(r=>`<td>${N(r.total)}</td>`).join('')}</tr>
     <tr class="tot"><td>${t('Total','مجموع')}</td>${sides.map(s=>`<td>${N(s.score)}</td>`).join('')}</tr></table>
     <p class="small">${over?t('First to '+target+' points wins.','اولین کسی که به '+N(target)+' امتیاز برسد می‌برد.'):t('Playing to '+target+' points.','بازی تا '+N(target)+' امتیاز.')}</p>
     <button class="big" id="nx">${over?t('Play again','دوباره بازی'):t('Next round','دور بعد')}</button>${over?`<button class="big alt" id="chg">${t('Change game','تغییر بازی')}</button>`:''}`,
-    ()=>{$('nx').onclick=()=>{audio();if(over)newGame();else{dealer=(dealer+1)%nPl;$('ov').hidden=true;newRound()}};if(over)$('chg').onclick=menu});
+    ()=>{$('nx').onclick=()=>{audio();AfsCele.stop();if(over)newGame();else{dealer=(dealer+1)%nPl;$('ov').hidden=true;newRound()}};if(over)$('chg').onclick=menu});
 }
 /* ---------- your taps ---------- */
 $('hand').addEventListener('click',e=>{
@@ -560,6 +568,63 @@ P=NAMES[nPl].map((n,i)=>({name:i?nm(AV[i]):t('You','شما'),av:i?AV[i].id:myAv,
 window.__cb={get P(){return P},get table(){return table},get deck(){return deck},get round(){return round},get sides(){return sides},get cur(){return cur},get busy(){return busy},get over(){return over},
   set speed(v){SPD=v},setN:n=>{nPl=n},setLV:v=>{LV=v},get LV(){return LV},newGame,aiChoice,playCard,options};
 }
+</script>
+
+<!-- Afsoon celebration: fireworks after a round, a golden cup at the end of the game -->
+<style>
+#afsFw{position:fixed;inset:0;width:100vw;height:100vh;z-index:90;pointer-events:none}
+.afs-cup{display:flex;flex-direction:column;align-items:center;gap:2px;margin:-4px 0 2px}
+.afs-cup svg{width:min(150px,38vw);height:auto;filter:drop-shadow(0 10px 18px rgba(0,0,0,.55)) drop-shadow(0 0 22px rgba(255,214,110,.45));animation:afsCupIn .9s cubic-bezier(.2,1.3,.4,1) both}
+.afs-cup .shine{animation:afsShine 2.4s ease-in-out .9s infinite}
+.afs-cup b{font-size:1.05rem;color:#ffe9a8;letter-spacing:.02em;animation:afsFade .5s .7s both}
+.afs-cup small{font-size:.8rem;color:#e9dcb8;opacity:.85;animation:afsFade .5s .9s both}
+.afs-rw{font-size:2.2rem;line-height:1;animation:afsCupIn .7s cubic-bezier(.2,1.3,.4,1) both}
+@keyframes afsCupIn{from{transform:translateY(-60px) scale(.3) rotate(-12deg);opacity:0}}
+@keyframes afsShine{0%,100%{transform:translateX(-90px)}50%{transform:translateX(120px)}}
+@keyframes afsFade{from{opacity:0;transform:translateY(6px)}}
+@media (prefers-reduced-motion:reduce){.afs-cup svg,.afs-cup .shine,.afs-rw{animation:none}}
+</style>
+<script>
+window.AfsCele=(function(){
+  let cv=null,ctx=null,parts=[],rockets=[],until=0,raf=0,lastT=0;
+  const COLS=['#ffd54a','#ff6b6b','#5ee0a0','#6bb6ff','#ff9ff3','#ffffff','#ffb347'];
+  function size(){const d=Math.min(window.devicePixelRatio||1,2);cv.width=innerWidth*d;cv.height=innerHeight*d;ctx.setTransform(d,0,0,d,0,0)}
+  function ensure(){if(cv)return;cv=document.createElement('canvas');cv.id='afsFw';document.body.appendChild(cv);ctx=cv.getContext('2d');size();addEventListener('resize',size)}
+  function burst(x,y){const col=COLS[Math.random()*COLS.length|0],col2=COLS[Math.random()*COLS.length|0],n=60+(Math.random()*40|0);
+    for(let i=0;i<n;i++){const a=Math.PI*2*i/n+Math.random()*.1,sp=2+Math.random()*3.6;
+      parts.push({x,y,vx:Math.cos(a)*sp,vy:Math.sin(a)*sp,life:1,dec:.009+Math.random()*.01,c:Math.random()<.7?col:col2,r:1.6+Math.random()*1.4})}}
+  function launch(){const W=innerWidth,H=innerHeight;rockets.push({x:W*(.15+Math.random()*.7),y:H+10,vx:(Math.random()-.5)*1.2,vy:-(7.5+Math.random()*3.5),ty:H*(.12+Math.random()*.33)})}
+  function frame(t){const dt=Math.min((t-(lastT||t))/16.7,3);lastT=t;
+    const W=innerWidth,H=innerHeight;ctx.globalCompositeOperation='destination-out';ctx.fillStyle='rgba(0,0,0,.22)';ctx.fillRect(0,0,W,H);ctx.globalCompositeOperation='lighter';
+    if(t<until&&Math.random()<.06*dt)launch();
+    rockets=rockets.filter(r=>{r.x+=r.vx*dt;r.y+=r.vy*dt;r.vy+=.09*dt;ctx.fillStyle='#ffe9a8';ctx.beginPath();ctx.arc(r.x,r.y,2.2,0,7);ctx.fill();
+      if(r.y<=r.ty||r.vy>=-1){burst(r.x,r.y);return false}return true});
+    parts=parts.filter(p=>{p.x+=p.vx*dt;p.y+=p.vy*dt;p.vx*=.985;p.vy=p.vy*.985+.05*dt;p.life-=p.dec*dt;if(p.life<=0)return false;
+      ctx.globalAlpha=Math.max(p.life,0);ctx.fillStyle=p.c;ctx.beginPath();ctx.arc(p.x,p.y,p.r,0,7);ctx.fill();return true});
+    ctx.globalAlpha=1;
+    if(t<until||parts.length||rockets.length)raf=requestAnimationFrame(frame);else{ctx.clearRect(0,0,W,H);raf=0}}
+  function fireworks(ms){if(matchMedia&&matchMedia('(prefers-reduced-motion: reduce)').matches)return;ensure();
+    until=performance.now()+(ms||2600);for(let i=0;i<3;i++)setTimeout(launch,i*180);if(!raf){lastT=0;raf=requestAnimationFrame(frame)}}
+  function stop(){until=0}
+  // golden cup with the winner's name on the plate
+  function cupSVG(){return `<svg viewBox="0 0 200 220" aria-hidden="true">
+  <defs><linearGradient id="afsG" x1="0" x2="1"><stop offset="0" stop-color="#8a5a12"/><stop offset=".25" stop-color="#f6d77a"/><stop offset=".5" stop-color="#fff2c2"/><stop offset=".72" stop-color="#e2b23f"/><stop offset="1" stop-color="#7a4d0e"/></linearGradient>
+  <linearGradient id="afsG2" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#f3cd62"/><stop offset="1" stop-color="#9a6516"/></linearGradient>
+  <clipPath id="afsC"><path d="M52 22h96v34c0 36-20 62-48 66-28-4-48-30-48-66z"/></clipPath></defs>
+  <path d="M54 34H30c-6 0-10 4-10 10 0 22 16 40 40 44" fill="none" stroke="url(#afsG2)" stroke-width="9" stroke-linecap="round"/>
+  <path d="M146 34h24c6 0 10 4 10 10 0 22-16 40-40 44" fill="none" stroke="url(#afsG2)" stroke-width="9" stroke-linecap="round"/>
+  <path d="M52 22h96v34c0 36-20 62-48 66-28-4-48-30-48-66z" fill="url(#afsG)" stroke="#7a4d0e" stroke-width="2"/>
+  <g clip-path="url(#afsC)"><rect class="shine" x="40" y="10" width="26" height="130" fill="#fff" opacity=".35" transform="skewX(-18)"/></g>
+  <ellipse cx="100" cy="22" rx="48" ry="7" fill="#fff2c2" stroke="#7a4d0e" stroke-width="2"/>
+  <path d="M100 44l6 13 14 1-11 9 4 14-13-8-13 8 4-14-11-9 14-1z" fill="#fff6d6" stroke="#a8761c" stroke-width="1.5"/>
+  <path d="M90 122h20v26H90z" fill="url(#afsG)"/><path d="M76 148h48l8 14H68z" fill="url(#afsG2)" stroke="#7a4d0e" stroke-width="1.5"/>
+  <rect x="56" y="162" width="88" height="40" rx="5" fill="#3a2508" stroke="url(#afsG2)" stroke-width="4"/>
+  <rect x="66" y="172" width="68" height="20" rx="3" fill="url(#afsG)"/>
+  <circle cx="34" cy="16" r="3" fill="#fff6d6"/><circle cx="170" cy="12" r="2.5" fill="#fff6d6"/><circle cx="182" cy="70" r="2" fill="#fff6d6"/></svg>`}
+  function cup(name,sub){return `<div class="afs-cup">${cupSVG()}<b>${name}</b>${sub?`<small>${sub}</small>`:''}</div>`}
+  function bigWin(ms){fireworks(ms||6000)}
+  return {fireworks,stop,cup,bigWin};
+})();
 </script>
 
 <section class="afs-info" aria-labelledby="afs-h">
