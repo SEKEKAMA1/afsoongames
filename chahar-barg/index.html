@@ -299,7 +299,7 @@ function newRound(){
     if(J===1){const k=table.findIndex(c=>c.r==='J');d.splice(d.length/2|0,0,table[k]);table[k]=d.shift();if(table[k].r==='J')continue}
     break;}
   deck=d;
-  round={caps:sides.map(()=>[]),sur:sides.map(()=>0),last:null,deal:0,deals:52/(nPl*4)-1+0};
+  round={caps:sides.map(()=>[]),sur:sides.map(()=>0),surLog:[],last:null,deal:0,deals:52/(nPl*4)-1+0};
   round.deals=(52-4)/(nPl*4);
   P.forEach(p=>p.hand=[]);
   cur=(dealer+1)%nPl;
@@ -323,7 +323,8 @@ function options(c,tb){tb=tb||table;
     for(let k=i;k<nums.length;k++){acc.push(nums[k]);rec(k+1,sum+val(nums[k]),acc);acc.pop()}};
   rec(0,0,[]);return out;
 }
-const isSur=(c,cap,tb)=>cap.length>0&&cap.length===(tb||table).length;
+// a Sarbaz (Jack) never makes a Sur by itself
+const isSur=(c,cap,tb)=>c.r!=='J'&&cap.length>0&&cap.length===(tb||table).length;
 function worth(c,cap,p,tb){
   if(!cap)return 0;
   const all=cap.concat([c]);let v=all.reduce((s,x)=>s+pts(x)*1.6+(isClub(x)?.55:0)+.14,0);
@@ -408,7 +409,11 @@ async function playCard(p,k,cap){
     table=table.filter(x=>!all.includes(x));round.caps[sd].push(...all);round.last=sd;sTake(all.length);
     let msg=p===0?t('You take '+all.length+' cards','شما '+N(all.length)+' برگ برداشتید'):t(pl.name+' takes '+all.length+' cards',pl.name+' '+N(all.length)+' برگ برداشت');
     if(sur){
-      round.sur[sd]++;msg+=t(' – SUR! +5',' – سور! +۵');surBanner('+'+N(5));sSur();
+      // a Sur cancels the rival's last Sur of this round: they lose 5, this Sur scores nothing
+      const L=round.surLog||(round.surLog=[]);let j=-1;for(let q=L.length-1;q>=0;q--)if(L[q]!==sd){j=q;break}
+      if(j>=0){const o=L[j];L.splice(j,1);round.sur[o]--;
+        msg+=t(' – SUR! It cancels '+sides[o].short+'\'s Sur',' – سور! سورِ '+sides[o].short+' را خنثی کرد');surBanner(t('Sur cancelled','سور خنثی شد'));sSur();}
+      else{round.sur[sd]++;L.push(sd);msg+=t(' – SUR! +5',' – سور! +۵');surBanner('+'+N(5));sSur();}
     }
     say(msg);
   }else say(p===0?t('Your card stays on the table','برگ شما روی زمین ماند'):t(pl.name+' puts a card on the table',pl.name+' برگی روی زمین گذاشت'));
@@ -437,7 +442,6 @@ function aiChoice(p){
       v=-(pts(c)*1.8+(isClub(c)?.6:0))-(c.r==='J'?3:0)-(c.r==='K'||c.r==='Q'?.3:0);
       const after=table.concat([c]);
       if(after.every(isNum)){const sum=after.reduce((s,x)=>s+val(x),0);if(sum<11&&sum>=1)v-=2.2}
-      if(!after.some(x=>x.r==='K'||x.r==='Q'))v-=.5; // a Sarbaz could now make a Sur
       v+=Math.random()*.2;
     }
     if(!best||v>best.v)best={k,v,cap:o[0]||null};
@@ -530,12 +534,12 @@ $('otherBtn').onclick=()=>{optI=(optI+1)%opts.length;explain();render()};
 function dialog(html,bind){$('dlg').innerHTML=html;$('ov').hidden=false;if(bind)bind()}
 const RULES_EN=`<ul><li><b>Numbers (A=1 to 10):</b> take table numbers that make 11 together with your card. A 4 takes a 7, a 5 takes 2+4.</li>
   <li><b>Shah (K)</b> takes a Shah, <b>Banu (Q)</b> takes a Banu.</li><li><b>Sarbaz (J)</b> takes every card on the table except Shah and Banu.</li>
-  <li>A card that takes nothing stays on the table.</li><li><b>Sur:</b> take every card on the table = 5 points – with any card, also a Sarbaz, also in the last deal and after 50 points.</li>
+  <li>A card that takes nothing stays on the table.</li><li><b>Sur:</b> take every card on the table = 5 points – also in the last deal and after 50 points. A Sarbaz never makes a Sur. If the other side makes a Sur after yours in the same round, the two Surs cancel out.</li>
   <li><b>Points:</b> 7 or more clubs 7, each Ace 1, each Sarbaz 1, 2 of clubs 2, 10 of diamonds 3. Cards with a gold dot are worth points.</li>
   <li>At the end of a round the last player who took cards gets the rest of the table.</li></ul>`;
 const RULES_FA=`<ul><li><b>عددها (آس = ۱ تا ۱۰):</b> برگ‌هایی از زمین را بردارید که با برگ شما جمعشان ۱۱ شود. ۴ یک ۷ را برمی‌دارد، ۵ هم ۲ و ۴ را.</li>
   <li><b>شاه</b> شاه را برمی‌دارد و <b>بی‌بی</b> بی‌بی را.</li><li><b>سرباز</b> همه‌ی برگ‌های زمین را برمی‌دارد، به جز شاه و بی‌بی.</li>
-  <li>برگی که چیزی برندارد روی زمین می‌ماند.</li><li><b>سور:</b> برداشتن همه‌ی برگ‌های زمین ۵ امتیاز دارد؛ با هر برگی، حتی سرباز، در دست آخر و بعد از ۵۰ امتیاز هم.</li>
+  <li>برگی که چیزی برندارد روی زمین می‌ماند.</li><li><b>سور:</b> برداشتن همه‌ی برگ‌های زمین ۵ امتیاز دارد؛ در دست آخر و بعد از ۵۰ امتیاز هم. سرباز هیچ‌وقت سور نمی‌زند. اگر حریف در همان دور بعد از سورِ شما سور بزند، دو سور همدیگر را خنثی می‌کنند.</li>
   <li><b>امتیازها:</b> ۷ خاج یا بیشتر ۷، هر آس ۱، هر سرباز ۱، دوی خاج ۲، دهِ خشت ۳. برگ‌های امتیازدار نقطه‌ی طلایی دارند.</li>
   <li>در پایان دور، آخرین کسی که برگ برداشته، برگ‌های مانده روی زمین را هم برمی‌دارد.</li></ul>`;
 const RULES=()=>FA()?RULES_FA:RULES_EN;
@@ -635,7 +639,7 @@ window.AfsCele=(function(){
 <li>Number cards (Ace = 1 up to 10) take one or more table numbers that make 11 together with the played card.</li>
 <li>A King (Shah) takes a King and a Queen (Banu) takes a Queen. A Jack (Sarbaz) takes every table card except Kings and Queens.</li>
 <li>A card that takes nothing stays on the table. If your card can take, you must take.</li>
-<li>Taking every card on the table is a Sur, worth 5 points – with any card, including a Jack, also in the last deal and after 50 points. Every Sur counts.</li>
+<li>Taking every card on the table is a Sur, worth 5 points – also in the last deal and after 50 points. A Jack never makes a Sur. If the other side makes a Sur after yours in the same round, the two Surs cancel each other out.</li>
 <li>When the last cards are played, the last player who took cards also takes what is left on the table.</li>
 <li>Scoring each round: 7 or more clubs 7 points, each Ace 1, each Jack 1, the 2 of clubs 2, the 10 of diamonds 3, and 5 for each Sur.</li></ol>
 <h3>Tips</h3>
