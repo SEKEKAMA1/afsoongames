@@ -61,11 +61,21 @@ button:focus-visible{outline:2px solid var(--gold-soft);outline-offset:2px}
 /* phones: less frame around the table so the cards can be bigger */
 @media (max-width:600px){body{padding-left:max(6px,env(safe-area-inset-left,0px));padding-right:max(6px,env(safe-area-inset-right,0px));padding-block:8px}.table{padding:6px}.wrap{gap:8px}}
 </style>
-<style id="table-narrow">/* tablets, laptops and desktops: the gold frame is 30% narrower, centred */
-@media (min-width:601px){.table{box-sizing:border-box;width:70%;margin-inline:auto}}
-</style>
-<style id="table-size">/* laptop and desktop: the game takes 80% of the screen, centred */
-@media (min-width:900px) and (min-height:600px){body{padding:14vh 14vw}}
+<style id="full-screen">/* the felt fills the whole screen like classic Windows solitaire: slim top bar, no frame, big cards */
+html,body{min-height:100%}
+body{padding:0!important;background:radial-gradient(ellipse 120% 90% at 50% 35%,#16446f 0%,#0d2b4a 55%,#081d33 100%) fixed}
+.wrap{gap:0!important;max-width:none!important}
+header{padding:6px max(12px,env(safe-area-inset-right,0px)) 6px max(12px,env(safe-area-inset-left,0px));background:rgba(4,14,28,.55);border-bottom:1px solid rgba(217,164,65,.35);gap:8px}
+header h1{font-size:clamp(18px,2.6vw,24px)}
+header a[aria-label=Home]{height:30px!important}
+header button{padding:5px 12px}
+.table{background:transparent!important;border:0!important;border-radius:0!important;padding:12px max(10px,env(safe-area-inset-right,0px)) 6px max(10px,env(safe-area-inset-left,0px))!important}
+.help{padding:0 10px 8px;font-size:12px}
+.win{padding-bottom:6px}
+.cascade{position:fixed;inset:0;width:100vw;height:100vh;z-index:80;cursor:pointer;touch-action:none}
+.winbox{position:fixed;left:50%;top:50%;transform:translate(-50%,-50%);z-index:90;background:rgba(4,14,28,.92);border:2px solid var(--gold);border-radius:14px;padding:22px 30px;text-align:center;box-shadow:0 18px 50px rgba(0,0,0,.5)}
+.winbox h2{font-family:var(--display);font-weight:400;color:var(--gold-soft);margin:0 0 6px;font-size:clamp(24px,4vw,34px)}
+.winbox p{margin:0 0 16px;color:var(--ink)}
 </style>
 </head>
 <body>
@@ -116,8 +126,8 @@ function render(){
   const topGap=parseFloat(getComputedStyle($('top')).marginBottom)||12;
   const below=$('win').offsetHeight+document.querySelector('.help').offsetHeight+24+16+10+parseFloat(getComputedStyle(document.body).paddingBottom);
   const avail=innerHeight-(tbl.getBoundingClientRect().top+scrollY)-parseFloat(cs.paddingTop)-parseFloat(cs.paddingBottom)-parseFloat(cs.borderTopWidth)*2-below;
-  const capH=(avail-topGap)/(1.4*3.15);
-  const want=Math.max(40,Math.min(capW,capH,230));
+  const capH=(avail-topGap)/(1.4*2.7);
+  const want=Math.max(40,Math.min(capW,capH,300));
   const rowW=Math.max(300,Math.ceil(want*7+6*gap))+'px';$('top').style.maxWidth=tabRow.style.maxWidth=rowW;$('top').style.marginInline=tabRow.style.marginInline='auto';
   // the felt fills the screen down to the help line
   tbl.style.minHeight=Math.max(0,Math.floor(avail+parseFloat(cs.paddingTop)+parseFloat(cs.paddingBottom)+parseFloat(cs.borderTopWidth)*2))+'px';
@@ -141,8 +151,46 @@ function render(){
   });
   tabRow.innerHTML=t;
   $('mv').textContent=mv;
-  if(!won&&fd.every(f=>f.length==13)){won=true;$('win').textContent='You win in '+mv+' moves!'}
+  if(!won&&fd.every(f=>f.length==13)){won=true;$('win').textContent='You win in '+mv+' moves!';setTimeout(cascade,250)}
   if(!won)$('win').textContent='';
+}
+// Win: the classic cascade — cards jump off the foundations one by one and bounce across the whole screen, leaving a trail
+function cascade(){
+  const done=()=>{if(document.querySelector('.winbox'))return;const tm=$('tm').textContent;const b=document.createElement('div');b.className='winbox';b.innerHTML='<h2>You win!</h2><p>'+mv+' moves · '+tm+'</p><button type="button">New game</button>';document.body.appendChild(b);b.querySelector('button').onclick=()=>{b.remove();const c=document.querySelector('.cascade');if(c)c.remove();deal()}};
+  if(matchMedia('(prefers-reduced-motion: reduce)').matches){done();return}
+  const slots=[...document.querySelectorAll('#top .slot[data-k="f"]')];
+  const rects=slots.map(sl=>sl.getBoundingClientRect());
+  const W=innerWidth,H=innerHeight,cw=rects[0].width,ch=cw*1.4,k=H/800;
+  const cv=document.createElement('canvas');cv.className='cascade';const dpr=Math.min(2,devicePixelRatio||1);
+  cv.width=W*dpr;cv.height=H*dpr;document.body.appendChild(cv);const g=cv.getContext('2d');g.scale(dpr,dpr);
+  const order=[];for(let r=12;r>=0;r--)for(let i=0;i<4;i++)order.push({i,r,c:fd[i][r]});
+  const ims=order.map(o=>{const im=new Image();im.src=img(o.c);return im});
+  let n=0,cur=null,last=0,stopped=false;
+  const showUnder=(i,r)=>{const im=slots[i].querySelector('img');if(!im)return;if(r>=0)im.src=img(fd[i][r]);else im.parentNode.style.visibility='hidden'};
+  function launch(){
+    if(n>=order.length){cur=null;done();return}
+    const o=order[n],rc=rects[o.i];showUnder(o.i,o.r-1);
+    let vx=W/(55+Math.random()*70)*(Math.random()<.5?-1:1);if(o.i==0&&vx<0||o.i==3&&vx>0&&Math.random()<.5)vx=-vx;
+    cur={im:ims[n],x:rc.left,y:rc.top,vx,vy:-(Math.random()*8)*k};n++;
+  }
+  function frame(t){
+    if(stopped)return;
+    const dt=last?Math.min(3,(t-last)/16.7):1;last=t;
+    if(!cur)launch();
+    if(cur){
+      const steps=Math.ceil(dt);
+      for(let s2=0;s2<steps;s2++){
+        const f=dt/steps;cur.vy+=.75*k*f;cur.x+=cur.vx*f;cur.y+=cur.vy*f;
+        if(cur.y+ch>H){cur.y=H-ch;cur.vy=-cur.vy*.78;if(Math.abs(cur.vy)<3*k)cur.vy=-(6+Math.random()*4)*k}
+        if(cur.im.complete&&cur.im.naturalWidth!==0||cur.im.complete)try{g.drawImage(cur.im,cur.x,cur.y,cw,ch)}catch(e){}
+      }
+      if(cur.x>W||cur.x+cw<0)cur=null;
+    }
+    if(n<order.length||cur)requestAnimationFrame(frame);else done();
+  }
+  // tap/click skips straight to the end
+  cv.addEventListener('pointerdown',()=>{if(n<order.length||cur){stopped=true;done()}});
+  requestAnimationFrame(frame);
 }
 function src(){if(sel.k=='w')return[wa[wa.length-1]];if(sel.k=='f')return[fd[sel.i][fd[sel.i].length-1]];return tb[sel.i].slice(sel.x)}
 const okF=(c,f)=>f.length?f[f.length-1].s==c.s&&f[f.length-1].r+1==c.r:c.r==1;
